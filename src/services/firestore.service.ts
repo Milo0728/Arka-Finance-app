@@ -54,7 +54,7 @@ async function createForUser<T extends { userId: string }>(
 ): Promise<T> {
   const ref = collection(db(), collectionName);
   const created = await addDoc(ref, { ...data, createdAt: serverTimestamp() });
-  return { ...data, id: created.id } as T;
+  return { ...data, id: created.id } as unknown as T;
 }
 
 async function updateDocument<T>(collectionName: string, id: string, data: Partial<T>) {
