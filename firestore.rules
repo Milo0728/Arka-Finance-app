@@ -1,0 +1,49 @@
+rules_version = '2';
+
+// Strict per-user isolation: a document can only be read or written by its owner (userId == auth.uid).
+// Users collection is keyed by uid, so a user can only touch their own profile document.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function belongsToUser() {
+      return isSignedIn() && request.resource.data.userId == request.auth.uid;
+    }
+
+    match /users/{uid} {
+      allow read, write: if isOwner(uid);
+    }
+
+    match /incomes/{docId} {
+      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if belongsToUser();
+    }
+
+    match /expenses/{docId} {
+      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if belongsToUser();
+    }
+
+    match /budgets/{docId} {
+      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if belongsToUser();
+    }
+
+    match /goals/{docId} {
+      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if belongsToUser();
+    }
+
+    match /subscriptions/{docId} {
+      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if belongsToUser();
+    }
+  }
+}
