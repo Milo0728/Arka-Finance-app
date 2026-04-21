@@ -76,7 +76,7 @@ export function FeatureGrid() {
           </h2>
           <p className="mt-4 text-muted-foreground">
             Arka wraps the spreadsheet-level control of YNAB with the simplicity of a modern fintech
-            app — and adds a philosophy that's lasted 8,000 years.
+            app — and adds a philosophy that&apos;s lasted 8,000 years.
           </p>
         </div>
 

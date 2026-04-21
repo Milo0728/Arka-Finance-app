@@ -176,7 +176,7 @@ export default function SettingsPage() {
 
           {money.currency !== money.baseCurrency && (
             <p className="text-xs text-muted-foreground">
-              Tip: when you type a new transaction it's converted into {money.baseCurrency} at the current
+              Tip: when you type a new transaction it&apos;s converted into {money.baseCurrency} at the current
               rate and stored that way — so switching display currency later stays consistent.
             </p>
           )}
