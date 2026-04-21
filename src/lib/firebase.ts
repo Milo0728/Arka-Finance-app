@@ -36,8 +36,7 @@ function ensureAppCheck(app: FirebaseApp) {
   // In Firebase console → App Check → Apps → Manage debug tokens, paste the value printed
   // in the browser console the first time this runs (or set the token explicitly here).
   if (process.env.NODE_ENV !== "production" && APPCHECK_DEBUG_TOKEN) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN =
+    (self as unknown as { FIREBASE_APPCHECK_DEBUG_TOKEN: string | boolean }).FIREBASE_APPCHECK_DEBUG_TOKEN =
       APPCHECK_DEBUG_TOKEN === "true" ? true : APPCHECK_DEBUG_TOKEN;
   }
 

@@ -20,7 +20,7 @@ export function Philosophy() {
             The philosophy
           </p>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Babylon's seven rules, built into the product.
+            Babylon&apos;s seven rules, built into the product.
           </h2>
           <p className="text-muted-foreground">
             In <em>The Richest Man in Babylon</em>, Arkad shares seven simple rules for a life of
@@ -30,8 +30,8 @@ export function Philosophy() {
           <Card className="relative overflow-hidden border bg-gradient-to-br from-primary/5 via-transparent to-transparent p-6">
             <Quote className="mb-3 h-5 w-5 text-primary" />
             <blockquote className="text-balance text-lg italic leading-relaxed text-foreground">
-              "A part of all you earn is yours to keep. Not less than a tenth, no matter how little
-              you earn."
+              &ldquo;A part of all you earn is yours to keep. Not less than a tenth, no matter how little
+              you earn.&rdquo;
             </blockquote>
             <p className="mt-3 text-sm text-muted-foreground">— Arkad, The Richest Man in Babylon</p>
           </Card>
