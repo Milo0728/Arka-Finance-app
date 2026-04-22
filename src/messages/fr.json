@@ -733,5 +733,166 @@
       ],
       "contact": "Questions ou demandes en matière de confidentialité ? Écrivez à jcrodriguezc0728@hotmail.com."
     }
+  },
+  "tutorial": {
+    "buttons": {
+      "back": "Retour",
+      "next": "Suivant",
+      "skip": "Passer le tour",
+      "finish": "Terminer",
+      "close": "Fermer"
+    },
+    "steps": {
+      "welcome": {
+        "title": "Bienvenue sur Arka Finance",
+        "body": "Ce tableau de bord vous aide à comprendre et à maîtriser vos finances. Nous allons faire un tour rapide — vous pouvez l'ignorer à tout moment."
+      },
+      "balance": {
+        "title": "Votre solde net",
+        "body": "Cette carte affiche votre solde financier actuel — tout ce que vous avez gagné moins tout ce que vous avez dépensé."
+      },
+      "income": {
+        "title": "Revenus du mois",
+        "body": "Ici vous pouvez suivre combien d'argent entre ce mois-ci et le comparer au mois précédent."
+      },
+      "expenses": {
+        "title": "Dépenses du mois",
+        "body": "Affiche vos dépenses de la période en cours. Une tendance à la baisse est une bonne nouvelle ici — moins c'est plus."
+      },
+      "charts": {
+        "title": "Graphiques et flux de trésorerie",
+        "body": "Ces graphiques vous aident à visualiser votre comportement financier : l'évolution des revenus et dépenses sur les six derniers mois."
+      },
+      "score": {
+        "title": "Score de santé financière",
+        "body": "Ce score reflète votre stabilité financière selon votre taux d'épargne, votre ratio dépenses/revenus, le respect de vos budgets et l'avancée de vos objectifs."
+      },
+      "quickAdd": {
+        "title": "Actions rapides",
+        "body": "Utilisez ce bouton pour ajouter rapidement un revenu ou une dépense sans quitter le tableau de bord. Vous pouvez aussi appuyer sur Ctrl+K."
+      },
+      "insights": {
+        "title": "Analyses d'Arka",
+        "body": "Ici vous recevez des recommandations personnalisées pour améliorer vos finances — surveillez ce panneau pour les alertes et conseils."
+      },
+      "done": {
+        "title": "Tout est prêt",
+        "body": "Vous êtes prêt à gérer vos finances. Vous pouvez rejouer n'importe quelle partie du tour dans Paramètres → Aide."
+      },
+      "incomePage": {
+        "title": "Section revenus",
+        "body": "Ici vit chaque rentrée d'argent : salaire, freelance, dividendes, ponctuels. Chaque ligne est une entrée."
+      },
+      "incomeAdd": {
+        "title": "Enregistrer un revenu",
+        "body": "Cliquez ici pour ajouter un nouveau revenu. Choisissez catégorie, montant et s'il se répète. Arka convertit automatiquement dans votre devise d'affichage."
+      },
+      "incomeTable": {
+        "title": "Historique des revenus",
+        "body": "Toutes les entrées apparaissent triées par date. Vous pouvez modifier ou supprimer n'importe laquelle depuis la colonne Actions."
+      },
+      "expensesPage": {
+        "title": "Section dépenses",
+        "body": "Toutes vos sorties d'argent, catégorisées. Savoir où part l'argent est la première loi de la richesse : la conscience."
+      },
+      "expensesAdd": {
+        "title": "Enregistrer une dépense",
+        "body": "Consignez un achat — montant, catégorie, fixe ou variable. Plus vous enregistrez, plus les analyses d'Arka sont affûtées."
+      },
+      "expensesTable": {
+        "title": "Transactions et filtres",
+        "body": "Recherchez par description, filtrez par catégorie ou type. Le tableau se met à jour en direct — utile pour revoir un mois précis ou retrouver cet abonnement oublié."
+      },
+      "budgetsPage": {
+        "title": "Section budgets",
+        "body": "Définissez un plafond mensuel, hebdomadaire ou annuel par catégorie. Arka suit votre progression et vous alerte avant le dépassement."
+      },
+      "budgetsAdd": {
+        "title": "Créer un budget",
+        "body": "Choisissez une catégorie et un plafond. Au fil du mois, une barre de progression se remplira au rythme de vos dépenses."
+      },
+      "budgetsGrid": {
+        "title": "Budgets actifs",
+        "body": "Chaque carte montre un budget et son usage. Vert = sain, ambre = approche de la limite, rouge = dépassement."
+      },
+      "goalsPage": {
+        "title": "Section objectifs",
+        "body": "Objectifs d'épargne long terme — un voyage, un fonds, un matelas de sécurité. Arka calcule combien épargner chaque mois pour respecter la date."
+      },
+      "goalsAdd": {
+        "title": "Créer un objectif",
+        "body": "Donnez-lui un nom, un montant cible et une date limite. Mettez à jour le montant accumulé au fil de votre épargne."
+      },
+      "goalsGrid": {
+        "title": "Suivi des objectifs",
+        "body": "Chaque carte affiche la progression, la contribution mensuelle nécessaire et les mois restants. Célébrez quand un objectif atteint 100%."
+      },
+      "subscriptionsPage": {
+        "title": "Section abonnements",
+        "body": "Les tueurs silencieux du budget. Arka les met en avant pour que vous voyiez le total mensuel et annuel de chaque service récurrent."
+      },
+      "subscriptionsAdd": {
+        "title": "Ajouter un abonnement",
+        "body": "Enregistrez les services payés périodiquement — streaming, salle, logiciels. Choisissez le cycle et Arka calcule l'équivalent mensuel."
+      },
+      "subscriptionsTable": {
+        "title": "Vos abonnements",
+        "body": "Tous les abonnements actifs avec leur cycle, leur montant et leur équivalent mensuel — pour décider ce qui mérite de rester."
+      },
+      "insightsFull": {
+        "title": "Analyses complètes",
+        "body": "Cette page va plus loin que le widget du tableau de bord : toutes les analyses générées par Arka, votre score de santé détaillé et vos catégories de plus grosses dépenses."
+      },
+      "insightsAll": {
+        "title": "Toutes les analyses",
+        "body": "Avertissements, félicitations et conseils. Chacun se base sur vos données réelles : taux d'épargne, respect des budgets, dépenses irrégulières et plus."
+      },
+      "reportsPage": {
+        "title": "Section rapports",
+        "body": "Vue à six mois et exports. Utilisez les boutons du haut pour télécharger des résumés CSV de revenus, dépenses ou un rapport complet."
+      },
+      "reportsTable": {
+        "title": "Détail mensuel",
+        "body": "Ligne par ligne : revenus, dépenses, net et taux d'épargne pour chacun des six derniers mois. Parfait pour repérer les tendances."
+      },
+      "settingsProfile": {
+        "title": "Profil",
+        "body": "Votre nom affiché et votre revenu mensuel attendu. Le revenu permet à Arka de comparer votre taux d'épargne à la règle des 10% de Babylone."
+      },
+      "settingsCurrency": {
+        "title": "Devise d'affichage",
+        "body": "Choisissez comment les montants sont affichés. Les données sont toujours stockées en USD et converties en direct — changer de devise ne détruit pas votre historique."
+      },
+      "settingsAppearance": {
+        "title": "Apparence",
+        "body": "Mode sombre ou suivre le thème système. Votre choix est enregistré sur votre compte et vous suit entre appareils."
+      },
+      "settingsLanguage": {
+        "title": "Langue",
+        "body": "Anglais, espagnol ou français. L'interface bascule instantanément et votre choix est mémorisé."
+      },
+      "settingsHelp": {
+        "title": "Aide et tutoriel",
+        "body": "Vous trouverez toujours le tour ici. Relancez la visite complète ou plongez dans une seule section dès que vous avez besoin d'un rappel."
+      }
+    },
+    "settings": {
+      "title": "Aide et tutoriel",
+      "description": "Relancez la visite interactive à tout moment.",
+      "restartFull": "Redémarrer le tutoriel complet",
+      "replayOverviewLabel": "Vue d'ensemble du tableau de bord",
+      "replayChartsLabel": "Explication des graphiques",
+      "replayScoreLabel": "Score financier",
+      "replayInsightsLabel": "Analyses du tableau de bord",
+      "replayIncomeLabel": "Page revenus",
+      "replayExpensesLabel": "Page dépenses",
+      "replayBudgetsLabel": "Page budgets",
+      "replayGoalsLabel": "Page objectifs",
+      "replaySubscriptionsLabel": "Page abonnements",
+      "replayInsightsPageLabel": "Page analyses",
+      "replayReportsLabel": "Page rapports",
+      "replaySettingsLabel": "Page paramètres",
+      "replay": "Rejouer"
+    }
   }
 }

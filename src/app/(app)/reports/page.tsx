@@ -100,7 +100,7 @@ export default function ReportsPage() {
   }
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-6">
+    <div className="mx-auto flex max-w-7xl flex-col gap-6" data-tutorial="page">
       <PageHeader
         title={t("title")}
         description={t("description")}
@@ -177,7 +177,7 @@ export default function ReportsPage() {
             </Card>
           </div>
 
-          <Card>
+          <Card data-tutorial="main">
             <CardHeader className="pb-3">
               <CardTitle className="text-base">{t("breakdown")}</CardTitle>
             </CardHeader>

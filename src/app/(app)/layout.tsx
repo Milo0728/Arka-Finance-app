@@ -4,6 +4,7 @@ import * as React from "react";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { QuickAddDialog } from "@/components/dashboard/quick-add-dialog";
+import { DashboardTutorial } from "@/components/dashboard/tutorial/dashboard-tutorial";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { useFinanceStore } from "@/store/useFinanceStore";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -58,15 +59,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <Sidebar />
-      <div className="flex min-h-screen flex-1 flex-col">
-        <DashboardHeader onQuickAdd={() => setQuickAdd(true)} />
-        <main className="flex-1 overflow-x-hidden px-4 py-6 lg:px-8 lg:py-8">
-          <ErrorBoundary>{children}</ErrorBoundary>
-        </main>
+    <DashboardTutorial>
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <div className="flex min-h-screen flex-1 flex-col">
+          <DashboardHeader onQuickAdd={() => setQuickAdd(true)} />
+          <main className="flex-1 overflow-x-hidden px-4 py-6 lg:px-8 lg:py-8">
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </main>
+        </div>
+        <QuickAddDialog open={quickAdd} onOpenChange={setQuickAdd} />
       </div>
-      <QuickAddDialog open={quickAdd} onOpenChange={setQuickAdd} />
-    </div>
+    </DashboardTutorial>
   );
 }

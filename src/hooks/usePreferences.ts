@@ -13,6 +13,8 @@ type PreferencePatch = {
   currency?: Currency;
   theme?: "light" | "dark" | "system";
   language?: Locale;
+  onboardingCompleted?: boolean;
+  tutorialVersion?: number;
 };
 
 /**
@@ -30,6 +32,9 @@ export async function saveProfilePreferences(patch: PreferencePatch) {
   if (patch.currency) next.currency = patch.currency;
   if (patch.theme) next.theme = patch.theme;
   if (patch.language) next.language = patch.language;
+  if (typeof patch.onboardingCompleted === "boolean")
+    next.onboardingCompleted = patch.onboardingCompleted;
+  if (typeof patch.tutorialVersion === "number") next.tutorialVersion = patch.tutorialVersion;
   useFinanceStore.setState({ profile: next });
   try {
     await persistProfile(next);

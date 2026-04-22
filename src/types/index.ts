@@ -19,6 +19,9 @@ export interface UserProfile {
   photoURL?: string;
   createdAt: ISODate;
   onboardingCompleted?: boolean;
+  /** Version of the tutorial the user has already finished. Bumped in `TUTORIAL_VERSION`
+   * when the walkthrough changes enough that returning users should see it again. */
+  tutorialVersion?: number;
   theme?: "light" | "dark" | "system";
   language?: "en" | "es" | "fr";
 }

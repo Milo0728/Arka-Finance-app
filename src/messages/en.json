@@ -792,5 +792,166 @@
       ],
       "contact": "Privacy questions or requests? Email jcrodriguezc0728@hotmail.com."
     }
+  },
+  "tutorial": {
+    "buttons": {
+      "back": "Back",
+      "next": "Next",
+      "skip": "Skip tour",
+      "finish": "Finish",
+      "close": "Close"
+    },
+    "steps": {
+      "welcome": {
+        "title": "Welcome to Arka Finance",
+        "body": "This dashboard helps you understand and control your finances. We'll take a quick tour — you can skip anytime."
+      },
+      "balance": {
+        "title": "Your net balance",
+        "body": "This card shows your current financial balance — everything you've earned minus everything you've spent."
+      },
+      "income": {
+        "title": "Income this month",
+        "body": "Here you can track how much money is coming in this month and compare it with the previous month."
+      },
+      "expenses": {
+        "title": "Expenses this month",
+        "body": "This shows your spending for the current period. A downward trend is good here — less is more."
+      },
+      "charts": {
+        "title": "Charts and cashflow",
+        "body": "These charts help you visualise your financial behaviour: how income and expenses evolve over the last six months."
+      },
+      "score": {
+        "title": "Financial health score",
+        "body": "This score reflects your financial stability based on savings rate, spend-to-income ratio, budget adherence and goal progress."
+      },
+      "quickAdd": {
+        "title": "Quick actions",
+        "body": "Use this button to quickly add an income or expense without leaving the dashboard. You can also press Ctrl+K."
+      },
+      "insights": {
+        "title": "Arka insights",
+        "body": "Here you receive personalised recommendations to improve your finances — watch this panel for alerts and tips."
+      },
+      "done": {
+        "title": "You're all set",
+        "body": "You're ready to start managing your finances. You can replay any part of the tour from Settings → Help."
+      },
+      "incomePage": {
+        "title": "Income section",
+        "body": "This is where every bit of money coming in lives: salary, freelance, dividends, one-offs. Each row is one entry."
+      },
+      "incomeAdd": {
+        "title": "Log a new income",
+        "body": "Click here to record a new income. Pick a category, amount and whether it repeats. Arka converts it to your display currency automatically."
+      },
+      "incomeTable": {
+        "title": "Your income history",
+        "body": "Every entry appears here sorted by date. You can edit or delete any row from the Actions column."
+      },
+      "expensesPage": {
+        "title": "Expenses section",
+        "body": "All your outflows, categorised. Knowing where the money leaves is the first law of wealth — awareness."
+      },
+      "expensesAdd": {
+        "title": "Log a new expense",
+        "body": "Record a purchase — amount, category, whether it's fixed or variable. The more you log, the sharper Arka's insights get."
+      },
+      "expensesTable": {
+        "title": "Transactions and filters",
+        "body": "Search by description, filter by category or type. The table updates in real time — useful for reviewing a specific month or finding that one forgotten subscription."
+      },
+      "budgetsPage": {
+        "title": "Budgets section",
+        "body": "Set a monthly, weekly or yearly cap per category. Arka tracks how close you are and warns you before you go over."
+      },
+      "budgetsAdd": {
+        "title": "Create a budget",
+        "body": "Pick a category and a limit. Over the month you'll see a progress bar filling up as you spend in that category."
+      },
+      "budgetsGrid": {
+        "title": "Active budgets",
+        "body": "Each card shows one budget with its usage. Green means healthy, amber means approaching the limit, red means overshoot."
+      },
+      "goalsPage": {
+        "title": "Goals section",
+        "body": "Long-term savings targets — a trip, a fund, an emergency cushion. Arka calculates how much you need to save each month to hit the deadline."
+      },
+      "goalsAdd": {
+        "title": "Create a goal",
+        "body": "Name the goal, set a target amount and a deadline. Update the current amount as you save towards it."
+      },
+      "goalsGrid": {
+        "title": "Goal tracker",
+        "body": "Each card shows progress, monthly contribution needed and months remaining. Celebrate when one hits 100%."
+      },
+      "subscriptionsPage": {
+        "title": "Subscriptions section",
+        "body": "The silent budget killers. Arka surfaces them so you can see the full monthly and yearly bill of every recurring service."
+      },
+      "subscriptionsAdd": {
+        "title": "Add a subscription",
+        "body": "Record services you pay periodically — streaming, gym, software. Pick a billing cycle and Arka normalises to a monthly equivalent."
+      },
+      "subscriptionsTable": {
+        "title": "Your subscriptions",
+        "body": "All active subscriptions listed with their billing cycle, amount and monthly equivalent — so you can spot what's worth keeping."
+      },
+      "insightsFull": {
+        "title": "Full insights",
+        "body": "This page goes deeper than the dashboard widget: every insight Arka generates, your health score broken down, and your top spending categories."
+      },
+      "insightsAll": {
+        "title": "All insights",
+        "body": "Warnings, praises and tips. Each is based on your actual data — savings rate, budget adherence, irregular expenses, and more."
+      },
+      "reportsPage": {
+        "title": "Reports section",
+        "body": "Six-month view of your finances plus exports. Use the buttons at the top to download CSV summaries of income, expenses or a full report."
+      },
+      "reportsTable": {
+        "title": "Monthly breakdown",
+        "body": "Row by row view of income, expenses, net and savings rate for each of the last six months. Great for spotting trends."
+      },
+      "settingsProfile": {
+        "title": "Profile",
+        "body": "Your display name and expected monthly income. The income helps Arka benchmark your savings rate against the Babylonian 10% rule."
+      },
+      "settingsCurrency": {
+        "title": "Display currency",
+        "body": "Choose how amounts are displayed. Data is always stored in USD and converted live — so switching currency doesn't destroy your history."
+      },
+      "settingsAppearance": {
+        "title": "Appearance",
+        "body": "Dark mode or follow your system theme. Your choice is saved on your account and follows you across devices."
+      },
+      "settingsLanguage": {
+        "title": "Language",
+        "body": "English, Spanish or French. The interface switches instantly and your choice is remembered."
+      },
+      "settingsHelp": {
+        "title": "Help and tutorial",
+        "body": "You'll always find the tour here. Replay the full walkthrough or jump into a single section any time you need a refresher."
+      }
+    },
+    "settings": {
+      "title": "Help & tutorial",
+      "description": "Relaunch the interactive walkthrough at any time.",
+      "restartFull": "Restart full tutorial",
+      "replayOverviewLabel": "Dashboard overview",
+      "replayChartsLabel": "Charts explanation",
+      "replayScoreLabel": "Financial score",
+      "replayInsightsLabel": "Dashboard insights",
+      "replayIncomeLabel": "Income page",
+      "replayExpensesLabel": "Expenses page",
+      "replayBudgetsLabel": "Budgets page",
+      "replayGoalsLabel": "Goals page",
+      "replaySubscriptionsLabel": "Subscriptions page",
+      "replayInsightsPageLabel": "Insights page",
+      "replayReportsLabel": "Reports page",
+      "replaySettingsLabel": "Settings page",
+      "replay": "Replay"
+    }
   }
 }

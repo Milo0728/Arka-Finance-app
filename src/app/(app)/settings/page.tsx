@@ -11,6 +11,8 @@ import {
   Trash2,
   RefreshCw,
   Loader2,
+  HelpCircle,
+  Play,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -38,6 +40,7 @@ import { COOKIE_KEYS, setCookie } from "@/lib/preferences";
 import { LOCALES, LOCALE_LABELS, type Locale } from "@/i18n/config";
 import { Globe } from "lucide-react";
 import { saveProfilePreferences } from "@/hooks/usePreferences";
+import { useTutorialStore, type TutorialSection } from "@/store/useTutorialStore";
 
 export default function SettingsPage() {
   const profile = useFinanceStore((s) => s.profile);
@@ -51,8 +54,15 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const t = useTranslations("settings");
   const tCommon = useTranslations("common");
+  const tTutorial = useTranslations("tutorial.settings");
   const locale = useLocale() as Locale;
   const router = useRouter();
+  const startTutorial = useTutorialStore((s) => s.start);
+
+  function launchTutorial(section: TutorialSection | "full") {
+    startTutorial(section);
+    // The tutorial controller will navigate to the correct route itself.
+  }
 
   function pickLocale(next: Locale) {
     if (next === locale) return;
@@ -122,10 +132,10 @@ export default function SettingsPage() {
     : "never";
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6">
+    <div className="mx-auto flex max-w-3xl flex-col gap-6" data-tutorial="page">
       <PageHeader title={t("title")} description={t("description")} />
 
-      <Card>
+      <Card data-tutorial="profile">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <UserIcon className="h-4 w-4 text-primary" />
@@ -155,7 +165,7 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card data-tutorial="currency">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <Coins className="h-4 w-4 text-primary" />
@@ -207,7 +217,7 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card data-tutorial="appearance">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <Palette className="h-4 w-4 text-primary" />
@@ -234,7 +244,7 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card data-tutorial="language">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <Globe className="h-4 w-4 text-primary" />
@@ -252,6 +262,50 @@ export default function SettingsPage() {
                 onClick={() => pickLocale(code)}
               >
                 {LOCALE_LABELS[code].native}
+              </Button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card data-tutorial="help">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <HelpCircle className="h-4 w-4 text-primary" />
+            {tTutorial("title")}
+          </CardTitle>
+          <CardDescription>{tTutorial("description")}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Button size="sm" onClick={() => launchTutorial("full")}>
+            <Play className="h-4 w-4" />
+            <span className="ml-1">{tTutorial("restartFull")}</span>
+          </Button>
+          <Separator />
+          <div className="grid gap-2 sm:grid-cols-2">
+            {[
+              { key: "overview" as const, label: tTutorial("replayOverviewLabel") },
+              { key: "charts" as const, label: tTutorial("replayChartsLabel") },
+              { key: "score" as const, label: tTutorial("replayScoreLabel") },
+              { key: "insights" as const, label: tTutorial("replayInsightsLabel") },
+              { key: "income" as const, label: tTutorial("replayIncomeLabel") },
+              { key: "expenses" as const, label: tTutorial("replayExpensesLabel") },
+              { key: "budgets" as const, label: tTutorial("replayBudgetsLabel") },
+              { key: "goals" as const, label: tTutorial("replayGoalsLabel") },
+              { key: "subscriptions" as const, label: tTutorial("replaySubscriptionsLabel") },
+              { key: "insightsPage" as const, label: tTutorial("replayInsightsPageLabel") },
+              { key: "reports" as const, label: tTutorial("replayReportsLabel") },
+              { key: "settings" as const, label: tTutorial("replaySettingsLabel") },
+            ].map((section) => (
+              <Button
+                key={section.key}
+                size="sm"
+                variant="outline"
+                onClick={() => launchTutorial(section.key)}
+                className="justify-between"
+              >
+                <span>{section.label}</span>
+                <span className="text-xs text-muted-foreground">{tTutorial("replay")}</span>
               </Button>
             ))}
           </div>

@@ -34,6 +34,8 @@ export function useAuthListener() {
           createdAt: existing?.createdAt ?? new Date().toISOString(),
           theme: existing?.theme,
           language: existing?.language,
+          onboardingCompleted: existing?.onboardingCompleted,
+          tutorialVersion: existing?.tutorialVersion,
         };
         setProfile(profile);
         await persistProfile(profile);

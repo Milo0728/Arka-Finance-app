@@ -68,12 +68,12 @@ export default function SubscriptionsPage() {
   }
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-6">
+    <div className="mx-auto flex max-w-7xl flex-col gap-6" data-tutorial="page">
       <PageHeader
         title={t("title")}
         description={t("description")}
         action={
-          <Button size="sm" onClick={openNew}>
+          <Button size="sm" onClick={openNew} data-tutorial="add-button">
             <Plus className="h-4 w-4" />
             <span className="ml-1">{t("newSubscription")}</span>
           </Button>
@@ -131,7 +131,7 @@ export default function SubscriptionsPage() {
           }
         />
       ) : (
-        <Card>
+        <Card data-tutorial="main">
           <CardContent className="p-0">
             <Table>
               <TableHeader>

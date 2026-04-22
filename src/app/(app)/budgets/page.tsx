@@ -45,12 +45,12 @@ export default function BudgetsPage() {
   }
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-6">
+    <div className="mx-auto flex max-w-7xl flex-col gap-6" data-tutorial="page">
       <PageHeader
         title={t("title")}
         description={t("description")}
         action={
-          <Button size="sm" onClick={openNew}>
+          <Button size="sm" onClick={openNew} data-tutorial="add-button">
             <Plus className="h-4 w-4" />
             <span className="ml-1">{t("newBudget")}</span>
           </Button>
@@ -70,7 +70,7 @@ export default function BudgetsPage() {
           }
         />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" data-tutorial="main">
           {budgets.map((b) => {
             const { used, limit, pct } = budgetUsage(expenses, b);
             const overshoot = used > limit;

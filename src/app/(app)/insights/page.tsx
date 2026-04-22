@@ -36,11 +36,13 @@ export default function InsightsPage() {
   const hasData = incomes.length > 0 || expenses.length > 0;
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-6">
+    <div className="mx-auto flex max-w-7xl flex-col gap-6" data-tutorial="page">
       <PageHeader title={t("title")} description={t("description")} />
 
       <div className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
-        <InsightsList insights={insights} title={t("all")} />
+        <div data-tutorial="main">
+          <InsightsList insights={insights} title={t("all")} />
+        </div>
         <div className="space-y-4">
           <HealthScore score={score} hasData={hasData} />
           <Card>

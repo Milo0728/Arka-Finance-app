@@ -95,7 +95,7 @@ export default function DashboardPage() {
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
+        <div data-tutorial="welcome">
           <h1 className="text-2xl font-semibold tracking-tight lg:text-3xl">
             {t("greeting", { name: displayName })}
           </h1>
@@ -118,28 +118,34 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KPICard
-          label={t("netBalance")}
-          value={money.format(balance)}
-          delta={balanceDelta}
-          deltaLabel={t("vsLastMonth")}
-          icon={<Wallet className="h-4 w-4" />}
-        />
-        <KPICard
-          label={t("incomeThisMonth")}
-          value={money.format(mIncome)}
-          delta={incomeDelta}
-          deltaLabel={t("vsLastMonth")}
-          icon={<TrendingUp className="h-4 w-4" />}
-          tone="success"
-        />
-        <KPICard
-          label={t("expensesThisMonth")}
-          value={money.format(mExpense)}
-          delta={-expenseDelta}
-          deltaLabel={t("lowerIsBetter")}
-          icon={<TrendingDown className="h-4 w-4" />}
-        />
+        <div data-tutorial="balance">
+          <KPICard
+            label={t("netBalance")}
+            value={money.format(balance)}
+            delta={balanceDelta}
+            deltaLabel={t("vsLastMonth")}
+            icon={<Wallet className="h-4 w-4" />}
+          />
+        </div>
+        <div data-tutorial="income">
+          <KPICard
+            label={t("incomeThisMonth")}
+            value={money.format(mIncome)}
+            delta={incomeDelta}
+            deltaLabel={t("vsLastMonth")}
+            icon={<TrendingUp className="h-4 w-4" />}
+            tone="success"
+          />
+        </div>
+        <div data-tutorial="expenses">
+          <KPICard
+            label={t("expensesThisMonth")}
+            value={money.format(mExpense)}
+            delta={-expenseDelta}
+            deltaLabel={t("lowerIsBetter")}
+            icon={<TrendingDown className="h-4 w-4" />}
+          />
+        </div>
         <KPICard
           label={t("savingsRate")}
           value={`${rate.toFixed(1)}%`}
@@ -150,7 +156,7 @@ export default function DashboardPage() {
         />
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[1.6fr_1fr]">
+      <div className="grid gap-4 xl:grid-cols-[1.6fr_1fr]" data-tutorial="charts">
         <Card>
           <CardHeader className="flex flex-row items-start justify-between pb-2">
             <div>
@@ -191,10 +197,14 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <HealthScore score={score} hasData={hasData} />
+        <div data-tutorial="score" className="xl:col-span-1">
+          <HealthScore score={score} hasData={hasData} />
+        </div>
       </div>
 
-      <InsightsList insights={insights} title={t("arkaInsights")} />
+      <div data-tutorial="insights">
+        <InsightsList insights={insights} title={t("arkaInsights")} />
+      </div>
     </div>
   );
 }

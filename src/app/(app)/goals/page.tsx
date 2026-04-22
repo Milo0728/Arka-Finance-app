@@ -42,12 +42,12 @@ export default function GoalsPage() {
   }
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-6">
+    <div className="mx-auto flex max-w-7xl flex-col gap-6" data-tutorial="page">
       <PageHeader
         title={t("title")}
         description={t("description")}
         action={
-          <Button size="sm" onClick={openNew}>
+          <Button size="sm" onClick={openNew} data-tutorial="add-button">
             <Plus className="h-4 w-4" />
             <span className="ml-1">{t("newGoal")}</span>
           </Button>
@@ -67,7 +67,7 @@ export default function GoalsPage() {
           }
         />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" data-tutorial="main">
           {goals.map((g) => {
             const progress = g.targetAmount > 0 ? Math.min(100, (g.currentAmount / g.targetAmount) * 100) : 0;
             const monthsLeft = monthsUntil(g.deadline);

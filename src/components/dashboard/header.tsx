@@ -96,7 +96,7 @@ export function DashboardHeader({ onQuickAdd }: { onQuickAdd?: () => void }) {
         <Input placeholder={tHeader("searchPlaceholder")} className="h-9 pl-9" />
       </div>
 
-      <Button size="sm" onClick={onQuickAdd} className="hidden sm:inline-flex">
+      <Button size="sm" onClick={onQuickAdd} className="hidden sm:inline-flex" data-tutorial="quick-add">
         <Plus className="h-4 w-4" />
         <span className="ml-1">{tCommon("quickAdd")}</span>
       </Button>
