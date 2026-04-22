@@ -121,6 +121,10 @@ function TutorialController() {
 
   const pollRef = React.useRef<number | null>(null);
   const prevOpenRef = React.useRef(false);
+  // Latch: auto-launch fires at most once per mount of the (app) layout.
+  // Prevents re-triggering after a section replay, a Firestore-persist race,
+  // or a same-route click like the sidebar "Resumen" link.
+  const didAutoStartRef = React.useRef(false);
 
   const hasCompleted = React.useMemo(() => {
     // Version-based: only counts as done if the profile (or cookie) matches
@@ -138,11 +142,13 @@ function TutorialController() {
 
   // Auto-launch the full tour the first time a signed-in user lands on /dashboard.
   React.useEffect(() => {
+    if (didAutoStartRef.current) return;
     if (pathname !== "/dashboard") return;
     if (authLoading || !user) return;
     if (running || isOpen) return;
     if (!financeHydrated) return;
     if (hasCompleted) return;
+    didAutoStartRef.current = true;
     const id = window.setTimeout(() => start("full"), 900);
     return () => window.clearTimeout(id);
   }, [pathname, authLoading, user, running, isOpen, financeHydrated, hasCompleted, start]);
