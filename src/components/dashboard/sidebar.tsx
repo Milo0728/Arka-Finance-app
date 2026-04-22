@@ -33,11 +33,18 @@ const ITEMS = [
 export const Sidebar = React.memo(function Sidebar() {
   const pathname = usePathname();
   const t = useTranslations("nav");
+  const tCommon = useTranslations("common");
 
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r bg-card/40 lg:flex">
       <div className="flex h-16 items-center gap-2 border-b px-6">
         <Logo />
+        <Badge
+          variant="outline"
+          className="border-primary/40 bg-primary/10 text-[10px] font-semibold uppercase tracking-wider text-primary"
+        >
+          {tCommon("beta")}
+        </Badge>
       </div>
 
       <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">

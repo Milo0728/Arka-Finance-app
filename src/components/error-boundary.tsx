@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -40,17 +41,16 @@ export class ErrorBoundary extends React.Component<Props, State> {
 }
 
 function DefaultFallback({ error, onReset }: { error: Error; onReset: () => void }) {
+  const t = useTranslations("errors");
   return (
     <div className="flex min-h-[320px] w-full items-center justify-center p-6">
       <Card className="w-full max-w-lg border-destructive/30">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2 text-destructive">
             <AlertTriangle className="h-5 w-5" />
-            <CardTitle className="text-base">Something went wrong</CardTitle>
+            <CardTitle className="text-base">{t("boundaryTitle")}</CardTitle>
           </div>
-          <CardDescription>
-            A part of the interface ran into an error. Your data is safe — try again or reload.
-          </CardDescription>
+          <CardDescription>{t("boundaryDesc")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <pre className="max-h-40 overflow-auto rounded-md bg-muted p-3 text-xs text-muted-foreground">
@@ -58,11 +58,11 @@ function DefaultFallback({ error, onReset }: { error: Error; onReset: () => void
           </pre>
           <div className="flex justify-end gap-2">
             <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
-              Reload page
+              {t("reloadPage")}
             </Button>
             <Button size="sm" onClick={onReset}>
               <RefreshCw className="h-4 w-4" />
-              <span className="ml-1">Try again</span>
+              <span className="ml-1">{t("tryAgain")}</span>
             </Button>
           </div>
         </CardContent>

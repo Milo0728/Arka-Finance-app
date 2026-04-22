@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,16 +17,23 @@ import { isFirebaseConfigured } from "@/lib/firebase";
 import { AuthFormShell } from "./auth-form-shell";
 import { ProviderButtons } from "./provider-buttons";
 
-const schema = z.object({
-  name: z.string().min(2, "Tell us your name"),
-  email: z.string().email("Enter a valid email"),
-  password: z.string().min(8, "Use at least 8 characters"),
-});
-
-type RegisterValues = z.infer<typeof schema>;
+type RegisterValues = { name: string; email: string; password: string };
 
 export function RegisterForm() {
   const router = useRouter();
+  const t = useTranslations("auth");
+  const tCommon = useTranslations("common");
+
+  const schema = React.useMemo(
+    () =>
+      z.object({
+        name: z.string().min(2, t("zod.name")),
+        email: z.string().email(t("zod.email")),
+        password: z.string().min(8, t("zod.passwordRegister")),
+      }),
+    [t]
+  );
+
   const {
     register,
     handleSubmit,
@@ -34,30 +42,28 @@ export function RegisterForm() {
 
   async function onSubmit(values: RegisterValues) {
     if (!isFirebaseConfigured) {
-      toast.info("Demo mode", {
-        description: "Add Firebase env vars to persist your account — exploring the demo for now.",
-      });
+      toast.info(tCommon("demoMode"), { description: t("toasts.demoRegister") });
       router.push("/dashboard");
       return;
     }
     try {
       await registerWithEmail(values.name, values.email, values.password);
-      toast.success("Welcome to Arka", { description: "Your account is ready." });
+      toast.success(t("toasts.createdToast"), { description: t("toasts.ready") });
       router.push("/dashboard");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Unable to create account");
+      toast.error(err instanceof Error ? err.message : t("toasts.signUpFailed"));
     }
   }
 
   return (
     <AuthFormShell
-      title="Create your Arka"
-      description="Start building wealth with Babylonian wisdom."
+      title={t("createArka")}
+      description={t("createArkaDesc")}
       footer={
         <>
-          Already have an account?{" "}
+          {t("haveAccount")}{" "}
           <Link href="/login" className="font-medium text-foreground hover:underline">
-            Sign in
+            {t("signInButton")}
           </Link>
         </>
       }
@@ -68,32 +74,32 @@ export function RegisterForm() {
           <span className="w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-card px-2 text-muted-foreground">or with email</span>
+          <span className="bg-card px-2 text-muted-foreground">{t("orEmail")}</span>
         </div>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="name">Full name</Label>
-          <Input id="name" placeholder="Arkad Babylonian" autoComplete="name" {...register("name")} />
+          <Label htmlFor="name">{t("fullName")}</Label>
+          <Input id="name" placeholder={t("namePlaceholder")} autoComplete="name" {...register("name")} />
           {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
         </div>
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{t("email")}</Label>
           <Input
             id="email"
             type="email"
-            placeholder="you@company.com"
+            placeholder={t("emailPlaceholder")}
             autoComplete="email"
             {...register("email")}
           />
           {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
         </div>
         <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">{t("password")}</Label>
           <Input
             id="password"
             type="password"
-            placeholder="At least 8 characters"
+            placeholder={t("registerPasswordPlaceholder")}
             autoComplete="new-password"
             {...register("password")}
           />
@@ -101,12 +107,18 @@ export function RegisterForm() {
         </div>
         <Button className="w-full" disabled={isSubmitting}>
           {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Create account
+          {t("createAccount")}
         </Button>
         <p className="text-xs text-muted-foreground">
-          By creating an account you agree to our friendly{" "}
-          <Link href="/" className="underline">Terms</Link> and{" "}
-          <Link href="/" className="underline">Privacy Policy</Link>.
+          {t("termsAgree")}{" "}
+          <Link href="/" className="underline">
+            {t("terms")}
+          </Link>{" "}
+          {t("and")}{" "}
+          <Link href="/" className="underline">
+            {t("privacy")}
+          </Link>
+          .
         </p>
       </form>
     </AuthFormShell>

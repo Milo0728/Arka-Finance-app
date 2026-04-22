@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ArrowDownRight, ArrowUpRight, PiggyBank, Wallet } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -9,6 +10,7 @@ const series = [28, 36, 32, 40, 44, 52, 58, 63, 68, 74, 79, 88];
 const max = Math.max(...series);
 
 export function HeroPreview() {
+  const t = useTranslations("landing.hero.preview");
   return (
     <div className="relative">
       <div className="absolute -inset-8 -z-10 rounded-[2rem] bg-gradient-to-br from-brand-500/20 via-brand-400/10 to-transparent blur-2xl" />
@@ -18,36 +20,36 @@ export function HeroPreview() {
             <span className="flex h-2 w-2 rounded-full bg-destructive/70" />
             <span className="flex h-2 w-2 rounded-full bg-warning/70" />
             <span className="flex h-2 w-2 rounded-full bg-success/70" />
-            <span className="ml-3 text-xs font-medium text-muted-foreground">Arka · Overview</span>
+            <span className="ml-3 text-xs font-medium text-muted-foreground">{t("overview")}</span>
           </div>
-          <Badge variant="success" className="text-[10px] uppercase tracking-wider">Live</Badge>
+          <Badge variant="success" className="text-[10px] uppercase tracking-wider">{t("live")}</Badge>
         </div>
 
         <div className="grid gap-6 p-6">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl border bg-background/60 p-4">
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Wallet className="h-3.5 w-3.5" /> Net balance
+                <Wallet className="h-3.5 w-3.5" /> {t("netBalance")}
               </div>
               <div className="mt-1 arka-number text-2xl font-semibold">$18,420.54</div>
               <div className="mt-1 inline-flex items-center gap-1 text-xs text-success">
-                <ArrowUpRight className="h-3 w-3" /> +8.4% this month
+                <ArrowUpRight className="h-3 w-3" /> {t("thisMonthUp")}
               </div>
             </div>
             <div className="rounded-xl border bg-background/60 p-4">
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <PiggyBank className="h-3.5 w-3.5" /> Saved in April
+                <PiggyBank className="h-3.5 w-3.5" /> {t("savedIn")}
               </div>
               <div className="mt-1 arka-number text-2xl font-semibold">$640.00</div>
               <div className="mt-1 inline-flex items-center gap-1 text-xs text-warning">
-                <ArrowDownRight className="h-3 w-3" /> 2% below Babylon target
+                <ArrowDownRight className="h-3 w-3" /> {t("belowTarget")}
               </div>
             </div>
           </div>
 
           <div className="rounded-xl border bg-background/60 p-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Cashflow (last 12 months)</span>
+              <span className="text-xs text-muted-foreground">{t("cashflow")}</span>
               <Badge variant="muted" className="text-[10px]">USD</Badge>
             </div>
             <div className="mt-3 flex h-28 items-end gap-1.5">
@@ -63,12 +65,12 @@ export function HeroPreview() {
 
           <div className="space-y-3 rounded-xl border bg-background/60 p-4">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">Food budget</span>
+              <span className="text-muted-foreground">{t("foodBudget")}</span>
               <span className="text-foreground">$412 / $600</span>
             </div>
             <Progress value={68} indicatorClassName="bg-gradient-to-r from-brand-500 to-brand-400" />
             <div className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">Japan trip goal</span>
+              <span className="text-muted-foreground">{t("japanGoal")}</span>
               <span className="text-foreground">25%</span>
             </div>
             <Progress value={25} indicatorClassName="bg-gradient-to-r from-amber-500 to-brand-400" />

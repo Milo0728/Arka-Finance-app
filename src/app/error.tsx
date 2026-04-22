@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { AlertTriangle, RefreshCw } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -13,6 +14,8 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useTranslations("errors");
+
   React.useEffect(() => {
     if (process.env.NODE_ENV === "development") {
       // eslint-disable-next-line no-console
@@ -26,24 +29,22 @@ export default function GlobalError({
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2 text-destructive">
             <AlertTriangle className="h-5 w-5" />
-            <CardTitle className="text-base">An unexpected error occurred</CardTitle>
+            <CardTitle className="text-base">{t("globalErrorTitle")}</CardTitle>
           </div>
-          <CardDescription>
-            Arka hit a snag while rendering this page. Your data is safe.
-          </CardDescription>
+          <CardDescription>{t("globalErrorDesc")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <pre className="max-h-40 overflow-auto rounded-md bg-muted p-3 text-xs text-muted-foreground">
             {error.message}
-            {error.digest ? `\n\ndigest: ${error.digest}` : ""}
+            {error.digest ? `\n\n${t("digest")}: ${error.digest}` : ""}
           </pre>
           <div className="flex justify-end gap-2">
             <Button variant="outline" size="sm" asChild>
-              <Link href="/dashboard">Go home</Link>
+              <Link href="/dashboard">{t("goHome")}</Link>
             </Button>
             <Button size="sm" onClick={reset}>
               <RefreshCw className="h-4 w-4" />
-              <span className="ml-1">Try again</span>
+              <span className="ml-1">{t("tryAgain")}</span>
             </Button>
           </div>
         </CardContent>

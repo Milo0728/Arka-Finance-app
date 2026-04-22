@@ -38,16 +38,73 @@
     "onTrack": "En camino",
     "warning": "Atención",
     "over": "Excedido",
-    "language": "Idioma"
+    "language": "Idioma",
+    "actions": "Acciones",
+    "dismiss": "Cerrar",
+    "demoMode": "Modo demo",
+    "beta": "Beta"
+  },
+  "months": {
+    "jan": "Ene",
+    "feb": "Feb",
+    "mar": "Mar",
+    "apr": "Abr",
+    "may": "May",
+    "jun": "Jun",
+    "jul": "Jul",
+    "aug": "Ago",
+    "sep": "Sep",
+    "oct": "Oct",
+    "nov": "Nov",
+    "dec": "Dic"
+  },
+  "categories": {
+    "expense": {
+      "food": "Comida",
+      "transport": "Transporte",
+      "housing": "Vivienda",
+      "utilities": "Servicios",
+      "entertainment": "Ocio",
+      "subscriptions": "Suscripciones",
+      "health": "Salud",
+      "education": "Educación",
+      "shopping": "Compras",
+      "savings": "Ahorro",
+      "debt": "Deudas",
+      "other": "Otros"
+    },
+    "income": {
+      "salary": "Salario",
+      "freelance": "Freelance",
+      "investment": "Inversión",
+      "business": "Negocio",
+      "gift": "Regalo",
+      "other": "Otros"
+    }
+  },
+  "billing": {
+    "weekly": "Semanal",
+    "monthly": "Mensual",
+    "quarterly": "Trimestral",
+    "yearly": "Anual"
+  },
+  "expenseType": {
+    "fixed": "Fijo",
+    "variable": "Variable"
   },
   "header": {
     "searchPlaceholder": "Busca gastos, categorías…",
     "preferences": "Preferencias",
-    "exportData": "Exportar datos"
+    "exportData": "Exportar datos",
+    "toggleNav": "Mostrar navegación",
+    "signOutFailed": "No se pudo cerrar sesión",
+    "defaultName": "Usuario de Arka",
+    "defaultEmail": "tu@arka.finance"
   },
   "dashboard": {
     "greeting": "Hola de nuevo, {name}.",
     "subheading": "Así va tu panorama financiero de {period}.",
+    "friend": "amigo",
     "reviewExpenses": "Revisar gastos",
     "netBalance": "Balance neto",
     "incomeThisMonth": "Ingresos del mes",
@@ -65,7 +122,9 @@
     "thisMonth": "Este mes",
     "savingsTrend": "Tendencia de ahorro",
     "savingsTrendSub": "Cuánto quedó en tu tesoro cada mes.",
-    "arkaInsights": "Análisis de Arka"
+    "arkaInsights": "Análisis de Arka",
+    "emptyChartTitle": "Aún no hay actividad",
+    "emptyChartDesc": "Añade un ingreso o gasto para ver tendencias."
   },
   "babylon": {
     "title": "Regla del 10% de Babilonia",
@@ -74,7 +133,9 @@
     "progress": "Progreso hacia el 10%",
     "actualRate": "Tasa real de ahorro este mes:",
     "keepGoing": " — sigue así.",
-    "wellDone": " — bien hecho."
+    "wellDone": " — bien hecho.",
+    "emptyTitle": "Registra tu primer ingreso",
+    "emptyDesc": "La regla del 10% se activa cuando sabemos cuánto ganas."
   },
   "health": {
     "title": "Puntuación de salud financiera",
@@ -92,7 +153,9 @@
     "poorDesc": "Algunas alertas — Arkad recomendaría reducir gastos primero.",
     "fairDesc": "Estás estable, pero aún no construyes riqueza a buen ritmo.",
     "goodDesc": "Hábitos saludables — unos ajustes y todo se acumulará bien.",
-    "excellentDesc": "Hábitos de clase mundial. Arkad brindaría contigo."
+    "excellentDesc": "Hábitos de clase mundial. Arkad brindaría contigo.",
+    "noDataTitle": "Aún no hay datos financieros.",
+    "noDataDesc": "Añade ingresos y gastos para calcular tu puntuación de salud financiera."
   },
   "income": {
     "title": "Ingresos",
@@ -105,7 +168,33 @@
     "emptyDesc": "Añade tu primer salario, cobro o dividendo para empezar a registrar.",
     "formNewTitle": "Registrar nuevo ingreso",
     "formEditTitle": "Editar ingreso",
-    "formDesc": "Dinero entrante — salario, trabajos extra o dividendos."
+    "formDesc": "Dinero entrante — salario, trabajos extra o dividendos.",
+    "table": {
+      "date": "Fecha",
+      "category": "Categoría",
+      "description": "Descripción",
+      "amount": "Importe"
+    },
+    "toasts": {
+      "added": "Ingreso añadido",
+      "updated": "Ingreso actualizado",
+      "removed": "Ingreso eliminado"
+    },
+    "form": {
+      "amount": "Importe",
+      "date": "Fecha",
+      "startDate": "Fecha de inicio",
+      "frequency": "Frecuencia",
+      "category": "Categoría",
+      "descriptionLabel": "Descripción",
+      "descriptionPlaceholder": "p. ej. Salario de abril, factura de diseño",
+      "addButton": "Añadir ingreso",
+      "positive": "Debe ser un número positivo",
+      "storedIn": "Guardado en {base} a ~{rate} {currency}/{base}."
+    },
+    "frequency": {
+      "once": "Una vez"
+    }
   },
   "expenses": {
     "title": "Gastos",
@@ -122,7 +211,38 @@
     "allTypes": "Todos los tipos",
     "fixed": "Fijo",
     "variable": "Variable",
-    "transactions": "Transacciones"
+    "transactions": "Transacciones",
+    "allTime": "Histórico",
+    "thisMonth": "Este mes",
+    "noDataYet": "Aún no hay datos",
+    "dash": "—",
+    "searchPlaceholder": "Busca descripciones",
+    "filterCategoryPlaceholder": "Categoría",
+    "filterTypePlaceholder": "Tipo",
+    "emptyPieTitle": "Aún no hay gastos.",
+    "table": {
+      "date": "Fecha",
+      "category": "Categoría",
+      "type": "Tipo",
+      "description": "Descripción",
+      "amount": "Importe"
+    },
+    "toasts": {
+      "added": "Gasto añadido",
+      "updated": "Gasto actualizado",
+      "removed": "Gasto eliminado"
+    },
+    "form": {
+      "amount": "Importe",
+      "date": "Fecha",
+      "category": "Categoría",
+      "type": "Tipo",
+      "descriptionLabel": "Descripción",
+      "descriptionPlaceholder": "p. ej. Mercadona, alquiler mensual",
+      "addButton": "Añadir gasto",
+      "positive": "Debe ser un número positivo",
+      "storedIn": "Guardado en {base} a ~{rate} {currency}/{base}."
+    }
   },
   "budgets": {
     "title": "Presupuestos",
@@ -135,7 +255,22 @@
     "formDesc": "Controla tus gastos — la segunda ley de Arkad.",
     "overBy": "Excedido por {amount}",
     "usedSlow": "{pct}% usado — baja el ritmo",
-    "usedTrack": "{pct}% usado — vas bien"
+    "usedTrack": "{pct}% usado — vas bien",
+    "of": "de {limit}",
+    "over": "Excedido",
+    "warning": "Atención",
+    "toasts": {
+      "created": "Presupuesto creado",
+      "updated": "Presupuesto actualizado",
+      "removed": "Presupuesto eliminado"
+    },
+    "form": {
+      "category": "Categoría",
+      "limit": "Límite",
+      "period": "Periodo",
+      "createButton": "Crear presupuesto",
+      "positive": "Debe ser un número positivo"
+    }
   },
   "goals": {
     "title": "Metas financieras",
@@ -149,7 +284,27 @@
     "formDesc": "Sueña en grande — luego divídelo en un plan mensual.",
     "monthsRemaining": "Meses restantes",
     "saveMonthly": "Ahorrar al mes",
-    "achieved": "Meta lograda"
+    "achieved": "Meta lograda",
+    "by": "para {date}",
+    "of": "de {target}",
+    "complete": "{pct}% completado",
+    "toasts": {
+      "created": "Meta creada",
+      "updated": "Meta actualizada",
+      "removed": "Meta eliminada"
+    },
+    "form": {
+      "titleLabel": "Título",
+      "titlePlaceholder": "Fondo de emergencia, viaje a Japón, entrada…",
+      "targetAmount": "Importe objetivo",
+      "savedSoFar": "Ahorrado hasta ahora",
+      "deadline": "Fecha límite",
+      "createButton": "Crear meta",
+      "giveName": "Ponle un nombre a tu meta",
+      "positive": "Debe ser positivo",
+      "nonNegative": "No puede ser negativo",
+      "pickDeadline": "Elige una fecha límite"
+    }
   },
   "subscriptions": {
     "title": "Suscripciones",
@@ -164,7 +319,28 @@
     "emptyDesc": "Registra streaming, SaaS y membresías para ver el costo real.",
     "formNewTitle": "Nueva suscripción",
     "formEditTitle": "Editar suscripción",
-    "formDesc": "Lleva el control de cada cargo recurrente."
+    "formDesc": "Lleva el control de cada cargo recurrente.",
+    "recurringFallback": "Recurrente",
+    "table": {
+      "service": "Servicio",
+      "billing": "Facturación",
+      "amount": "Importe",
+      "monthlyEquivalent": "≈ Mensual"
+    },
+    "toasts": {
+      "added": "Suscripción añadida",
+      "updated": "Suscripción actualizada",
+      "removed": "Suscripción eliminada"
+    },
+    "form": {
+      "nameLabel": "Nombre",
+      "namePlaceholder": "Netflix, Spotify, Gimnasio…",
+      "amountLabel": "Importe",
+      "billingLabel": "Ciclo de facturación",
+      "addButton": "Añadir suscripción",
+      "giveName": "Ponle un nombre",
+      "positive": "Debe ser positivo"
+    }
   },
   "insights": {
     "title": "Análisis financiero",
@@ -172,7 +348,29 @@
     "all": "Todos los análisis",
     "topCategoriesTitle": "Categorías con mayor gasto",
     "topCategoriesDesc": "Dónde fluyó más dinero a lo largo del tiempo.",
-    "nothingYet": "Nada que mostrar todavía."
+    "nothingYet": "Nada que mostrar todavía.",
+    "curatedDesc": "Generado automáticamente a partir de tu actividad.",
+    "defaultTitle": "Análisis",
+    "empty": {
+      "title": "Sigue registrando para desbloquear análisis",
+      "description": "Añade algunos ingresos y gastos y Arka mostrará patrones automáticamente."
+    },
+    "rules": {
+      "babylonOnTrackTitle": "Cumples la regla del 10%",
+      "babylonOnTrackDesc": "Este mes ahorraste {rate} de tus ingresos — Arkad lo aprobaría.",
+      "babylonBelowTitle": "Págate a ti primero",
+      "babylonBelowDesc": "Aparta {amount} este mes para alcanzar la regla del 10%.",
+      "categoryDominantTitle": "{category} domina tu gasto",
+      "categoryDominantDesc": "Gastaste el {share} de tus salidas en {category} este mes.",
+      "subsShareTitle": "Las suscripciones se acumulan",
+      "subsShareDesc": "Los servicios recurrentes representan el {share} de tu gasto mensual.",
+      "budgetOverTitle": "Presupuesto excedido en {category}",
+      "budgetOverDesc": "Has usado el {pct} de tu presupuesto de {category}.",
+      "budgetWarnTitle": "Te acercas al límite de {category}",
+      "budgetWarnDesc": "Has usado el {pct} de tu presupuesto de {category}.",
+      "goalDoneTitle": "Meta lograda: {title}",
+      "goalDoneDesc": "Plantea una nueva meta para mantener el impulso."
+    }
   },
   "reports": {
     "title": "Informes",
@@ -186,7 +384,21 @@
     "sixMonthIncome": "Ingresos 6 meses",
     "sixMonthSpend": "Gastos 6 meses",
     "sixMonthSavings": "Ahorros 6 meses",
-    "breakdown": "Desglose mes a mes"
+    "breakdown": "Desglose mes a mes",
+    "cashflow": "Flujo de caja",
+    "cashflowDesc": "Ingresos vs gastos en los últimos 6 meses.",
+    "monthlySavings": "Ahorro mensual",
+    "monthlySavingsDesc": "Cuánto quedó en el tesoro cada mes.",
+    "monthCol": "Mes",
+    "onTrack": "En camino",
+    "below10": "Bajo el 10%",
+    "emptyTitle": "Aún no hay actividad financiera.",
+    "emptyDesc": "Empieza añadiendo tu primer ingreso o gasto.",
+    "toasts": {
+      "expensesCsv": "Gastos exportados como CSV",
+      "incomeCsv": "Ingresos exportados como CSV",
+      "summaryCsv": "Resumen exportado como CSV"
+    }
   },
   "settings": {
     "title": "Ajustes",
@@ -212,7 +424,15 @@
     "languageDesc": "Elige el idioma de la interfaz.",
     "dangerZone": "Zona peligrosa",
     "dangerZoneDesc": "Puedes borrar los datos locales cuando quieras.",
-    "clearLocal": "Borrar datos locales"
+    "clearLocal": "Borrar datos locales",
+    "tip": "Consejo: al registrar una transacción se convierte a {base} al tipo actual y se guarda así — cambiar luego la moneda de visualización es consistente.",
+    "confirmClear": "¿Borrar todos los datos locales? No se eliminarán los datos de Firestore.",
+    "toasts": {
+      "signInRequired": "Inicia sesión para guardar tu perfil.",
+      "saved": "Preferencias guardadas",
+      "cleared": "Datos locales borrados",
+      "fxRefreshed": "Tasas actualizadas"
+    }
   },
   "cookies": {
     "title": "Cookies y privacidad",
@@ -239,6 +459,194 @@
     "rememberedQ": "¿La recordaste?",
     "backToSignIn": "Volver al inicio de sesión",
     "sendResetLink": "Enviar enlace",
-    "createAccount": "Crear cuenta"
+    "createAccount": "Crear cuenta",
+    "newToArka": "¿Nuevo en Arka?",
+    "footerText": "© {year} Arka Finance · Autenticación segura con Firebase",
+    "signInButton": "Iniciar sesión",
+    "emailPlaceholder": "tu@empresa.com",
+    "passwordPlaceholder": "••••••••",
+    "namePlaceholder": "Arkad Babilonio",
+    "registerPasswordPlaceholder": "Al menos 8 caracteres",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña",
+    "continueGoogle": "Continuar con Google",
+    "termsAgree": "Al crear una cuenta aceptas nuestros",
+    "terms": "Términos",
+    "and": "y",
+    "privacy": "Política de privacidad",
+    "toasts": {
+      "welcomeToast": "Bienvenido de nuevo",
+      "welcomeArka": "Bienvenido de vuelta a Arka",
+      "ready": "Tu cuenta está lista.",
+      "createdToast": "Bienvenido a Arka",
+      "resetSent": "Revisa tu bandeja de entrada",
+      "resetSentDesc": "Te enviamos un enlace para restablecer.",
+      "signInFailed": "No se pudo iniciar sesión",
+      "signUpFailed": "No se pudo crear la cuenta",
+      "resetFailed": "No se pudo enviar el correo",
+      "demoLogin": "Firebase no está configurado — explorando con datos de ejemplo.",
+      "demoRegister": "Configura Firebase para conservar tu cuenta — de momento explorando la demo.",
+      "demoReset": "Configura Firebase para habilitar los correos de restablecimiento.",
+      "demoGoogle": "Firebase aún no está configurado — te llevamos al panel de demo."
+    },
+    "zod": {
+      "email": "Introduce un correo válido",
+      "passwordLogin": "La contraseña debe tener al menos 6 caracteres",
+      "passwordRegister": "Usa al menos 8 caracteres",
+      "name": "Cuéntanos tu nombre"
+    }
+  },
+  "quickAdd": {
+    "title": "Añadir rápido",
+    "description": "Registra dinero entrante o saliente en segundos.",
+    "expenseTab": "Gasto",
+    "incomeTab": "Ingreso",
+    "amount": "Importe",
+    "date": "Fecha",
+    "category": "Categoría",
+    "type": "Tipo",
+    "description": "Descripción",
+    "expensePlaceholder": "Compra del super",
+    "incomePlaceholder": "Salario de abril",
+    "saveExpense": "Guardar gasto",
+    "saveIncome": "Guardar ingreso",
+    "positive": "Debe ser un número positivo",
+    "toasts": {
+      "expenseAdded": "Gasto añadido",
+      "incomeAdded": "Ingreso añadido"
+    }
+  },
+  "errors": {
+    "boundaryTitle": "Algo salió mal",
+    "boundaryDesc": "Una parte de la interfaz tuvo un error. Tus datos están a salvo — inténtalo de nuevo o recarga.",
+    "appErrorTitle": "Algo se rompió en esta página",
+    "appErrorDesc": "El resto de tu espacio sigue funcionando. Reintenta esta vista o recarga.",
+    "globalErrorTitle": "Ocurrió un error inesperado",
+    "globalErrorDesc": "Arka tuvo un problema al renderizar esta página. Tus datos están a salvo.",
+    "reloadPage": "Recargar página",
+    "reload": "Recargar",
+    "tryAgain": "Reintentar",
+    "goHome": "Ir al inicio",
+    "digest": "firma"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "desc": "La página que buscas no existe o ha cambiado de sitio. Vamos a ponerte de nuevo en ruta.",
+    "landing": "Inicio",
+    "dashboard": "Panel"
+  },
+  "landing": {
+    "nav": {
+      "features": "Funciones",
+      "philosophy": "Filosofía",
+      "product": "Producto",
+      "pricing": "Precios"
+    },
+    "hero": {
+      "inspiredBy": "Inspirado en",
+      "inspiredBySource": "El hombre más rico de Babilonia",
+      "headlineLine1": "Dinero que entiendes.",
+      "headlineLine2": "Riqueza que crece.",
+      "subtitle": "Arka Finance es un panel moderno y tranquilo que transforma tus gastos diarios en ahorro duradero. Planifica presupuestos, fija metas y sigue la regla del 10% de Arkad — todo en un solo lugar.",
+      "openArka": "Abre tu Arka",
+      "liveDashboard": "Ver panel en vivo",
+      "securityBadge": "Seguridad Firebase de nivel bancario",
+      "insightsBadge": "Análisis generados en tu dispositivo",
+      "preview": {
+        "overview": "Arka · Resumen",
+        "live": "En vivo",
+        "netBalance": "Balance neto",
+        "thisMonthUp": "+8.4% este mes",
+        "savedIn": "Ahorrado en abril",
+        "belowTarget": "2% bajo la meta de Babilonia",
+        "cashflow": "Flujo de caja (últimos 12 meses)",
+        "foodBudget": "Presupuesto de comida",
+        "japanGoal": "Meta viaje a Japón"
+      }
+    },
+    "features": {
+      "eyebrow": "Todas las herramientas",
+      "headline": "Gestiona tu dinero sin ansiedad",
+      "subtitle": "Arka combina el control a nivel de hoja de cálculo de YNAB con la simplicidad de una fintech moderna — y añade una filosofía con 8.000 años de historia.",
+      "items": {
+        "income": { "title": "Ingresos y gastos", "description": "Registra cada entrada y salida con categorías, tipos fijos o variables y notas detalladas." },
+        "dashboard": { "title": "Panel visual", "description": "Gráficos limpios y tranquilos: flujo de caja, gasto por categoría y ahorro — todo de un vistazo." },
+        "goals": { "title": "Metas y presupuestos", "description": "Planifica presupuestos mensuales por categoría y fija metas con objetivos mensuales automáticos." },
+        "babylon": { "title": "Regla del 10% de Babilonia", "description": "El principio de Arkad integrado: Arka te dice cuánto ahorrar este mes, cada mes." },
+        "insights": { "title": "Análisis automáticos", "description": "Alertas personalizadas: categorías excedidas, suscripciones crecientes, oportunidades de ahorro." },
+        "subscriptions": { "title": "Radar de suscripciones", "description": "Detecta cargos recurrentes automáticamente y muestra el total que pagas cada mes y año." },
+        "health": { "title": "Puntuación de salud financiera", "description": "Una única puntuación de 0 a 100 que refleja tu tasa de ahorro, hábitos y progreso de metas." },
+        "secure": { "title": "Seguro por defecto", "description": "Firebase Auth con Google, GitHub y email — reglas estrictas de Firestore aíslan tus datos." }
+      }
+    },
+    "philosophy": {
+      "eyebrow": "La filosofía",
+      "headline": "Las siete reglas de Babilonia, dentro del producto.",
+      "bodyPrefix": "En ",
+      "bodyBook": "El hombre más rico de Babilonia",
+      "bodySuffix": ", Arkad comparte siete reglas sencillas para una vida próspera. Arka Finance las convierte en recordatorios diarios — para que la filosofía se vuelva hábito.",
+      "quote": "Una parte de todo lo que ganas es tuya para conservar. No menos de la décima parte, por poco que ganes.",
+      "quoteAuthor": "— Arkad, El hombre más rico de Babilonia",
+      "laws": {
+        "l1": { "title": "Págate a ti primero", "detail": "Ahorra al menos la décima parte de cada ingreso antes de cualquier gasto." },
+        "l2": { "title": "Controla tus gastos", "detail": "Vive según un presupuesto ajustado a la vida que quieres." },
+        "l3": { "title": "Haz que tu oro se multiplique", "detail": "Pon tus ahorros a trabajar con inversiones deliberadas." },
+        "l4": { "title": "Protege tu tesoro", "detail": "Resguarda tu dinero de pérdidas y evita esquemas dudosos." },
+        "l5": { "title": "Ten tu propia casa", "detail": "Destina una parte a activos que construyan patrimonio." },
+        "l6": { "title": "Planifica tu futuro", "detail": "Prepárate para la vejez y la protección de los tuyos." },
+        "l7": { "title": "Aumenta tu capacidad de ingreso", "detail": "Sigue aprendiendo — la habilidad se compone más rápido que el capital." }
+      }
+    },
+    "screenshots": {
+      "eyebrow": "Recorrido del producto",
+      "headline": "Un panel, total claridad.",
+      "subtitle": "Cada pantalla de Arka está diseñada para darte una respuesta en menos de 30 segundos.",
+      "overviewBadge": "Resumen",
+      "overviewTitle": "Sabe adónde va el dinero",
+      "overviewBody": "Tarjetas clave para balance, ingresos, gastos y tasa de ahorro — junto a un gráfico de gasto por categoría.",
+      "labels": { "balance": "Balance", "income": "Ingresos", "expenses": "Gastos", "savings": "Ahorros" },
+      "budgetsBadge": "Presupuestos",
+      "budgetsTitle": "Gasta dentro de los límites",
+      "budgetsBody": "Presupuestos por categoría con barras de progreso y alertas cuando te acercas al límite.",
+      "categories": { "food": "Comida", "transport": "Transporte", "entertainment": "Ocio", "subscriptions": "Suscripciones" },
+      "healthBadge": "Salud",
+      "healthTitle": "Puntuación de salud financiera",
+      "healthBody": "Una sola puntuación de 0 a 100 que combina tasa de ahorro, disciplina de gasto, cumplimiento de presupuestos y metas.",
+      "good": "Buena",
+      "savingsRateShort": "Tasa de ahorro 14%",
+      "mom": "+4 pts MoM"
+    },
+    "pricing": {
+      "eyebrow": "Precios",
+      "headline": "Empieza gratis. Mejora cuando se pague solo.",
+      "subtitle": "Arka se amortiza la primera vez que evita un gasto excesivo. Garantizado.",
+      "mostPopular": "Más popular",
+      "priceFree": "Gratis",
+      "perMonth": "/ mes",
+      "comingSoon": "Próximamente",
+      "freeDuringBeta": "Gratis durante la beta",
+      "notAvailableYet": "Aún no disponible",
+      "tiers": {
+        "starter": { "name": "Starter", "description": "Todo lo que necesitas para tomar el control.", "f1": "Cuentas ilimitadas", "f2": "Hasta 6 meses de historial", "f3": "Todos los paneles y análisis", "f4": "Modo oscuro", "cta": "Empieza gratis" },
+        "arkad": { "name": "Arkad", "description": "Para quienes construyen patrimonio en serio.", "f1": "Historial ilimitado", "f2": "Radar de suscripciones", "f3": "Exportar CSV", "f4": "Recomendaciones automáticas", "f5": "Soporte prioritario", "cta": "Pasar a Arkad" },
+        "household": { "name": "Hogar", "description": "Gestiona las finanzas con tu pareja o familia.", "f1": "Todo lo de Arkad", "f2": "Hasta 5 usuarios", "f3": "Presupuestos y metas compartidas", "f4": "Puntuación por miembro", "cta": "Contáctanos" }
+      }
+    },
+    "cta": {
+      "eyebrow": "Empieza hoy",
+      "headlineLine1": "Una décima parte es tuya para conservar.",
+      "headlineLine2": "Empieza a ahorrarla a propósito.",
+      "body": "Crea tu cuenta gratuita de Arka en menos de un minuto. Sin tarjeta de crédito.",
+      "createAccount": "Crear cuenta gratis",
+      "iHaveOne": "Ya tengo una"
+    },
+    "footer": {
+      "description": "Arka Finance — un panel moderno y tranquilo para el dinero que ganas, gastas y haces crecer. Inspirado en Arkad.",
+      "signIn": "Iniciar sesión",
+      "createAccount": "Crear cuenta",
+      "liveDemo": "Demo en vivo",
+      "contact": "Contacto",
+      "copyright": "© {year} Arka Finance. Hecho con cariño. No somos asesores financieros."
+    }
   }
 }

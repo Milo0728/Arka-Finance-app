@@ -6,6 +6,8 @@ export type BudgetPeriod = "weekly" | "monthly" | "yearly";
 
 export type BillingCycle = "monthly" | "quarterly" | "yearly" | "weekly";
 
+export type IncomeFrequency = "once" | "weekly" | "monthly" | "quarterly" | "yearly";
+
 export type ISODate = string;
 
 export interface UserProfile {
@@ -17,14 +19,23 @@ export interface UserProfile {
   photoURL?: string;
   createdAt: ISODate;
   onboardingCompleted?: boolean;
+  theme?: "light" | "dark" | "system";
+  language?: "en" | "es" | "fr";
 }
 
 export interface Income {
   id: string;
   userId: string;
+  /** Per-occurrence amount in USD (see `frequency`). */
   amount: number;
   category: IncomeCategory;
+  /**
+   * One-off incomes: the day the money was received.
+   * Recurring incomes: the first occurrence (start date); cadence is driven by `frequency`.
+   */
   date: ISODate;
+  /** Undefined is treated as `"once"` for backward compatibility with legacy records. */
+  frequency?: IncomeFrequency;
   description?: string;
   createdAt?: ISODate;
 }
@@ -89,8 +100,15 @@ export type IncomeCategory = "salary" | "freelance" | "investment" | "business" 
 export interface FinancialInsight {
   id: string;
   level: "positive" | "warning" | "critical" | "info";
-  title: string;
-  description: string;
+  /** Key under `insights.rules.*` used for the title. */
+  titleKey: string;
+  /** Key under `insights.rules.*` used for the description. */
+  descriptionKey: string;
+  /** ICU variables substituted into the title key. */
+  titleValues?: Record<string, string>;
+  /** ICU variables substituted into the description key. */
+  descriptionValues?: Record<string, string>;
+  /** Optional right-aligned formatted value (already localised). */
   value?: string;
 }
 

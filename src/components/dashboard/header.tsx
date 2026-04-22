@@ -61,8 +61,8 @@ export function DashboardHeader({ onQuickAdd }: { onQuickAdd?: () => void }) {
   const tHeader = useTranslations("header");
   const tCommon = useTranslations("common");
 
-  const displayName = user?.displayName || profile?.name || "Arka demo";
-  const displayEmail = user?.email || profile?.email || "demo@arka.finance";
+  const displayName = user?.displayName || profile?.name || tHeader("defaultName");
+  const displayEmail = user?.email || profile?.email || tHeader("defaultEmail");
   const initial = displayName.split(" ").map((s) => s[0]).join("").slice(0, 2).toUpperCase();
 
   async function handleLogout() {
@@ -72,7 +72,7 @@ export function DashboardHeader({ onQuickAdd }: { onQuickAdd?: () => void }) {
       toast.success(tCommon("signOut"));
       router.push("/");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Sign out failed");
+      toast.error(err instanceof Error ? err.message : tHeader("signOutFailed"));
     }
   }
 
@@ -83,7 +83,7 @@ export function DashboardHeader({ onQuickAdd }: { onQuickAdd?: () => void }) {
         size="icon"
         className="lg:hidden"
         onClick={() => setMobileOpen((v) => !v)}
-        aria-label="Toggle navigation"
+        aria-label={tHeader("toggleNav")}
       >
         <Menu className="h-5 w-5" />
       </Button>

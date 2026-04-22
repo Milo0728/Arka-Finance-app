@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { Heart } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import type { HealthScoreBreakdown } from "@/types";
@@ -14,8 +15,35 @@ const TONE: Record<HealthScoreBreakdown["tier"], string> = {
   excellent: "text-success",
 };
 
-export function HealthScore({ score }: { score: HealthScoreBreakdown }) {
+interface HealthScoreProps {
+  score: HealthScoreBreakdown;
+  /** When false, render an empty/neutral state instead of the computed score. */
+  hasData?: boolean;
+}
+
+export function HealthScore({ score, hasData = true }: HealthScoreProps) {
   const t = useTranslations("health");
+
+  if (!hasData) {
+    return (
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">{t("title")}</CardTitle>
+          <CardDescription>{t("subtitle")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center gap-3 rounded-md border border-dashed bg-muted/20 py-10 text-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <Heart className="h-5 w-5" />
+            </div>
+            <p className="text-sm font-medium">{t("noDataTitle")}</p>
+            <p className="max-w-[280px] text-xs text-muted-foreground">{t("noDataDesc")}</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const circumference = 2 * Math.PI * 42;
   const offset = circumference - (score.score / 100) * circumference;
   const tone = TONE[score.tier];
@@ -78,14 +106,15 @@ function MetricRow({
   unit: string;
   inverse?: boolean;
 }) {
-  const clamped = Math.max(0, Math.min(max, value));
+  const safe = Number.isFinite(value) ? value : 0;
+  const clamped = Math.max(0, Math.min(max, safe));
   const pct = (clamped / max) * 100;
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between text-xs">
         <span className="text-muted-foreground">{label}</span>
         <span className="arka-number text-foreground">
-          {value.toFixed(1)}
+          {safe.toFixed(1)}
           {unit}
         </span>
       </div>

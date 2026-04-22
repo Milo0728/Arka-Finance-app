@@ -18,9 +18,11 @@ import { monthlySavingNeeded, monthsUntil } from "@/utils/finance";
 import type { Goal } from "@/types";
 
 export default function GoalsPage() {
-  const { goals, removeGoal } = useFinanceStore();
+  const goals = useFinanceStore((s) => s.goals);
+  const removeGoal = useFinanceStore((s) => s.removeGoal);
   const money = useMoney();
   const t = useTranslations("goals");
+  const tCommon = useTranslations("common");
   const [open, setOpen] = React.useState(false);
   const [editing, setEditing] = React.useState<Goal | null>(null);
 
@@ -36,7 +38,7 @@ export default function GoalsPage() {
 
   async function onDelete(goal: Goal) {
     await removeGoal(goal.id);
-    toast.success("Goal removed");
+    toast.success(t("toasts.removed"));
   }
 
   return (
@@ -71,6 +73,7 @@ export default function GoalsPage() {
             const monthsLeft = monthsUntil(g.deadline);
             const perMonth = monthlySavingNeeded(g);
             const achieved = progress >= 100;
+            const deadlineFmt = format(parseISO(g.deadline), "MMM d, yyyy");
             return (
               <Card key={g.id} className="group overflow-hidden">
                 <CardHeader className="flex flex-row items-start justify-between pb-3">
@@ -78,18 +81,18 @@ export default function GoalsPage() {
                     <CardTitle className="text-base">{g.title}</CardTitle>
                     <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
                       <CalendarClock className="h-3.5 w-3.5" />
-                      <span>by {format(parseISO(g.deadline), "MMM d, yyyy")}</span>
+                      <span>{t("by", { date: deadlineFmt })}</span>
                     </div>
                   </div>
                   <div className="flex gap-1 opacity-0 transition group-hover:opacity-100">
-                    <Button size="icon" variant="ghost" onClick={() => openEdit(g)} aria-label="Edit">
+                    <Button size="icon" variant="ghost" onClick={() => openEdit(g)} aria-label={tCommon("edit")}>
                       <Pencil className="h-4 w-4" />
                     </Button>
                     <Button
                       size="icon"
                       variant="ghost"
                       onClick={() => onDelete(g)}
-                      aria-label="Delete"
+                      aria-label={tCommon("delete")}
                       className="text-destructive hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -103,27 +106,29 @@ export default function GoalsPage() {
                         {money.format(g.currentAmount)}
                       </span>
                       <span className="text-sm text-muted-foreground">
-                        of {money.format(g.targetAmount)}
+                        {t("of", { target: money.format(g.targetAmount) })}
                       </span>
                     </div>
                     <Progress
                       value={progress}
                       indicatorClassName={achieved ? "bg-success" : "bg-gradient-to-r from-brand-600 to-brand-400"}
                     />
-                    <div className="text-xs text-muted-foreground">{progress.toFixed(1)}% complete</div>
+                    <div className="text-xs text-muted-foreground">
+                      {t("complete", { pct: progress.toFixed(1) })}
+                    </div>
                   </div>
 
                   <div className="rounded-lg border bg-muted/30 p-3 text-xs">
                     {achieved ? (
-                      <Badge variant="success">Goal achieved</Badge>
+                      <Badge variant="success">{t("achieved")}</Badge>
                     ) : (
                       <div className="space-y-1">
                         <div className="flex justify-between text-muted-foreground">
-                          <span>Months remaining</span>
+                          <span>{t("monthsRemaining")}</span>
                           <span className="arka-number font-medium text-foreground">{monthsLeft}</span>
                         </div>
                         <div className="flex justify-between text-muted-foreground">
-                          <span>Save monthly</span>
+                          <span>{t("saveMonthly")}</span>
                           <span className="arka-number font-medium text-foreground">
                             {money.format(perMonth)}
                           </span>

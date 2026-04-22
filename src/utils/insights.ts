@@ -10,20 +10,25 @@ import {
 } from "./finance";
 import { formatPercent } from "@/lib/currency";
 
-/**
- * Generates human-friendly insights from the user's data.
- * `format` receives amounts in USD (base) and is expected to produce a display string
- * already converted to the user's display currency.
- */
-export function generateInsights(args: {
+export interface GenerateInsightsArgs {
   incomes: Income[];
   expenses: Expense[];
   budgets: Budget[];
   goals: Goal[];
   subscriptions: Subscription[];
+  /** Convert a stored USD amount into a localised display string. */
   format: (usdAmount: number) => string;
-}): FinancialInsight[] {
-  const { incomes, expenses, budgets, subscriptions, goals, format } = args;
+  /** Resolve a category key into a localised label (e.g. "food" → "Comida"). */
+  categoryLabel: (category: string) => string;
+}
+
+/**
+ * Generates machine-readable insights from the user's data. Each insight carries
+ * translation keys + ICU variables rather than pre-formatted strings — the UI layer
+ * resolves them with `useTranslations("insights.rules")`.
+ */
+export function generateInsights(args: GenerateInsightsArgs): FinancialInsight[] {
+  const { incomes, expenses, budgets, subscriptions, goals, format, categoryLabel } = args;
   const insights: FinancialInsight[] = [];
   const income = monthlyIncome(incomes);
   const expense = monthlyExpenses(expenses);
@@ -36,33 +41,37 @@ export function generateInsights(args: {
       insights.push({
         id: "babylon-on-track",
         level: "positive",
-        title: "You're honoring the 10% rule",
-        description: `This month you saved ${formatPercent(rate, 1)} of your income — Arkad would approve.`,
-        value: format(income - expense),
+        titleKey: "babylonOnTrackTitle",
+        descriptionKey: "babylonOnTrackDesc",
+        descriptionValues: { rate: formatPercent(rate, 1) },
+        value: format(Math.max(0, income - expense)),
       });
     } else {
       insights.push({
         id: "babylon-below",
         level: "warning",
-        title: "Pay yourself first",
-        description: `Set aside ${format(target)} this month to reach the 10% savings rule.`,
+        titleKey: "babylonBelowTitle",
+        descriptionKey: "babylonBelowDesc",
+        descriptionValues: { amount: format(target) },
         value: formatPercent(rate, 1),
       });
     }
   }
 
-  const total = expense;
-  if (total > 0) {
+  if (expense > 0) {
     const sorted = Object.entries(byCategory).sort((a, b) => b[1] - a[1]);
     const [topCat, topAmount] = sorted[0] ?? [null, 0];
     if (topCat) {
-      const share = (topAmount / total) * 100;
+      const share = (topAmount / expense) * 100;
       if (share >= 30) {
+        const label = categoryLabel(topCat);
         insights.push({
           id: `category-dominant-${topCat}`,
           level: share >= 45 ? "critical" : "warning",
-          title: `${capitalize(topCat)} dominates your spending`,
-          description: `You spent ${formatPercent(share, 0)} of your outflow on ${topCat} this month.`,
+          titleKey: "categoryDominantTitle",
+          titleValues: { category: label },
+          descriptionKey: "categoryDominantDesc",
+          descriptionValues: { share: formatPercent(share, 0), category: label },
           value: format(topAmount),
         });
       }
@@ -76,8 +85,9 @@ export function generateInsights(args: {
       insights.push({
         id: "subs-share",
         level: share >= 20 ? "warning" : "info",
-        title: "Subscriptions are stacking up",
-        description: `Recurring services represent ${formatPercent(share, 0)} of your monthly spending.`,
+        titleKey: "subsShareTitle",
+        descriptionKey: "subsShareDesc",
+        descriptionValues: { share: formatPercent(share, 0) },
         value: format(subsTotal),
       });
     }
@@ -85,20 +95,25 @@ export function generateInsights(args: {
 
   for (const b of budgets) {
     const u = budgetUsage(expenses, b);
+    const label = categoryLabel(b.category);
     if (u.pct >= 100) {
       insights.push({
         id: `budget-over-${b.id}`,
         level: "critical",
-        title: `Over budget on ${b.category}`,
-        description: `You used ${formatPercent(u.pct, 0)} of your ${b.category} budget.`,
+        titleKey: "budgetOverTitle",
+        titleValues: { category: label },
+        descriptionKey: "budgetOverDesc",
+        descriptionValues: { pct: formatPercent(u.pct, 0), category: label },
         value: format(u.used),
       });
     } else if (u.pct >= 80) {
       insights.push({
         id: `budget-warn-${b.id}`,
         level: "warning",
-        title: `Approaching ${b.category} limit`,
-        description: `You've used ${formatPercent(u.pct, 0)} of your ${b.category} budget.`,
+        titleKey: "budgetWarnTitle",
+        titleValues: { category: label },
+        descriptionKey: "budgetWarnDesc",
+        descriptionValues: { pct: formatPercent(u.pct, 0), category: label },
         value: format(u.used),
       });
     }
@@ -110,25 +125,13 @@ export function generateInsights(args: {
       insights.push({
         id: `goal-done-${g.id}`,
         level: "positive",
-        title: `Goal achieved: ${g.title}`,
-        description: "Consider setting a new target to keep momentum.",
+        titleKey: "goalDoneTitle",
+        titleValues: { title: g.title },
+        descriptionKey: "goalDoneDesc",
         value: format(g.targetAmount),
       });
     }
   }
 
-  if (insights.length === 0) {
-    insights.push({
-      id: "empty",
-      level: "info",
-      title: "Keep logging to unlock insights",
-      description: "Add a few incomes and expenses and Arka will surface patterns automatically.",
-    });
-  }
-
   return insights;
-}
-
-function capitalize(value: string) {
-  return value.charAt(0).toUpperCase() + value.slice(1);
 }

@@ -7,9 +7,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { CookieConsent } from "@/components/layout/cookie-consent";
 import { useAuthListener } from "@/hooks/useAuth";
+import { usePreferencesSync } from "@/hooks/usePreferences";
 
 function AuthGate({ children }: { children: React.ReactNode }) {
   useAuthListener();
+  usePreferencesSync();
   return <>{children}</>;
 }
 

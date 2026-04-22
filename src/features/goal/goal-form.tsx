@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,14 +23,12 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useMoney } from "@/hooks/useMoney";
 import type { Goal } from "@/types";
 
-const schema = z.object({
-  title: z.string().min(2, "Give your goal a name"),
-  targetAmount: z.coerce.number().positive("Must be positive"),
-  currentAmount: z.coerce.number().min(0, "Cannot be negative"),
-  deadline: z.string().min(1, "Pick a deadline"),
-});
-
-type Values = z.infer<typeof schema>;
+type Values = {
+  title: string;
+  targetAmount: number;
+  currentAmount: number;
+  deadline: string;
+};
 
 interface Props {
   open: boolean;
@@ -44,16 +43,31 @@ export function GoalForm({ open, onOpenChange, editing }: Props) {
   const user = useAuthStore((s) => s.user);
   const userId = user?.uid ?? profile?.id ?? "demo-user";
   const money = useMoney();
+  const t = useTranslations("goals");
+  const tForm = useTranslations("goals.form");
+  const tCommon = useTranslations("common");
 
+  const schema = React.useMemo(
+    () =>
+      z.object({
+        title: z.string().min(2, tForm("giveName")),
+        targetAmount: z.coerce.number().positive(tForm("positive")),
+        currentAmount: z.coerce.number().min(0, tForm("nonNegative")),
+        deadline: z.string().min(1, tForm("pickDeadline")),
+      }),
+    [tForm]
+  );
+
+  const moneyRate = money.rate;
   const defaults = React.useMemo<Values>(
     () => ({
       title: editing?.title ?? "",
-      targetAmount: editing ? Number(money.fromUSD(editing.targetAmount).toFixed(2)) : 0,
-      currentAmount: editing ? Number(money.fromUSD(editing.currentAmount).toFixed(2)) : 0,
+      targetAmount: editing ? Number((editing.targetAmount * moneyRate).toFixed(2)) : 0,
+      currentAmount: editing ? Number((editing.currentAmount * moneyRate).toFixed(2)) : 0,
       deadline:
         editing?.deadline ?? new Date(new Date().setMonth(new Date().getMonth() + 6)).toISOString().slice(0, 10),
     }),
-    [editing, money]
+    [editing, moneyRate]
   );
 
   const {
@@ -75,10 +89,10 @@ export function GoalForm({ open, onOpenChange, editing }: Props) {
     };
     if (editing) {
       await updateGoal(editing.id, payload);
-      toast.success("Goal updated");
+      toast.success(t("toasts.updated"));
     } else {
       await addGoal({ ...payload, userId });
-      toast.success("Goal created");
+      toast.success(t("toasts.created"));
     }
     onOpenChange(false);
   }
@@ -87,37 +101,47 @@ export function GoalForm({ open, onOpenChange, editing }: Props) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{editing ? "Edit goal" : "New goal"}</DialogTitle>
-          <DialogDescription>Dream big — then break it down into a monthly plan.</DialogDescription>
+          <DialogTitle>{editing ? t("formEditTitle") : t("formNewTitle")}</DialogTitle>
+          <DialogDescription>{t("formDesc")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label>Title</Label>
-            <Input placeholder="Emergency fund, Japan trip, Down payment…" {...register("title")} />
+            <Label>{tForm("titleLabel")}</Label>
+            <Input placeholder={tForm("titlePlaceholder")} {...register("title")} />
             {errors.title && <p className="text-xs text-destructive">{errors.title.message}</p>}
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label>Target amount ({money.currency})</Label>
+              <Label>
+                {tForm("targetAmount")} ({money.currency})
+              </Label>
               <Input type="number" step="0.01" placeholder="0.00" {...register("targetAmount")} />
-              {errors.targetAmount && <p className="text-xs text-destructive">{errors.targetAmount.message}</p>}
+              {errors.targetAmount && (
+                <p className="text-xs text-destructive">{errors.targetAmount.message}</p>
+              )}
             </div>
             <div className="space-y-2">
-              <Label>Saved so far ({money.currency})</Label>
+              <Label>
+                {tForm("savedSoFar")} ({money.currency})
+              </Label>
               <Input type="number" step="0.01" placeholder="0.00" {...register("currentAmount")} />
-              {errors.currentAmount && <p className="text-xs text-destructive">{errors.currentAmount.message}</p>}
+              {errors.currentAmount && (
+                <p className="text-xs text-destructive">{errors.currentAmount.message}</p>
+              )}
             </div>
           </div>
           <div className="space-y-2">
-            <Label>Deadline</Label>
+            <Label>{tForm("deadline")}</Label>
             <Input type="date" {...register("deadline")} />
             {errors.deadline && <p className="text-xs text-destructive">{errors.deadline.message}</p>}
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              {tCommon("cancel")}
+            </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {editing ? "Save changes" : "Create goal"}
+              {editing ? tCommon("saveChanges") : tForm("createButton")}
             </Button>
           </DialogFooter>
         </form>

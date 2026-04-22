@@ -6,6 +6,8 @@ import { DashboardHeader } from "@/components/dashboard/header";
 import { QuickAddDialog } from "@/components/dashboard/quick-add-dialog";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { useFinanceStore } from "@/store/useFinanceStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { isFirebaseConfigured } from "@/lib/firebase";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [quickAdd, setQuickAdd] = React.useState(false);
@@ -13,14 +15,29 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const hydrateSeed = useFinanceStore((s) => s.hydrateSeed);
   const hydrated = useFinanceStore((s) => s.hydrated);
   const loadRates = useFinanceStore((s) => s.loadRates);
+  const user = useAuthStore((s) => s.user);
+  const authLoading = useAuthStore((s) => s.loading);
 
   React.useEffect(() => {
-    useFinanceStore.persist.rehydrate()?.finally(() => setRehydrated(true));
+    const unsub = useFinanceStore.persist.onFinishHydration(() => setRehydrated(true));
+    if (useFinanceStore.persist.hasHydrated()) {
+      setRehydrated(true);
+    } else {
+      Promise.resolve(useFinanceStore.persist.rehydrate()).catch(() => {
+        setRehydrated(true);
+      });
+    }
+    return unsub;
   }, []);
 
   React.useEffect(() => {
-    if (rehydrated && !hydrated) hydrateSeed();
-  }, [rehydrated, hydrated, hydrateSeed]);
+    if (!rehydrated || hydrated) return;
+    // When Firebase is configured, the auth listener's bootstrap() fills the
+    // store from Firestore. Only fall back to the local seed in demo mode, or
+    // once auth has confirmed there is no user.
+    if (isFirebaseConfigured && (authLoading || user)) return;
+    hydrateSeed();
+  }, [rehydrated, hydrated, hydrateSeed, user, authLoading]);
 
   React.useEffect(() => {
     if (rehydrated) loadRates();
@@ -28,10 +45,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        setQuickAdd(true);
+      if (!((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k")) return;
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
+        return;
       }
+      e.preventDefault();
+      setQuickAdd(true);
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);

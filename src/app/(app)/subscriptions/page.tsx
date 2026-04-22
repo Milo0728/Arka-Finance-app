@@ -14,6 +14,7 @@ import { SubscriptionForm } from "@/features/subscription/subscription-form";
 import { useTranslations } from "next-intl";
 import { useFinanceStore } from "@/store/useFinanceStore";
 import { useMoney } from "@/hooks/useMoney";
+import { useLabels } from "@/hooks/useLabels";
 import {
   detectPotentialSubscriptions,
   monthlyEquivalent,
@@ -22,10 +23,15 @@ import {
 import type { Subscription } from "@/types";
 
 export default function SubscriptionsPage() {
-  const { subscriptions, expenses, removeSubscription, addSubscription, profile } =
-    useFinanceStore();
+  const subscriptions = useFinanceStore((s) => s.subscriptions);
+  const expenses = useFinanceStore((s) => s.expenses);
+  const removeSubscription = useFinanceStore((s) => s.removeSubscription);
+  const addSubscription = useFinanceStore((s) => s.addSubscription);
+  const profile = useFinanceStore((s) => s.profile);
   const money = useMoney();
+  const labels = useLabels();
   const t = useTranslations("subscriptions");
+  const tCommon = useTranslations("common");
   const [open, setOpen] = React.useState(false);
   const [editing, setEditing] = React.useState<Subscription | null>(null);
 
@@ -47,7 +53,7 @@ export default function SubscriptionsPage() {
 
   async function onDelete(sub: Subscription) {
     await removeSubscription(sub.id);
-    toast.success("Subscription removed");
+    toast.success(t("toasts.removed"));
   }
 
   async function addFromCandidate(description: string, amount: number) {
@@ -58,7 +64,7 @@ export default function SubscriptionsPage() {
       billingCycle: "monthly",
       category: "subscriptions",
     });
-    toast.success("Subscription added");
+    toast.success(t("toasts.added"));
   }
 
   return (
@@ -100,7 +106,7 @@ export default function SubscriptionsPage() {
                 variant="outline"
                 size="sm"
                 className="rounded-full border-dashed"
-                onClick={() => addFromCandidate(c.description ?? "Recurring", c.amount)}
+                onClick={() => addFromCandidate(c.description ?? t("recurringFallback"), c.amount)}
               >
                 <Plus className="h-3.5 w-3.5" />
                 <span className="ml-1">
@@ -130,11 +136,11 @@ export default function SubscriptionsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Service</TableHead>
-                  <TableHead>Billing</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
-                  <TableHead className="text-right">≈ Monthly</TableHead>
-                  <TableHead className="w-24 text-right">Actions</TableHead>
+                  <TableHead>{t("table.service")}</TableHead>
+                  <TableHead>{t("table.billing")}</TableHead>
+                  <TableHead className="text-right">{t("table.amount")}</TableHead>
+                  <TableHead className="text-right">{t("table.monthlyEquivalent")}</TableHead>
+                  <TableHead className="w-24 text-right">{tCommon("actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -142,24 +148,22 @@ export default function SubscriptionsPage() {
                   <TableRow key={s.id}>
                     <TableCell className="font-medium">{s.name}</TableCell>
                     <TableCell>
-                      <Badge variant="muted">{s.billingCycle}</Badge>
+                      <Badge variant="muted">{labels.billing(s.billingCycle)}</Badge>
                     </TableCell>
-                    <TableCell className="arka-number text-right">
-                      {money.format(s.amount)}
-                    </TableCell>
+                    <TableCell className="arka-number text-right">{money.format(s.amount)}</TableCell>
                     <TableCell className="arka-number text-right text-muted-foreground">
                       {money.format(monthlyEquivalent(s))}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Button size="icon" variant="ghost" onClick={() => openEdit(s)} aria-label="Edit">
+                        <Button size="icon" variant="ghost" onClick={() => openEdit(s)} aria-label={tCommon("edit")}>
                           <Pencil className="h-4 w-4" />
                         </Button>
                         <Button
                           size="icon"
                           variant="ghost"
                           onClick={() => onDelete(s)}
-                          aria-label="Delete"
+                          aria-label={tCommon("delete")}
                           className="text-destructive hover:text-destructive"
                         >
                           <Trash2 className="h-4 w-4" />

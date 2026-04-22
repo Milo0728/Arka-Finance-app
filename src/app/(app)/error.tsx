@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertTriangle, RefreshCw } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -11,17 +12,16 @@ export default function AppError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useTranslations("errors");
   return (
     <div className="flex min-h-[420px] items-center justify-center p-6">
       <Card className="w-full max-w-lg border-destructive/30">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2 text-destructive">
             <AlertTriangle className="h-5 w-5" />
-            <CardTitle className="text-base">Something broke on this page</CardTitle>
+            <CardTitle className="text-base">{t("appErrorTitle")}</CardTitle>
           </div>
-          <CardDescription>
-            The rest of your workspace still works. Retry this view or reload the app.
-          </CardDescription>
+          <CardDescription>{t("appErrorDesc")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <pre className="max-h-40 overflow-auto rounded-md bg-muted p-3 text-xs text-muted-foreground">
@@ -29,11 +29,11 @@ export default function AppError({
           </pre>
           <div className="flex justify-end gap-2">
             <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
-              Reload
+              {t("reload")}
             </Button>
             <Button size="sm" onClick={reset}>
               <RefreshCw className="h-4 w-4" />
-              <span className="ml-1">Try again</span>
+              <span className="ml-1">{t("tryAgain")}</span>
             </Button>
           </div>
         </CardContent>

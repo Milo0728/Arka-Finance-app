@@ -13,6 +13,7 @@ import { HealthScore } from "@/components/dashboard/health-score";
 import { InsightsList } from "@/components/dashboard/insights-list";
 import { useFinanceStore } from "@/store/useFinanceStore";
 import { useMoney } from "@/hooks/useMoney";
+import { useLabels } from "@/hooks/useLabels";
 import {
   computeHealthScore,
   filterByMonth,
@@ -26,12 +27,18 @@ import { generateInsights } from "@/utils/insights";
 import { subMonths } from "date-fns";
 
 export default function DashboardPage() {
-  const { incomes, expenses, budgets, goals, subscriptions, profile } = useFinanceStore();
+  const incomes = useFinanceStore((s) => s.incomes);
+  const expenses = useFinanceStore((s) => s.expenses);
+  const budgets = useFinanceStore((s) => s.budgets);
+  const goals = useFinanceStore((s) => s.goals);
+  const subscriptions = useFinanceStore((s) => s.subscriptions);
+  const profile = useFinanceStore((s) => s.profile);
   const money = useMoney();
   const locale = useLocale();
+  const labels = useLabels();
   const t = useTranslations("dashboard");
   const tCommon = useTranslations("common");
-  const displayName = profile?.name?.split(" ")[0] ?? "friend";
+  const displayName = profile?.name?.split(" ")[0] ?? t("friend");
 
   const now = React.useMemo(() => new Date(), []);
   const prev = React.useMemo(() => subMonths(now, 1), [now]);
@@ -61,10 +68,15 @@ export default function DashboardPage() {
 
   const { mIncome, mExpense, balance, rate, balanceDelta, incomeDelta, expenseDelta, savingsDelta } = derived;
 
+  const hasData = incomes.length > 0 || expenses.length > 0;
+
   const score = React.useMemo(
     () => computeHealthScore({ incomes, expenses, budgets, goals }),
     [incomes, expenses, budgets, goals]
   );
+
+  const categoryLabel = labels.category;
+  const moneyFormat = money.format;
   const insights = React.useMemo(
     () =>
       generateInsights({
@@ -73,9 +85,10 @@ export default function DashboardPage() {
         budgets,
         goals,
         subscriptions,
-        format: money.format,
+        format: moneyFormat,
+        categoryLabel,
       }).slice(0, 5),
-    [incomes, expenses, budgets, goals, subscriptions, money]
+    [incomes, expenses, budgets, goals, subscriptions, moneyFormat, categoryLabel]
   );
   const thisMonthExpenses = React.useMemo(() => filterByMonth(expenses, now), [expenses, now]);
 
@@ -178,7 +191,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <HealthScore score={score} />
+        <HealthScore score={score} hasData={hasData} />
       </div>
 
       <InsightsList insights={insights} title={t("arkaInsights")} />

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useTranslations } from "next-intl";
 import {
   Area,
   AreaChart,
@@ -19,6 +20,7 @@ import {
 import type { Expense, ExpenseCategory, Income } from "@/types";
 import { expensesByCategory, incomeVsExpenseSeries } from "@/utils/finance";
 import { useMoney } from "@/hooks/useMoney";
+import { useLabels } from "@/hooks/useLabels";
 
 const CATEGORY_COLORS: Record<ExpenseCategory, string> = {
   food: "#22c55e",
@@ -35,10 +37,31 @@ const CATEGORY_COLORS: Record<ExpenseCategory, string> = {
   other: "#64748b",
 };
 
+function EmptyChart({ height = 280 }: { height?: number }) {
+  const t = useTranslations("dashboard");
+  return (
+    <div
+      className="flex w-full items-center justify-center rounded-md border border-dashed bg-muted/20 text-sm text-muted-foreground"
+      style={{ height }}
+    >
+      <div className="px-6 text-center">
+        <p className="font-medium text-foreground">{t("emptyChartTitle")}</p>
+        <p className="mt-1 text-xs">{t("emptyChartDesc")}</p>
+      </div>
+    </div>
+  );
+}
+
 export function CashflowChart({ incomes, expenses }: { incomes: Income[]; expenses: Expense[] }) {
   const money = useMoney();
+  const labels = useLabels();
+
+  if (incomes.length === 0 && expenses.length === 0) {
+    return <EmptyChart height={280} />;
+  }
+
   const data = incomeVsExpenseSeries(incomes, expenses, 6).map((b) => ({
-    label: b.label,
+    label: labels.monthShort(b.monthIndex),
     income: money.fromUSD(b.income),
     expense: money.fromUSD(b.expense),
     savings: money.fromUSD(b.savings),
@@ -84,10 +107,17 @@ export function CashflowChart({ incomes, expenses }: { incomes: Income[]; expens
 
 export function SavingsTrendChart({ incomes, expenses }: { incomes: Income[]; expenses: Expense[] }) {
   const money = useMoney();
+  const labels = useLabels();
+
+  if (incomes.length === 0 && expenses.length === 0) {
+    return <EmptyChart height={220} />;
+  }
+
   const data = incomeVsExpenseSeries(incomes, expenses, 6).map((b) => ({
-    label: b.label,
+    label: labels.monthShort(b.monthIndex),
     savings: money.fromUSD(b.savings),
   }));
+
   return (
     <ResponsiveContainer width="100%" height={220}>
       <BarChart data={data} margin={{ top: 10, right: 0, left: -12, bottom: 0 }}>
@@ -117,6 +147,8 @@ export function SavingsTrendChart({ incomes, expenses }: { incomes: Income[]; ex
 
 export function CategoryPieChart({ expenses }: { expenses: Expense[] }) {
   const money = useMoney();
+  const labels = useLabels();
+  const tExpenses = useTranslations("expenses");
   const grouped = expensesByCategory(expenses);
   const data = Object.entries(grouped)
     .map(([name, value]) => ({ name, value: money.fromUSD(value) }))
@@ -126,7 +158,7 @@ export function CategoryPieChart({ expenses }: { expenses: Expense[] }) {
   if (data.length === 0) {
     return (
       <div className="flex h-[240px] items-center justify-center text-sm text-muted-foreground">
-        No expenses yet.
+        {tExpenses("emptyPieTitle")}
       </div>
     );
   }
@@ -154,12 +186,16 @@ export function CategoryPieChart({ expenses }: { expenses: Expense[] }) {
             border: "1px solid hsl(var(--border))",
             fontSize: 12,
           }}
-          formatter={(value: number, name) => [money.format(money.toUSD(value)), String(name)]}
+          formatter={(value: number, name) => [
+            money.format(money.toUSD(value)),
+            labels.expenseCategory(String(name)) ?? String(name),
+          ]}
         />
         <Legend
           verticalAlign="bottom"
           height={28}
           wrapperStyle={{ fontSize: 11, color: "hsl(var(--muted-foreground))" }}
+          formatter={(value) => labels.expenseCategory(String(value)) ?? String(value)}
         />
       </PieChart>
     </ResponsiveContainer>

@@ -120,7 +120,17 @@ export const useFinanceStore = create<FinanceState>()(
           get().hydrateSeed();
           return;
         }
-        set((s) => ({ loading: { ...s.loading, bootstrap: true } }));
+        // Wipe any stale local seed before fetching real data, so users signing
+        // in for the first time never see demo content they didn't create.
+        set((s) => ({
+          incomes: s.usingLocalSeed ? [] : s.incomes,
+          expenses: s.usingLocalSeed ? [] : s.expenses,
+          budgets: s.usingLocalSeed ? [] : s.budgets,
+          goals: s.usingLocalSeed ? [] : s.goals,
+          subscriptions: s.usingLocalSeed ? [] : s.subscriptions,
+          usingLocalSeed: false,
+          loading: { ...s.loading, bootstrap: true },
+        }));
         try {
           const [incomes, expenses, budgets, goals, subscriptions] = await Promise.all([
             incomeService.list(userId),
@@ -138,6 +148,11 @@ export const useFinanceStore = create<FinanceState>()(
             hydrated: true,
             usingLocalSeed: false,
           });
+        } catch (err) {
+          if (process.env.NODE_ENV !== "production") {
+            console.warn("[Arka] bootstrap failed:", err);
+          }
+          set({ hydrated: true });
         } finally {
           set((s) => ({ loading: { ...s.loading, bootstrap: false } }));
         }
@@ -278,7 +293,10 @@ export const useFinanceStore = create<FinanceState>()(
 );
 
 export async function persistProfile(profile: UserProfile) {
-  if (isFirebaseConfigured) {
-    await upsertUserProfile(profile);
-  }
+  if (!isFirebaseConfigured) return;
+  // Firestore rejects undefined values with setDoc — strip them before writing.
+  const clean = Object.fromEntries(
+    Object.entries(profile).filter(([, v]) => v !== undefined)
+  ) as UserProfile;
+  await upsertUserProfile(clean);
 }

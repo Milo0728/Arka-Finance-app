@@ -10,12 +10,17 @@ export function buildSeed(userId = "demo-user") {
   const iso = (d: Date) => formatISO(d, { representation: "date" });
 
   const incomes: Income[] = [
-    { id: "i1", userId, amount: 5200, category: "salary", date: iso(subDays(today, 2)), description: "April salary" },
-    { id: "i2", userId, amount: 850, category: "freelance", date: iso(subDays(today, 12)), description: "Logo design" },
-    { id: "i3", userId, amount: 5200, category: "salary", date: iso(subDays(today, 32)), description: "March salary" },
-    { id: "i4", userId, amount: 5200, category: "salary", date: iso(subDays(today, 62)), description: "February salary" },
-    { id: "i5", userId, amount: 5200, category: "salary", date: iso(subDays(today, 92)), description: "January salary" },
-    { id: "i6", userId, amount: 420, category: "investment", date: iso(subDays(today, 18)), description: "ETF dividends" },
+    {
+      id: "i1",
+      userId,
+      amount: 5200,
+      category: "salary",
+      frequency: "monthly",
+      date: iso(subDays(today, 92)),
+      description: "Monthly salary",
+    },
+    { id: "i2", userId, amount: 850, category: "freelance", frequency: "once", date: iso(subDays(today, 12)), description: "Logo design" },
+    { id: "i6", userId, amount: 420, category: "investment", frequency: "once", date: iso(subDays(today, 18)), description: "ETF dividends" },
   ];
 
   const expenses: Expense[] = [

@@ -2,7 +2,7 @@
 
 import { PiggyBank } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { babylonSavingsTarget, savingsRate } from "@/utils/finance";
 import { useMoney } from "@/hooks/useMoney";
@@ -17,6 +17,24 @@ interface BabylonWidgetProps {
 export function BabylonWidget({ monthlyIncome, monthlyExpenses }: BabylonWidgetProps) {
   const money = useMoney();
   const t = useTranslations("babylon");
+
+  if (monthlyIncome <= 0) {
+    return (
+      <Card className="relative overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-transparent">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <PiggyBank className="h-4 w-4 text-primary" />
+            {t("title")}
+          </CardTitle>
+          <CardDescription>{t("emptyTitle")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">{t("emptyDesc")}</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const target = babylonSavingsTarget(monthlyIncome);
   const actualSavings = Math.max(0, monthlyIncome - monthlyExpenses);
   const rate = savingsRate(monthlyIncome, monthlyExpenses);

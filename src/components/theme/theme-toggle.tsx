@@ -6,6 +6,7 @@ import { Moon, Sun } from "lucide-react";
 import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { saveProfilePreferences } from "@/hooks/usePreferences";
 
 export function ThemeToggle({ compact = false }: { compact?: boolean }) {
   const { theme, setTheme, resolvedTheme } = useTheme();
@@ -22,6 +23,7 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
     const next = isDark ? "light" : "dark";
     setTheme(next);
     Cookies.set("user_theme", next, { expires: 365, sameSite: "lax" });
+    void saveProfilePreferences({ theme: next });
   }
 
   // Render a stable structure from the start to avoid removeChild hydration errors.

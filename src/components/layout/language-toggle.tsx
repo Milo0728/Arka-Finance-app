@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Globe, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,10 +16,12 @@ import {
 import { COOKIE_KEYS, setCookie } from "@/lib/preferences";
 import { LOCALES, LOCALE_LABELS, type Locale } from "@/i18n/config";
 import { cn } from "@/lib/utils";
+import { saveProfilePreferences } from "@/hooks/usePreferences";
 
 export function LanguageToggle({ compact = false }: { compact?: boolean }) {
   const active = useLocale() as Locale;
   const router = useRouter();
+  const t = useTranslations("common");
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => setMounted(true), []);
@@ -27,6 +29,7 @@ export function LanguageToggle({ compact = false }: { compact?: boolean }) {
   function pick(next: Locale) {
     if (next === active) return;
     setCookie(COOKIE_KEYS.language, next);
+    void saveProfilePreferences({ language: next });
     router.refresh();
   }
 
@@ -48,7 +51,7 @@ export function LanguageToggle({ compact = false }: { compact?: boolean }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuLabel>Language</DropdownMenuLabel>
+        <DropdownMenuLabel>{t("language")}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {LOCALES.map((code) => (
           <DropdownMenuItem

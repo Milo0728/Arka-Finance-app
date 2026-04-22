@@ -13,15 +13,19 @@ import { BudgetForm } from "@/features/budget/budget-form";
 import { useTranslations } from "next-intl";
 import { useFinanceStore } from "@/store/useFinanceStore";
 import { useMoney } from "@/hooks/useMoney";
+import { useLabels } from "@/hooks/useLabels";
 import { budgetUsage } from "@/utils/finance";
-import { categoryLabel } from "@/lib/categories";
 import { cn } from "@/lib/utils";
 import type { Budget } from "@/types";
 
 export default function BudgetsPage() {
-  const { budgets, expenses, removeBudget } = useFinanceStore();
+  const budgets = useFinanceStore((s) => s.budgets);
+  const expenses = useFinanceStore((s) => s.expenses);
+  const removeBudget = useFinanceStore((s) => s.removeBudget);
   const money = useMoney();
+  const labels = useLabels();
   const t = useTranslations("budgets");
+  const tCommon = useTranslations("common");
   const [open, setOpen] = React.useState(false);
   const [editing, setEditing] = React.useState<Budget | null>(null);
 
@@ -37,7 +41,7 @@ export default function BudgetsPage() {
 
   async function onDelete(budget: Budget) {
     await removeBudget(budget.id);
-    toast.success("Budget removed");
+    toast.success(t("toasts.removed"));
   }
 
   return (
@@ -71,36 +75,37 @@ export default function BudgetsPage() {
             const { used, limit, pct } = budgetUsage(expenses, b);
             const overshoot = used > limit;
             const approaching = pct >= 80 && pct < 100;
-            const color = overshoot
-              ? "bg-destructive"
-              : approaching
-              ? "bg-warning"
-              : "bg-primary";
+            const color = overshoot ? "bg-destructive" : approaching ? "bg-warning" : "bg-primary";
+            const pctRounded = Math.round(pct);
 
             return (
               <Card key={b.id} className="group">
                 <CardHeader className="flex flex-row items-start justify-between pb-3">
                   <div>
-                    <CardTitle className="text-base">{categoryLabel(b.category)}</CardTitle>
+                    <CardTitle className="text-base">
+                      {labels.expenseCategory(b.category) ?? b.category}
+                    </CardTitle>
                     <div className="mt-1 flex items-center gap-2">
-                      <Badge variant="muted" className="text-[10px] uppercase">{b.period}</Badge>
+                      <Badge variant="muted" className="text-[10px] uppercase">
+                        {labels.billing(b.period)}
+                      </Badge>
                       {overshoot && (
-                        <Badge variant="destructive" className="text-[10px]">Over</Badge>
+                        <Badge variant="destructive" className="text-[10px]">{t("over")}</Badge>
                       )}
                       {approaching && (
-                        <Badge variant="warning" className="text-[10px]">Warning</Badge>
+                        <Badge variant="warning" className="text-[10px]">{t("warning")}</Badge>
                       )}
                     </div>
                   </div>
                   <div className="flex gap-1 opacity-0 transition group-hover:opacity-100">
-                    <Button size="icon" variant="ghost" onClick={() => openEdit(b)} aria-label="Edit">
+                    <Button size="icon" variant="ghost" onClick={() => openEdit(b)} aria-label={tCommon("edit")}>
                       <Pencil className="h-4 w-4" />
                     </Button>
                     <Button
                       size="icon"
                       variant="ghost"
                       onClick={() => onDelete(b)}
-                      aria-label="Delete"
+                      aria-label={tCommon("delete")}
                       className="text-destructive hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -109,11 +114,9 @@ export default function BudgetsPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="arka-number text-2xl font-semibold">
-                      {money.format(used)}
-                    </span>
+                    <span className="arka-number text-2xl font-semibold">{money.format(used)}</span>
                     <span className="text-sm text-muted-foreground">
-                      of {money.format(limit)}
+                      {t("of", { limit: money.format(limit) })}
                     </span>
                   </div>
                   <Progress value={Math.min(100, pct)} indicatorClassName={color} />
@@ -131,10 +134,10 @@ export default function BudgetsPage() {
                       <CheckCircle2 className="h-3.5 w-3.5" />
                     )}
                     {overshoot
-                      ? `Over by ${money.format(used - limit)}`
+                      ? t("overBy", { amount: money.format(used - limit) })
                       : approaching
-                      ? `${Math.round(pct)}% used — slow down`
-                      : `${Math.round(pct)}% used — on track`}
+                      ? t("usedSlow", { pct: pctRounded })
+                      : t("usedTrack", { pct: pctRounded })}
                   </div>
                 </CardContent>
               </Card>

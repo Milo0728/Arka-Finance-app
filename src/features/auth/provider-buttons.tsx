@@ -3,6 +3,7 @@
 import * as React from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { loginWithGoogle } from "@/services/auth.service";
 import { isFirebaseConfigured } from "@/lib/firebase";
@@ -20,23 +21,23 @@ function GoogleIcon() {
 
 export function ProviderButtons() {
   const router = useRouter();
+  const t = useTranslations("auth");
+  const tCommon = useTranslations("common");
   const [loading, setLoading] = React.useState(false);
 
   async function handleGoogle() {
     if (!isFirebaseConfigured) {
-      toast.info("Demo mode", {
-        description: "Firebase isn't configured yet — taking you to the demo dashboard.",
-      });
+      toast.info(tCommon("demoMode"), { description: t("toasts.demoGoogle") });
       router.push("/dashboard");
       return;
     }
     setLoading(true);
     try {
       await loginWithGoogle();
-      toast.success("Welcome back to Arka");
+      toast.success(t("toasts.welcomeArka"));
       router.push("/dashboard");
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Sign in failed";
+      const message = err instanceof Error ? err.message : t("toasts.signInFailed");
       toast.error(message);
     } finally {
       setLoading(false);
@@ -46,7 +47,7 @@ export function ProviderButtons() {
   return (
     <Button variant="outline" type="button" onClick={handleGoogle} disabled={loading} className="w-full">
       <GoogleIcon />
-      <span className="ml-2">Continue with Google</span>
+      <span className="ml-2">{t("continueGoogle")}</span>
     </Button>
   );
 }

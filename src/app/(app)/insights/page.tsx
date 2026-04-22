@@ -8,14 +8,20 @@ import { HealthScore } from "@/components/dashboard/health-score";
 import { useTranslations } from "next-intl";
 import { useFinanceStore } from "@/store/useFinanceStore";
 import { useMoney } from "@/hooks/useMoney";
+import { useLabels } from "@/hooks/useLabels";
 import { generateInsights } from "@/utils/insights";
 import { computeHealthScore, topCategories } from "@/utils/finance";
-import { categoryLabel } from "@/lib/categories";
 
 export default function InsightsPage() {
-  const { incomes, expenses, budgets, goals, subscriptions } = useFinanceStore();
+  const incomes = useFinanceStore((s) => s.incomes);
+  const expenses = useFinanceStore((s) => s.expenses);
+  const budgets = useFinanceStore((s) => s.budgets);
+  const goals = useFinanceStore((s) => s.goals);
+  const subscriptions = useFinanceStore((s) => s.subscriptions);
   const money = useMoney();
+  const labels = useLabels();
   const t = useTranslations("insights");
+
   const insights = generateInsights({
     incomes,
     expenses,
@@ -23,9 +29,11 @@ export default function InsightsPage() {
     goals,
     subscriptions,
     format: money.format,
+    categoryLabel: labels.category,
   });
   const score = computeHealthScore({ incomes, expenses, budgets, goals });
   const categories = topCategories(expenses, 5);
+  const hasData = incomes.length > 0 || expenses.length > 0;
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-6">
@@ -34,7 +42,7 @@ export default function InsightsPage() {
       <div className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
         <InsightsList insights={insights} title={t("all")} />
         <div className="space-y-4">
-          <HealthScore score={score} />
+          <HealthScore score={score} hasData={hasData} />
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-base">
@@ -52,7 +60,7 @@ export default function InsightsPage() {
                     <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
                       {idx + 1}
                     </span>
-                    <span className="flex-1 capitalize">{categoryLabel(c.category)}</span>
+                    <span className="flex-1">{labels.expenseCategory(c.category) ?? c.category}</span>
                     <span className="arka-number text-muted-foreground">
                       {money.format(c.amount)}
                     </span>

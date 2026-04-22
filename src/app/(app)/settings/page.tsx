@@ -37,9 +37,16 @@ import { useRouter } from "next/navigation";
 import { COOKIE_KEYS, setCookie } from "@/lib/preferences";
 import { LOCALES, LOCALE_LABELS, type Locale } from "@/i18n/config";
 import { Globe } from "lucide-react";
+import { saveProfilePreferences } from "@/hooks/usePreferences";
 
 export default function SettingsPage() {
-  const { profile, setProfile, currency, setCurrency, reset, loadRates, loading } = useFinanceStore();
+  const profile = useFinanceStore((s) => s.profile);
+  const setProfile = useFinanceStore((s) => s.setProfile);
+  const currency = useFinanceStore((s) => s.currency);
+  const setCurrency = useFinanceStore((s) => s.setCurrency);
+  const reset = useFinanceStore((s) => s.reset);
+  const loadRates = useFinanceStore((s) => s.loadRates);
+  const loading = useFinanceStore((s) => s.loading);
   const money = useMoney();
   const { theme, setTheme } = useTheme();
   const t = useTranslations("settings");
@@ -50,7 +57,18 @@ export default function SettingsPage() {
   function pickLocale(next: Locale) {
     if (next === locale) return;
     setCookie(COOKIE_KEYS.language, next);
+    void saveProfilePreferences({ language: next });
     router.refresh();
+  }
+
+  function pickCurrency(next: Currency) {
+    setCurrency(next);
+    void saveProfilePreferences({ currency: next });
+  }
+
+  function pickTheme(next: "light" | "dark" | "system") {
+    setTheme(next);
+    void saveProfilePreferences({ theme: next });
   }
 
   const [name, setName] = React.useState(profile?.name ?? "");
@@ -58,14 +76,21 @@ export default function SettingsPage() {
     profile?.monthlyIncome ? Number(money.fromUSD(profile.monthlyIncome).toFixed(2)) : 0
   );
 
+  const profileName = profile?.name;
+  const profileMonthlyIncome = profile?.monthlyIncome;
+  const moneyRate = money.rate;
+
   React.useEffect(() => {
-    setName(profile?.name ?? "");
-    setMonthlyIncome(profile?.monthlyIncome ? Number(money.fromUSD(profile.monthlyIncome).toFixed(2)) : 0);
-  }, [profile, money]);
+    setName(profileName ?? "");
+  }, [profileName]);
+
+  React.useEffect(() => {
+    setMonthlyIncome(profileMonthlyIncome ? Number((profileMonthlyIncome * moneyRate).toFixed(2)) : 0);
+  }, [profileMonthlyIncome, moneyRate]);
 
   async function saveProfile() {
     if (!profile) {
-      toast.info("Sign in to save profile details.");
+      toast.info(t("toasts.signInRequired"));
       return;
     }
     const updated = {
@@ -73,21 +98,23 @@ export default function SettingsPage() {
       name,
       monthlyIncome: money.toUSD(monthlyIncome),
       currency,
+      theme: (theme as "light" | "dark" | "system" | undefined) ?? profile.theme,
+      language: locale,
     };
     setProfile(updated);
     await persistProfile(updated);
-    toast.success("Preferences saved");
+    toast.success(t("toasts.saved"));
   }
 
   function clearLocalData() {
-    if (!confirm("Clear all locally stored demo data? This will not delete Firestore data.")) return;
+    if (!confirm(t("confirmClear"))) return;
     reset();
-    toast.success("Local data cleared");
+    toast.success(t("toasts.cleared"));
   }
 
   async function refreshRates() {
     await loadRates(true);
-    toast.success("FX rates refreshed");
+    toast.success(t("toasts.fxRefreshed"));
   }
 
   const ratesAgo = money.ratesUpdatedAt
@@ -139,7 +166,7 @@ export default function SettingsPage() {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label>{t("displayCurrency")}</Label>
-            <Select value={currency} onValueChange={(v) => setCurrency(v as Currency)}>
+            <Select value={currency} onValueChange={(v) => pickCurrency(v as Currency)}>
               <SelectTrigger className="max-w-xs"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {CURRENCIES.map((c) => (
@@ -175,10 +202,7 @@ export default function SettingsPage() {
           </div>
 
           {money.currency !== money.baseCurrency && (
-            <p className="text-xs text-muted-foreground">
-              Tip: when you type a new transaction it&apos;s converted into {money.baseCurrency} at the current
-              rate and stored that way — so switching display currency later stays consistent.
-            </p>
+            <p className="text-xs text-muted-foreground">{t("tip", { base: money.baseCurrency })}</p>
           )}
         </CardContent>
       </Card>
@@ -197,7 +221,7 @@ export default function SettingsPage() {
               <p className="text-sm font-medium">{t("darkMode")}</p>
               <p className="text-xs text-muted-foreground">{t("darkModeDesc")}</p>
             </div>
-            <Switch checked={theme === "dark"} onCheckedChange={(v) => setTheme(v ? "dark" : "light")} />
+            <Switch checked={theme === "dark"} onCheckedChange={(v) => pickTheme(v ? "dark" : "light")} />
           </div>
           <Separator />
           <div className="flex items-center justify-between">
@@ -205,7 +229,7 @@ export default function SettingsPage() {
               <p className="text-sm font-medium">{t("followSystem")}</p>
               <p className="text-xs text-muted-foreground">{t("followSystemDesc")}</p>
             </div>
-            <Switch checked={theme === "system"} onCheckedChange={(v) => setTheme(v ? "system" : "light")} />
+            <Switch checked={theme === "system"} onCheckedChange={(v) => pickTheme(v ? "system" : "light")} />
           </div>
         </CardContent>
       </Card>

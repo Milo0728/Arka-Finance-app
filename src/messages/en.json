@@ -38,16 +38,73 @@
     "onTrack": "On track",
     "warning": "Warning",
     "over": "Over",
-    "language": "Language"
+    "language": "Language",
+    "actions": "Actions",
+    "dismiss": "Dismiss",
+    "demoMode": "Demo mode",
+    "beta": "Beta"
+  },
+  "months": {
+    "jan": "Jan",
+    "feb": "Feb",
+    "mar": "Mar",
+    "apr": "Apr",
+    "may": "May",
+    "jun": "Jun",
+    "jul": "Jul",
+    "aug": "Aug",
+    "sep": "Sep",
+    "oct": "Oct",
+    "nov": "Nov",
+    "dec": "Dec"
+  },
+  "categories": {
+    "expense": {
+      "food": "Food",
+      "transport": "Transport",
+      "housing": "Housing",
+      "utilities": "Utilities",
+      "entertainment": "Entertainment",
+      "subscriptions": "Subscriptions",
+      "health": "Health",
+      "education": "Education",
+      "shopping": "Shopping",
+      "savings": "Savings",
+      "debt": "Debt",
+      "other": "Other"
+    },
+    "income": {
+      "salary": "Salary",
+      "freelance": "Freelance",
+      "investment": "Investment",
+      "business": "Business",
+      "gift": "Gift",
+      "other": "Other"
+    }
+  },
+  "billing": {
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "quarterly": "Quarterly",
+    "yearly": "Yearly"
+  },
+  "expenseType": {
+    "fixed": "Fixed",
+    "variable": "Variable"
   },
   "header": {
     "searchPlaceholder": "Search expenses, categories…",
     "preferences": "Preferences",
-    "exportData": "Export data"
+    "exportData": "Export data",
+    "toggleNav": "Toggle navigation",
+    "signOutFailed": "Sign out failed",
+    "defaultName": "Arka user",
+    "defaultEmail": "you@arka.finance"
   },
   "dashboard": {
     "greeting": "Good to see you, {name}.",
     "subheading": "Here's your financial picture for {period}.",
+    "friend": "friend",
     "reviewExpenses": "Review expenses",
     "netBalance": "Net balance",
     "incomeThisMonth": "Income this month",
@@ -65,7 +122,9 @@
     "thisMonth": "This month",
     "savingsTrend": "Savings trend",
     "savingsTrendSub": "How much stayed in the treasury each month.",
-    "arkaInsights": "Arka insights"
+    "arkaInsights": "Arka insights",
+    "emptyChartTitle": "No activity yet",
+    "emptyChartDesc": "Add an income or expense to see trends."
   },
   "babylon": {
     "title": "Babylon 10% rule",
@@ -74,7 +133,9 @@
     "progress": "Progress toward 10%",
     "actualRate": "Actual savings rate this month:",
     "keepGoing": " — keep going.",
-    "wellDone": " — well done."
+    "wellDone": " — well done.",
+    "emptyTitle": "Log your first income",
+    "emptyDesc": "The 10% rule kicks in once we know what you earn."
   },
   "health": {
     "title": "Financial Health Score",
@@ -92,7 +153,9 @@
     "poorDesc": "Some red flags — Arkad would suggest trimming expenses first.",
     "fairDesc": "You're stable but not yet building wealth at a steady pace.",
     "goodDesc": "Healthy habits — a few adjustments will compound nicely.",
-    "excellentDesc": "World-class habits. Arkad would toast you at the House of Lenders."
+    "excellentDesc": "World-class habits. Arkad would toast you at the House of Lenders.",
+    "noDataTitle": "No financial data yet.",
+    "noDataDesc": "Add income and expenses to calculate your financial health score."
   },
   "income": {
     "title": "Income",
@@ -105,7 +168,33 @@
     "emptyDesc": "Add your first paycheck, gig payment or dividend to start tracking.",
     "formNewTitle": "Log new income",
     "formEditTitle": "Edit income",
-    "formDesc": "Money flowing in — whether salary, side hustle or dividends."
+    "formDesc": "Money flowing in — whether salary, side hustle or dividends.",
+    "table": {
+      "date": "Date",
+      "category": "Category",
+      "description": "Description",
+      "amount": "Amount"
+    },
+    "toasts": {
+      "added": "Income added",
+      "updated": "Income updated",
+      "removed": "Income removed"
+    },
+    "form": {
+      "amount": "Amount",
+      "date": "Date",
+      "startDate": "Start date",
+      "frequency": "Frequency",
+      "category": "Category",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "e.g. April salary, design invoice",
+      "addButton": "Add income",
+      "positive": "Must be a positive number",
+      "storedIn": "Stored in {base} at ~{rate} {currency}/{base}."
+    },
+    "frequency": {
+      "once": "Once"
+    }
   },
   "expenses": {
     "title": "Expenses",
@@ -122,7 +211,38 @@
     "allTypes": "All types",
     "fixed": "Fixed",
     "variable": "Variable",
-    "transactions": "Transactions"
+    "transactions": "Transactions",
+    "allTime": "All-time",
+    "thisMonth": "This month",
+    "noDataYet": "No data yet",
+    "dash": "—",
+    "searchPlaceholder": "Search descriptions",
+    "filterCategoryPlaceholder": "Category",
+    "filterTypePlaceholder": "Type",
+    "emptyPieTitle": "No expenses yet.",
+    "table": {
+      "date": "Date",
+      "category": "Category",
+      "type": "Type",
+      "description": "Description",
+      "amount": "Amount"
+    },
+    "toasts": {
+      "added": "Expense added",
+      "updated": "Expense updated",
+      "removed": "Expense removed"
+    },
+    "form": {
+      "amount": "Amount",
+      "date": "Date",
+      "category": "Category",
+      "type": "Type",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "e.g. Whole Foods, Monthly rent",
+      "addButton": "Add expense",
+      "positive": "Must be a positive number",
+      "storedIn": "Stored in {base} at ~{rate} {currency}/{base}."
+    }
   },
   "budgets": {
     "title": "Budgets",
@@ -135,7 +255,22 @@
     "formDesc": "Control your expenses — the second law of Arkad.",
     "overBy": "Over by {amount}",
     "usedSlow": "{pct}% used — slow down",
-    "usedTrack": "{pct}% used — on track"
+    "usedTrack": "{pct}% used — on track",
+    "of": "of {limit}",
+    "over": "Over",
+    "warning": "Warning",
+    "toasts": {
+      "created": "Budget created",
+      "updated": "Budget updated",
+      "removed": "Budget removed"
+    },
+    "form": {
+      "category": "Category",
+      "limit": "Limit",
+      "period": "Period",
+      "createButton": "Create budget",
+      "positive": "Must be a positive number"
+    }
   },
   "goals": {
     "title": "Financial goals",
@@ -149,7 +284,27 @@
     "formDesc": "Dream big — then break it down into a monthly plan.",
     "monthsRemaining": "Months remaining",
     "saveMonthly": "Save monthly",
-    "achieved": "Goal achieved"
+    "achieved": "Goal achieved",
+    "by": "by {date}",
+    "of": "of {target}",
+    "complete": "{pct}% complete",
+    "toasts": {
+      "created": "Goal created",
+      "updated": "Goal updated",
+      "removed": "Goal removed"
+    },
+    "form": {
+      "titleLabel": "Title",
+      "titlePlaceholder": "Emergency fund, Japan trip, Down payment…",
+      "targetAmount": "Target amount",
+      "savedSoFar": "Saved so far",
+      "deadline": "Deadline",
+      "createButton": "Create goal",
+      "giveName": "Give your goal a name",
+      "positive": "Must be positive",
+      "nonNegative": "Cannot be negative",
+      "pickDeadline": "Pick a deadline"
+    }
   },
   "subscriptions": {
     "title": "Subscriptions",
@@ -164,7 +319,28 @@
     "emptyDesc": "Log your streaming, SaaS and memberships to see the true cost.",
     "formNewTitle": "New subscription",
     "formEditTitle": "Edit subscription",
-    "formDesc": "Keep tabs on every recurring charge."
+    "formDesc": "Keep tabs on every recurring charge.",
+    "recurringFallback": "Recurring",
+    "table": {
+      "service": "Service",
+      "billing": "Billing",
+      "amount": "Amount",
+      "monthlyEquivalent": "≈ Monthly"
+    },
+    "toasts": {
+      "added": "Subscription added",
+      "updated": "Subscription updated",
+      "removed": "Subscription removed"
+    },
+    "form": {
+      "nameLabel": "Name",
+      "namePlaceholder": "Netflix, Spotify, Gym…",
+      "amountLabel": "Amount",
+      "billingLabel": "Billing cycle",
+      "addButton": "Add subscription",
+      "giveName": "Give it a name",
+      "positive": "Must be positive"
+    }
   },
   "insights": {
     "title": "Financial insights",
@@ -172,7 +348,29 @@
     "all": "All insights",
     "topCategoriesTitle": "Top spending categories",
     "topCategoriesDesc": "Where the most money flowed over time.",
-    "nothingYet": "Nothing to show yet."
+    "nothingYet": "Nothing to show yet.",
+    "curatedDesc": "Curated automatically from your activity.",
+    "defaultTitle": "Insights",
+    "empty": {
+      "title": "Keep logging to unlock insights",
+      "description": "Add a few incomes and expenses and Arka will surface patterns automatically."
+    },
+    "rules": {
+      "babylonOnTrackTitle": "You're honoring the 10% rule",
+      "babylonOnTrackDesc": "This month you saved {rate} of your income — Arkad would approve.",
+      "babylonBelowTitle": "Pay yourself first",
+      "babylonBelowDesc": "Set aside {amount} this month to reach the 10% savings rule.",
+      "categoryDominantTitle": "{category} dominates your spending",
+      "categoryDominantDesc": "You spent {share} of your outflow on {category} this month.",
+      "subsShareTitle": "Subscriptions are stacking up",
+      "subsShareDesc": "Recurring services represent {share} of your monthly spending.",
+      "budgetOverTitle": "Over budget on {category}",
+      "budgetOverDesc": "You used {pct} of your {category} budget.",
+      "budgetWarnTitle": "Approaching {category} limit",
+      "budgetWarnDesc": "You've used {pct} of your {category} budget.",
+      "goalDoneTitle": "Goal achieved: {title}",
+      "goalDoneDesc": "Consider setting a new target to keep momentum."
+    }
   },
   "reports": {
     "title": "Reports",
@@ -186,7 +384,21 @@
     "sixMonthIncome": "6-month income",
     "sixMonthSpend": "6-month spend",
     "sixMonthSavings": "6-month savings",
-    "breakdown": "Month-by-month breakdown"
+    "breakdown": "Month-by-month breakdown",
+    "cashflow": "Cashflow",
+    "cashflowDesc": "Income vs expenses over the last 6 months.",
+    "monthlySavings": "Monthly savings",
+    "monthlySavingsDesc": "How much stayed in the treasury each month.",
+    "monthCol": "Month",
+    "onTrack": "On track",
+    "below10": "Below 10%",
+    "emptyTitle": "No financial activity yet.",
+    "emptyDesc": "Start by adding your first income or expense.",
+    "toasts": {
+      "expensesCsv": "Expenses exported as CSV",
+      "incomeCsv": "Income exported as CSV",
+      "summaryCsv": "Summary exported as CSV"
+    }
   },
   "settings": {
     "title": "Settings",
@@ -212,7 +424,15 @@
     "languageDesc": "Choose the language used across the interface.",
     "dangerZone": "Danger zone",
     "dangerZoneDesc": "Locally stored data can be cleared at any time.",
-    "clearLocal": "Clear local data"
+    "clearLocal": "Clear local data",
+    "tip": "Tip: when you type a new transaction it's converted into {base} at the current rate and stored that way — so switching display currency later stays consistent.",
+    "confirmClear": "Clear all locally stored demo data? This will not delete Firestore data.",
+    "toasts": {
+      "signInRequired": "Sign in to save profile details.",
+      "saved": "Preferences saved",
+      "cleared": "Local data cleared",
+      "fxRefreshed": "FX rates refreshed"
+    }
   },
   "cookies": {
     "title": "Cookies & privacy",
@@ -239,6 +459,253 @@
     "rememberedQ": "Remembered?",
     "backToSignIn": "Back to sign in",
     "sendResetLink": "Send reset link",
-    "createAccount": "Create account"
+    "createAccount": "Create account",
+    "newToArka": "New to Arka?",
+    "footerText": "© {year} Arka Finance · Secure auth powered by Firebase",
+    "signInButton": "Sign in",
+    "emailPlaceholder": "you@company.com",
+    "passwordPlaceholder": "••••••••",
+    "namePlaceholder": "Arkad Babylonian",
+    "registerPasswordPlaceholder": "At least 8 characters",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "continueGoogle": "Continue with Google",
+    "termsAgree": "By creating an account you agree to our friendly",
+    "terms": "Terms",
+    "and": "and",
+    "privacy": "Privacy Policy",
+    "toasts": {
+      "welcomeToast": "Welcome back",
+      "welcomeArka": "Welcome back to Arka",
+      "ready": "Your account is ready.",
+      "createdToast": "Welcome to Arka",
+      "resetSent": "Check your inbox",
+      "resetSentDesc": "We sent you a reset link.",
+      "signInFailed": "Sign in failed",
+      "signUpFailed": "Unable to create account",
+      "resetFailed": "Could not send reset email",
+      "demoLogin": "Firebase isn't configured — exploring with sample data.",
+      "demoRegister": "Add Firebase env vars to persist your account — exploring the demo for now.",
+      "demoReset": "Configure Firebase to enable password reset emails.",
+      "demoGoogle": "Firebase isn't configured yet — taking you to the demo dashboard."
+    },
+    "zod": {
+      "email": "Enter a valid email",
+      "passwordLogin": "Password must be at least 6 characters",
+      "passwordRegister": "Use at least 8 characters",
+      "name": "Tell us your name"
+    }
+  },
+  "quickAdd": {
+    "title": "Quick add",
+    "description": "Log money in or out in a few seconds.",
+    "expenseTab": "Expense",
+    "incomeTab": "Income",
+    "amount": "Amount",
+    "date": "Date",
+    "category": "Category",
+    "type": "Type",
+    "description": "Description",
+    "expensePlaceholder": "Groceries at Whole Foods",
+    "incomePlaceholder": "April salary",
+    "saveExpense": "Save expense",
+    "saveIncome": "Save income",
+    "positive": "Must be a positive number",
+    "toasts": {
+      "expenseAdded": "Expense added",
+      "incomeAdded": "Income added"
+    }
+  },
+  "errors": {
+    "boundaryTitle": "Something went wrong",
+    "boundaryDesc": "A part of the interface ran into an error. Your data is safe — try again or reload.",
+    "appErrorTitle": "Something broke on this page",
+    "appErrorDesc": "The rest of your workspace still works. Retry this view or reload the app.",
+    "globalErrorTitle": "An unexpected error occurred",
+    "globalErrorDesc": "Arka hit a snag while rendering this page. Your data is safe.",
+    "reloadPage": "Reload page",
+    "reload": "Reload",
+    "tryAgain": "Try again",
+    "goHome": "Go home",
+    "digest": "digest"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "desc": "The page you're looking for doesn't exist or has moved. Let's get you back on track.",
+    "landing": "Landing",
+    "dashboard": "Dashboard"
+  },
+  "landing": {
+    "nav": {
+      "features": "Features",
+      "philosophy": "Philosophy",
+      "product": "Product",
+      "pricing": "Pricing"
+    },
+    "hero": {
+      "inspiredBy": "Inspired by",
+      "inspiredBySource": "The Richest Man in Babylon",
+      "headlineLine1": "Money you understand.",
+      "headlineLine2": "Wealth that compounds.",
+      "subtitle": "Arka Finance is a calm, modern dashboard that turns everyday spending into lasting savings. Plan budgets, set goals, and follow the 10% rule from Arkad — all in one place.",
+      "openArka": "Open your Arka",
+      "liveDashboard": "See live dashboard",
+      "securityBadge": "Bank-grade Firebase security",
+      "insightsBadge": "Insights generated on-device",
+      "preview": {
+        "overview": "Arka · Overview",
+        "live": "Live",
+        "netBalance": "Net balance",
+        "thisMonthUp": "+8.4% this month",
+        "savedIn": "Saved in April",
+        "belowTarget": "2% below Babylon target",
+        "cashflow": "Cashflow (last 12 months)",
+        "foodBudget": "Food budget",
+        "japanGoal": "Japan trip goal"
+      }
+    },
+    "features": {
+      "eyebrow": "Every tool you need",
+      "headline": "Manage your money without the anxiety",
+      "subtitle": "Arka wraps the spreadsheet-level control of YNAB with the simplicity of a modern fintech app — and adds a philosophy that's lasted 8,000 years.",
+      "items": {
+        "income": {
+          "title": "Income & expenses",
+          "description": "Log every inflow and outflow with categories, fixed vs variable types, and rich notes."
+        },
+        "dashboard": {
+          "title": "Visual dashboard",
+          "description": "Clean, calm charts: cashflow trend, spending by category, savings momentum — all at a glance."
+        },
+        "goals": {
+          "title": "Goals & budgets",
+          "description": "Plan monthly budgets per category and set financial goals with automatic monthly targets."
+        },
+        "babylon": {
+          "title": "Babylon 10% rule",
+          "description": "Arkad's core principle baked in: Arka tells you how much to save this month, every month."
+        },
+        "insights": {
+          "title": "Automatic insights",
+          "description": "Personalised nudges: category overshoots, subscription creep, savings opportunities."
+        },
+        "subscriptions": {
+          "title": "Subscription radar",
+          "description": "Detects recurring charges automatically and shows the total you pay every month and year."
+        },
+        "health": {
+          "title": "Financial health score",
+          "description": "A single 0–100 score that reflects your savings rate, spending habits and goal progress."
+        },
+        "secure": {
+          "title": "Secure by default",
+          "description": "Firebase Auth with Google, GitHub and email — strict Firestore rules isolate your data."
+        }
+      }
+    },
+    "philosophy": {
+      "eyebrow": "The philosophy",
+      "headline": "Babylon's seven rules, built into the product.",
+      "bodyPrefix": "In ",
+      "bodyBook": "The Richest Man in Babylon",
+      "bodySuffix": ", Arkad shares seven simple rules for a life of wealth. Arka Finance turns those rules into gentle daily nudges — so the philosophy becomes a habit.",
+      "quote": "A part of all you earn is yours to keep. Not less than a tenth, no matter how little you earn.",
+      "quoteAuthor": "— Arkad, The Richest Man in Babylon",
+      "laws": {
+        "l1": { "title": "Pay yourself first", "detail": "Save at least one tenth of every income before any expense." },
+        "l2": { "title": "Control your expenses", "detail": "Live within a budget calibrated to the life you want." },
+        "l3": { "title": "Make your gold multiply", "detail": "Put savings to work through deliberate investing." },
+        "l4": { "title": "Guard your treasure", "detail": "Protect your money against loss and avoid schemes." },
+        "l5": { "title": "Own your home", "detail": "Direct a portion toward assets that build equity." },
+        "l6": { "title": "Plan future income", "detail": "Prepare for old age and the protection of loved ones." },
+        "l7": { "title": "Increase earning power", "detail": "Keep learning — skill compounds faster than capital." }
+      }
+    },
+    "screenshots": {
+      "eyebrow": "Product tour",
+      "headline": "One dashboard, total clarity.",
+      "subtitle": "Each surface of Arka is designed to hand you an answer in under 30 seconds.",
+      "overviewBadge": "Overview",
+      "overviewTitle": "Know where the money goes",
+      "overviewBody": "KPI cards for balance, income, expenses and savings rate — paired with a donut of category spend.",
+      "labels": {
+        "balance": "Balance",
+        "income": "Income",
+        "expenses": "Expenses",
+        "savings": "Savings"
+      },
+      "budgetsBadge": "Budgets",
+      "budgetsTitle": "Spend within guardrails",
+      "budgetsBody": "Budgets per category with progress bars and timely alerts when you approach the limit.",
+      "categories": {
+        "food": "Food",
+        "transport": "Transport",
+        "entertainment": "Entertainment",
+        "subscriptions": "Subscriptions"
+      },
+      "healthBadge": "Health",
+      "healthTitle": "Financial Health Score",
+      "healthBody": "A single 0–100 score blending savings rate, spending discipline, budget adherence and goal progress.",
+      "good": "Good",
+      "savingsRateShort": "Savings rate 14%",
+      "mom": "+4 pts MoM"
+    },
+    "pricing": {
+      "eyebrow": "Pricing",
+      "headline": "Start free. Upgrade when it pays for itself.",
+      "subtitle": "Arka pays for itself the first time it prevents an overspend. Guaranteed.",
+      "mostPopular": "Most popular",
+      "priceFree": "Free",
+      "perMonth": "/ month",
+      "comingSoon": "Coming soon",
+      "freeDuringBeta": "Free during beta",
+      "notAvailableYet": "Not available yet",
+      "tiers": {
+        "starter": {
+          "name": "Starter",
+          "description": "Everything you need to take control.",
+          "f1": "Unlimited accounts",
+          "f2": "Up to 6 months of history",
+          "f3": "All dashboards and insights",
+          "f4": "Dark mode",
+          "cta": "Start for free"
+        },
+        "arkad": {
+          "name": "Arkad",
+          "description": "For serious wealth builders.",
+          "f1": "Unlimited history",
+          "f2": "Subscription radar",
+          "f3": "CSV exports",
+          "f4": "Automated recommendations",
+          "f5": "Priority support",
+          "cta": "Upgrade to Arkad"
+        },
+        "household": {
+          "name": "Household",
+          "description": "Manage finances with your partner or family.",
+          "f1": "Everything in Arkad",
+          "f2": "Up to 5 seats",
+          "f3": "Shared budgets and goals",
+          "f4": "Per-member health scores",
+          "cta": "Talk to us"
+        }
+      }
+    },
+    "cta": {
+      "eyebrow": "Start today",
+      "headlineLine1": "A tenth is yours to keep.",
+      "headlineLine2": "Start saving it on purpose.",
+      "body": "Create your free Arka account in under a minute. No credit card needed.",
+      "createAccount": "Create free account",
+      "iHaveOne": "I already have one"
+    },
+    "footer": {
+      "description": "Arka Finance — a calm, modern dashboard for the money you earn, spend and grow. Inspired by Arkad, built in TypeScript.",
+      "signIn": "Sign in",
+      "createAccount": "Create account",
+      "liveDemo": "Live demo",
+      "contact": "Contact",
+      "copyright": "© {year} Arka Finance. Crafted with care. Not a financial advisor."
+    }
   }
 }

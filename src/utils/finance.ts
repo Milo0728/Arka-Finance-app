@@ -1,5 +1,32 @@
 import { differenceInCalendarMonths, endOfMonth, isSameMonth, parseISO, startOfMonth } from "date-fns";
-import type { Budget, Expense, ExpenseCategory, Goal, HealthScoreBreakdown, Income, Subscription } from "@/types";
+import type {
+  BillingCycle,
+  Budget,
+  Expense,
+  ExpenseCategory,
+  Goal,
+  HealthScoreBreakdown,
+  Income,
+  IncomeFrequency,
+  Subscription,
+} from "@/types";
+
+/**
+ * Converts a per-cycle amount into its equivalent monthly amount.
+ * Shared by Subscriptions and recurring Incomes so they stay consistent.
+ */
+export function cycleToMonthly(amount: number, cycle: BillingCycle): number {
+  switch (cycle) {
+    case "weekly":
+      return amount * 4.33;
+    case "monthly":
+      return amount;
+    case "quarterly":
+      return amount / 3;
+    case "yearly":
+      return amount / 12;
+  }
+}
 
 export function sum<T>(items: T[], pick: (i: T) => number): number {
   return items.reduce((acc, i) => acc + (pick(i) || 0), 0);
@@ -9,8 +36,25 @@ export function filterByMonth<T extends { date: string }>(items: T[], reference:
   return items.filter((i) => isSameMonth(parseISO(i.date), reference));
 }
 
+/**
+ * Returns the amount a single income contributes to the given month.
+ * - "once" / undefined: the full amount only in the month matching its date.
+ * - Recurring: the monthly equivalent, but only from the start month onwards.
+ */
+export function monthlyIncomeContribution(income: Income, reference = new Date()): number {
+  const freq: IncomeFrequency = income.frequency ?? "once";
+  const start = parseISO(income.date);
+  if (freq === "once") {
+    return isSameMonth(start, reference) ? income.amount : 0;
+  }
+  if (startOfMonth(reference).getTime() < startOfMonth(start).getTime()) {
+    return 0;
+  }
+  return cycleToMonthly(income.amount, freq);
+}
+
 export function monthlyIncome(incomes: Income[], reference = new Date()) {
-  return sum(filterByMonth(incomes, reference), (i) => i.amount);
+  return sum(incomes, (i) => monthlyIncomeContribution(i, reference));
 }
 
 export function monthlyExpenses(expenses: Expense[], reference = new Date()) {
@@ -21,8 +65,26 @@ export function monthlyBalance(incomes: Income[], expenses: Expense[], reference
   return monthlyIncome(incomes, reference) - monthlyExpenses(expenses, reference);
 }
 
+/**
+ * Total amount an income has produced from its start date up to `asOf`.
+ * One-off incomes contribute exactly their amount; recurring incomes extrapolate
+ * their monthly equivalent across every elapsed month.
+ */
+export function lifetimeIncome(incomes: Income[], asOf = new Date()): number {
+  return sum(incomes, (i) => lifetimeContribution(i, asOf));
+}
+
+function lifetimeContribution(income: Income, asOf: Date): number {
+  const freq: IncomeFrequency = income.frequency ?? "once";
+  if (freq === "once") return income.amount;
+  const start = parseISO(income.date);
+  if (asOf.getTime() < start.getTime()) return 0;
+  const months = Math.max(1, differenceInCalendarMonths(startOfMonth(asOf), startOfMonth(start)) + 1);
+  return cycleToMonthly(income.amount, freq) * months;
+}
+
 export function totalBalance(incomes: Income[], expenses: Expense[]) {
-  return sum(incomes, (i) => i.amount) - sum(expenses, (e) => e.amount);
+  return lifetimeIncome(incomes) - sum(expenses, (e) => e.amount);
 }
 
 export function savingsRate(income: number, expenses: number): number {
@@ -53,15 +115,30 @@ export function topCategories(expenses: Expense[], limit = 5) {
     .slice(0, limit);
 }
 
+/**
+ * Returns a rolling series of monthly totals. `monthIndex` is 0-11 (Jan-Dec) so
+ * the UI can look up a translated short-month label.
+ */
 export function incomeVsExpenseSeries(incomes: Income[], expenses: Expense[], months = 6) {
   const now = new Date();
-  const buckets: { label: string; income: number; expense: number; savings: number }[] = [];
+  const buckets: {
+    monthIndex: number;
+    year: number;
+    income: number;
+    expense: number;
+    savings: number;
+  }[] = [];
   for (let i = months - 1; i >= 0; i--) {
     const ref = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const label = ref.toLocaleString("en-US", { month: "short" });
     const income = monthlyIncome(incomes, ref);
     const expense = monthlyExpenses(expenses, ref);
-    buckets.push({ label, income, expense, savings: Math.max(0, income - expense) });
+    buckets.push({
+      monthIndex: ref.getMonth(),
+      year: ref.getFullYear(),
+      income,
+      expense,
+      savings: Math.max(0, income - expense),
+    });
   }
   return buckets;
 }
@@ -77,16 +154,7 @@ export function monthlySavingNeeded(goal: Goal): number {
 }
 
 export function monthlyEquivalent(sub: Subscription): number {
-  switch (sub.billingCycle) {
-    case "weekly":
-      return sub.amount * 4.33;
-    case "monthly":
-      return sub.amount;
-    case "quarterly":
-      return sub.amount / 3;
-    case "yearly":
-      return sub.amount / 12;
-  }
+  return cycleToMonthly(sub.amount, sub.billingCycle);
 }
 
 export function totalMonthlySubscriptions(subs: Subscription[]) {
