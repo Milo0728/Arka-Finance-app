@@ -27,6 +27,8 @@ export function MarketingFooter() {
             </>
           )}
           <Link href="/dashboard" className="hover:text-foreground">{t("liveDemo")}</Link>
+          <Link href="/terms" className="hover:text-foreground">{t("terms")}</Link>
+          <Link href="/privacy" className="hover:text-foreground">{t("privacy")}</Link>
           <a href="mailto:jcrodriguezc0728@hotmail.com" className="hover:text-foreground">{t("contact")}</a>
         </nav>
       </div>

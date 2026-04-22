@@ -646,7 +646,92 @@
       "createAccount": "Crear cuenta",
       "liveDemo": "Demo en vivo",
       "contact": "Contacto",
+      "terms": "Términos",
+      "privacy": "Privacidad",
       "copyright": "© {year} Arka Finance. Hecho con cariño. No somos asesores financieros."
+    }
+  },
+  "legal": {
+    "backToHome": "← Volver al inicio",
+    "terms": {
+      "title": "Términos del servicio",
+      "lastUpdated": "Última actualización: abril 2026",
+      "intro": "Bienvenido a Arka Finance (\"Arka\", \"nosotros\"). Estos términos rigen el uso de la aplicación web Arka en arka-finance-app.vercel.app. Al crear una cuenta o usar la app aceptas estos términos. Si no estás de acuerdo, por favor no uses Arka.",
+      "sections": [
+        {
+          "heading": "1. Fase beta",
+          "body": "Arka se encuentra en beta. Las funciones pueden cambiar, fallar o eliminarse sin aviso. Hacemos lo posible para evitar pérdidas de datos, pero durante la beta no podemos garantizarlo. Conserva copias propias de lo que sea importante."
+        },
+        {
+          "heading": "2. Tu cuenta",
+          "body": "Debes proporcionar un email válido y una contraseña, o iniciar sesión con un proveedor compatible (Google). Eres responsable de custodiar tus credenciales y de toda la actividad que ocurra bajo tu cuenta. Avísanos si sospechas un acceso no autorizado."
+        },
+        {
+          "heading": "3. Uso aceptable",
+          "body": "No intentes romper Arka, abusar de su infraestructura, extraer datos automáticamente, aplicar ingeniería inversa, subir contenido malicioso, suplantar a otros ni usarla para fraude o actividades ilegales. No se permite el acceso automatizado ni los bots."
+        },
+        {
+          "heading": "4. Tus datos son tuyos",
+          "body": "Toda la información financiera que ingreses (ingresos, gastos, presupuestos, metas, suscripciones) es tuya. Puedes exportarla o eliminar tu cuenta en cualquier momento desde Ajustes. No vendemos tus datos."
+        },
+        {
+          "heading": "5. No es asesoría financiera",
+          "body": "Arka es una herramienta de presupuesto y educación financiera personal. Nada dentro de la app constituye asesoramiento financiero, legal, fiscal ni de inversión. Consulta siempre a un profesional cualificado antes de tomar decisiones importantes con tu dinero."
+        },
+        {
+          "heading": "6. Disponibilidad",
+          "body": "Arka corre sobre servicios en la nube de terceros (Firebase, Vercel). El servicio se ofrece \"tal cual\" y puede estar indisponible, lento o inconsistente. Durante la beta no prometemos un tiempo de actividad específico."
+        },
+        {
+          "heading": "7. Descargo y responsabilidad",
+          "body": "En la medida máxima permitida por la ley, Arka se ofrece sin garantías de ningún tipo, expresas o implícitas. No somos responsables de daños directos, indirectos, incidentales ni consecuentes derivados del uso del servicio."
+        },
+        {
+          "heading": "8. Cancelación y cambios",
+          "body": "Puedes eliminar tu cuenta cuando quieras. Podemos suspender cuentas que violen estos términos. También podemos actualizar estos términos; la fecha de \"Última actualización\" lo reflejará. Continuar usando la app tras un cambio implica aceptar la nueva versión."
+        }
+      ],
+      "contact": "¿Dudas sobre estos términos? Escribe a jcrodriguezc0728@hotmail.com."
+    },
+    "privacy": {
+      "title": "Política de privacidad",
+      "lastUpdated": "Última actualización: abril 2026",
+      "intro": "Esta política explica qué datos recopila Arka Finance, cómo se usan y los controles que tienes sobre ellos. Arka es una app independiente de finanzas personales creada y mantenida por su autor. Contacto: jcrodriguezc0728@hotmail.com.",
+      "sections": [
+        {
+          "heading": "1. Qué datos recopilamos",
+          "body": "Información de cuenta (email, nombre visible, foto opcional si usas Google). Preferencias (tema, idioma, moneda de visualización). Datos financieros que ingresas manualmente: ingresos, gastos, presupuestos, metas y suscripciones. No sincronizamos tu cuenta bancaria, no hacemos scraping ni usamos píxeles de seguimiento."
+        },
+        {
+          "heading": "2. Cómo los usamos",
+          "body": "Para hacer funcionar la app, mostrar tus paneles, mantener tu estado sincronizado entre dispositivos y mejorar Arka. Nunca vendemos tus datos ni los compartimos con fines publicitarios."
+        },
+        {
+          "heading": "3. Dónde se almacenan",
+          "body": "Tus datos viven en Google Cloud Firestore (Firebase), asociados al UID de tu cuenta. Las reglas de seguridad de Firestore imponen aislamiento estricto por usuario: ningún otro usuario puede leer ni modificar tus registros."
+        },
+        {
+          "heading": "4. Terceros con los que trabajamos",
+          "body": "Firebase Authentication y Firestore (Google) para identidad y almacenamiento. Firebase App Check con reCAPTCHA v3 (Google) para bloquear abusos. Una API de tipos de cambio para conversión de divisa (no se envían datos personales). Vercel para el alojamiento. Estos proveedores tratan datos en nuestro nombre bajo sus propios términos."
+        },
+        {
+          "heading": "5. Cookies y almacenamiento local",
+          "body": "Usamos cookies para recordar tus preferencias (tema, idioma, consentimiento de cookies) y el estado de sesión. Usamos localStorage para mantener una copia offline-first del estado de la app, de modo que Arka cargue al instante. No utilizamos cookies de publicidad ni de analítica de terceros."
+        },
+        {
+          "heading": "6. Tus derechos",
+          "body": "Puedes ver, editar, exportar y eliminar tus datos directamente desde Ajustes. Bajo el RGPD y marcos similares también tienes derecho a oponerte al tratamiento, restringirlo o presentar una reclamación ante tu autoridad local de protección de datos. Escríbenos para ejercer cualquiera de ellos."
+        },
+        {
+          "heading": "7. Retención y eliminación",
+          "body": "Conservamos tus datos mientras tu cuenta esté activa. Al borrar los datos locales o eliminar tu cuenta, los registros correspondientes se eliminan de Firestore. Los respaldos que mantiene Google Cloud pueden persistir durante una ventana breve antes de purgarse."
+        },
+        {
+          "heading": "8. Menores y cambios",
+          "body": "Arka no está destinada a personas menores de 16 años. Podemos actualizar esta política; la fecha de \"Última actualización\" reflejará los cambios. Si son cambios materiales haremos esfuerzos razonables para notificártelo."
+        }
+      ],
+      "contact": "¿Preguntas o solicitudes sobre privacidad? Escribe a jcrodriguezc0728@hotmail.com."
     }
   }
 }

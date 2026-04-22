@@ -705,7 +705,92 @@
       "createAccount": "Create account",
       "liveDemo": "Live demo",
       "contact": "Contact",
+      "terms": "Terms",
+      "privacy": "Privacy",
       "copyright": "© {year} Arka Finance. Crafted with care. Not a financial advisor."
+    }
+  },
+  "legal": {
+    "backToHome": "← Back to home",
+    "terms": {
+      "title": "Terms of Service",
+      "lastUpdated": "Last updated: April 2026",
+      "intro": "Welcome to Arka Finance (\"Arka\", \"we\", \"us\"). These terms govern your use of the Arka web app at arka-finance-app.vercel.app. By creating an account or using the app, you agree to them. If you disagree, please don't use Arka.",
+      "sections": [
+        {
+          "heading": "1. Beta status",
+          "body": "Arka is currently in beta. Features may change, break, or be removed without notice. We do our best to avoid data loss, but during beta we cannot guarantee it. Please keep your own records for anything critical."
+        },
+        {
+          "heading": "2. Your account",
+          "body": "You must provide a valid email and a password, or sign in with a supported provider (Google). You're responsible for keeping your credentials safe and for all activity under your account. Notify us if you suspect unauthorised access."
+        },
+        {
+          "heading": "3. Acceptable use",
+          "body": "Don't try to break Arka, abuse its infrastructure, scrape data, reverse-engineer it, upload malicious content, impersonate others, or use it to commit fraud or anything illegal. Automated access or botting is not allowed."
+        },
+        {
+          "heading": "4. Your data belongs to you",
+          "body": "All financial information you enter (incomes, expenses, budgets, goals, subscriptions) is yours. You can export it or delete your account at any time from Settings. We don't sell your data."
+        },
+        {
+          "heading": "5. Not financial advice",
+          "body": "Arka is a personal budgeting and literacy tool. Nothing inside the app is financial, legal, tax, or investment advice. Always consult a qualified professional before making material decisions with your money."
+        },
+        {
+          "heading": "6. Availability",
+          "body": "Arka runs on third-party cloud services (Firebase, Vercel). The service is provided \"as is\" and may be unavailable, slow, or inconsistent at times. We do not promise specific uptime during beta."
+        },
+        {
+          "heading": "7. Disclaimer and liability",
+          "body": "To the fullest extent allowed by law, Arka is provided without warranties of any kind, express or implied. We are not liable for any direct, indirect, incidental, or consequential losses arising from your use of the service."
+        },
+        {
+          "heading": "8. Termination and changes",
+          "body": "You can delete your account at any time. We may suspend accounts that violate these terms. We may also update these terms; the \"Last updated\" date will reflect it. Continued use after a change means you accept the new version."
+        }
+      ],
+      "contact": "Questions about these terms? Email jcrodriguezc0728@hotmail.com."
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "lastUpdated": "Last updated: April 2026",
+      "intro": "This policy explains what data Arka Finance collects, how it's used, and the controls you have over it. Arka is an indie personal finance app built and maintained by its author. Contact: jcrodriguezc0728@hotmail.com.",
+      "sections": [
+        {
+          "heading": "1. Data we collect",
+          "body": "Account info (email, display name, optional photo from Google sign-in). Preferences (theme, language, display currency). Financial data you enter manually: incomes, expenses, budgets, goals and subscriptions. We do not sync your bank account, do not scrape, and do not use tracking pixels."
+        },
+        {
+          "heading": "2. How we use it",
+          "body": "To run the app, render your dashboards, keep your state synced across devices, and improve Arka. We never sell your data and we don't share it for advertising."
+        },
+        {
+          "heading": "3. Where it's stored",
+          "body": "Your data lives in Google Cloud Firestore (Firebase), associated with your account UID. Firestore security rules enforce strict per-user isolation: no other user can read or modify your records."
+        },
+        {
+          "heading": "4. Third parties we rely on",
+          "body": "Firebase Authentication and Firestore (Google) for identity and storage. Firebase App Check with reCAPTCHA v3 (Google) to block abuse. An FX rate API for currency conversion (no personal data is sent). Vercel for hosting. These providers handle data on our behalf under their own terms."
+        },
+        {
+          "heading": "5. Cookies and local storage",
+          "body": "We use cookies to remember your preferences (theme, language, cookie consent) and authentication state. We use localStorage to keep an offline-first snapshot of your app state so Arka loads instantly. No third-party advertising or analytics cookies."
+        },
+        {
+          "heading": "6. Your rights",
+          "body": "You can view, edit, export, and delete your data directly in Settings. Under GDPR and similar frameworks you also have the right to object, restrict processing, or lodge a complaint with your local data protection authority. Contact us to exercise any of these."
+        },
+        {
+          "heading": "7. Retention and deletion",
+          "body": "We retain your data while your account is active. When you clear local data or delete your account, the corresponding records are removed from Firestore. Backups kept by Google Cloud may persist for a short rolling window before being purged."
+        },
+        {
+          "heading": "8. Children and changes",
+          "body": "Arka is not intended for users under 16. We may update this policy; the \"Last updated\" date reflects changes. If the change is material we will make reasonable effort to notify you."
+        }
+      ],
+      "contact": "Privacy questions or requests? Email jcrodriguezc0728@hotmail.com."
     }
   }
 }

@@ -111,11 +111,11 @@ export function RegisterForm() {
         </Button>
         <p className="text-xs text-muted-foreground">
           {t("termsAgree")}{" "}
-          <Link href="/" className="underline">
+          <Link href="/terms" className="underline">
             {t("terms")}
           </Link>{" "}
           {t("and")}{" "}
-          <Link href="/" className="underline">
+          <Link href="/privacy" className="underline">
             {t("privacy")}
           </Link>
           .

@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { getRequestConfig } from "next-intl/server";
+import type { AbstractIntlMessages } from "next-intl";
 import { loadMessages, resolveLocale } from "./config";
 
 /**
@@ -13,8 +14,10 @@ import { loadMessages, resolveLocale } from "./config";
 export default getRequestConfig(async () => {
   const cookieStore = await cookies();
   const locale = resolveLocale(cookieStore.get("user_language")?.value);
+  // Cast: next-intl's AbstractIntlMessages doesn't model arrays in JSON, but
+  // `t.raw(...)` handles them at runtime. Legal pages iterate `sections` arrays.
   return {
     locale,
-    messages: await loadMessages(locale),
+    messages: (await loadMessages(locale)) as unknown as AbstractIntlMessages,
   };
 });
