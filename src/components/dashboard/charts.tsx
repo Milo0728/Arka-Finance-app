@@ -35,6 +35,11 @@ const CATEGORY_COLORS: Record<ExpenseCategory, string> = {
   savings: "#10b981",
   debt: "#f43f5e",
   other: "#64748b",
+  // Transfers are excluded from every chart via `expensesByCategory`
+  // (which filters them out) — this key only exists to satisfy the Record
+  // type. Neutral grey so if a future chart surfaces it, the visual
+  // signals "not real spending".
+  transfer: "#94a3b8",
 };
 
 function EmptyChart({ height = 280 }: { height?: number }) {
