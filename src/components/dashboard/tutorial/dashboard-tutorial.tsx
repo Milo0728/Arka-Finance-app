@@ -105,7 +105,7 @@ function TutorialController() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { setIsOpen, setSteps, setCurrentStep, isOpen } = useTour();
+  const { setIsOpen, setSteps, setCurrentStep, isOpen, currentStep, steps } = useTour();
 
   const running = useTutorialStore((s) => s.running);
   const section = useTutorialStore((s) => s.section);
@@ -241,6 +241,41 @@ function TutorialController() {
     if (!running && isOpen) setIsOpen(false);
   }, [running, isOpen, setIsOpen]);
 
+  // ── Scroll lock ────────────────────────────────────────────────────────────
+  // While the tour is running we freeze page scroll so users can't drift away
+  // from the highlighted element. We keep html/body untouched when the tour
+  // ends to avoid fighting other lock sources (Radix dialog, etc.).
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const root = document.documentElement;
+    const prevHtml = root.style.overflow;
+    const prevBody = document.body.style.overflow;
+    root.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    return () => {
+      root.style.overflow = prevHtml;
+      document.body.style.overflow = prevBody;
+    };
+  }, [isOpen]);
+
+  // ── Autoscroll to the current step's target ───────────────────────────────
+  // Reactour's built-in `scrollSmooth` only triggers on open; it misses same-tour
+  // step transitions when the target is offscreen. We complement it with a
+  // manual scrollIntoView on every step change. A short delay lets the popover
+  // finish its own positioning first so the browser doesn't clip our scroll.
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const step = steps[currentStep];
+    if (!step || typeof step.selector !== "string") return;
+    if (step.selector === "body") return;
+    const el = document.querySelector(step.selector);
+    if (!(el instanceof HTMLElement)) return;
+    const id = window.setTimeout(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+    }, 60);
+    return () => window.clearTimeout(id);
+  }, [isOpen, currentStep, steps]);
+
   // Expose nothing. Listening only.
   // (kept isFullTour dependency silent — store handles its own persistence.)
   void isFullTour;
@@ -261,11 +296,20 @@ export function DashboardTutorial({ children }: { children: React.ReactNode }) {
     <TourProvider
       steps={[]}
       padding={{ mask: 6, popover: 14 }}
-      disableInteraction={false}
+      // Lock interaction with the highlighted element while the tour is open —
+      // keeps the user focused on the guide (popover buttons still work because
+      // they live outside the mask).
+      disableInteraction
+      // Clicking the darkened backdrop should NOT close the tour: too easy to
+      // dismiss by accident and lose progress.
       disableDotsNavigation
+      disableKeyboardNavigation={false}
       showBadge
       scrollSmooth
       showCloseButton
+      onClickMask={() => {
+        /* noop — prevent backdrop click from closing the tour */
+      }}
       // Default next-button clamps at the last step — we override so that
       // pressing next on the last step closes the popover, which lets our
       // `advance()` detector move the queue forward.
@@ -302,8 +346,20 @@ export function DashboardTutorial({ children }: { children: React.ReactNode }) {
             : "0 20px 40px -12px rgba(2, 31, 20, 0.25)",
           maxWidth: 380,
         }),
-        maskArea: (base) => ({ ...base, rx: 12 }),
-        maskWrapper: (base) => ({ ...base, color: "rgba(3, 48, 30, 0.55)" }),
+        maskArea: (base) => ({
+          ...base,
+          rx: 12,
+          // Bright ring around the spotlight so the active element reads clearly
+          // even against the stronger backdrop below.
+          stroke: "#1ec47f",
+          strokeWidth: 2,
+        }),
+        maskWrapper: (base) => ({
+          ...base,
+          // Stronger black-tinted overlay. The previous greenish 0.55 blended
+          // too much into the app's brand palette, making the backdrop feel soft.
+          color: isDark ? "rgba(0, 0, 0, 0.82)" : "rgba(3, 20, 14, 0.72)",
+        }),
         badge: (base) => ({
           ...base,
           backgroundColor: "#1ec47f",

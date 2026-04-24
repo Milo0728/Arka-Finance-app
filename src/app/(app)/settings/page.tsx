@@ -41,6 +41,8 @@ import { LOCALES, LOCALE_LABELS, type Locale } from "@/i18n/config";
 import { Globe } from "lucide-react";
 import { saveProfilePreferences } from "@/hooks/usePreferences";
 import { useTutorialStore, type TutorialSection } from "@/store/useTutorialStore";
+import { useConfirm } from "@/components/ui/confirm-dialog";
+import { useAchievementsStore } from "@/store/useAchievementsStore";
 
 export default function SettingsPage() {
   const profile = useFinanceStore((s) => s.profile);
@@ -58,6 +60,8 @@ export default function SettingsPage() {
   const locale = useLocale() as Locale;
   const router = useRouter();
   const startTutorial = useTutorialStore((s) => s.start);
+  const resetAchievements = useAchievementsStore((s) => s.reset);
+  const { confirm, dialog: confirmDialog } = useConfirm();
 
   function launchTutorial(section: TutorialSection | "full") {
     startTutorial(section);
@@ -116,10 +120,34 @@ export default function SettingsPage() {
     toast.success(t("toasts.saved"));
   }
 
-  function clearLocalData() {
-    if (!confirm(t("confirmClear"))) return;
+  async function clearLocalData() {
+    const ok = await confirm({
+      title: t("confirmClearTitle"),
+      description: t("confirmClear"),
+      confirmLabel: t("clearLocal"),
+      cancelLabel: tCommon("cancel"),
+      destructive: true,
+    });
+    if (!ok) return;
     reset();
+    // A full data reset only makes sense alongside an achievement reset —
+    // leaving unlocked badges pointing at transactions that no longer exist
+    // is more confusing than helpful.
+    resetAchievements();
     toast.success(t("toasts.cleared"));
+  }
+
+  async function handleResetAchievements() {
+    const ok = await confirm({
+      title: t("confirmResetAchievementsTitle"),
+      description: t("confirmResetAchievements"),
+      confirmLabel: t("resetAchievements"),
+      cancelLabel: tCommon("cancel"),
+      destructive: true,
+    });
+    if (!ok) return;
+    resetAchievements();
+    toast.success(t("toasts.achievementsReset"));
   }
 
   async function refreshRates() {
@@ -189,22 +217,28 @@ export default function SettingsPage() {
           </div>
 
           <div className="rounded-lg border bg-muted/40 p-4 text-sm">
-            <div className="flex items-start justify-between gap-4">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+              <div className="min-w-0 space-y-1">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="text-muted-foreground">{t("exchangeRate")}</span>
                   <Badge variant={money.ratesSource === "live" ? "success" : "warning"} className="text-[10px]">
                     {money.ratesSource === "live" ? tCommon("live") : tCommon("fallback")}
                   </Badge>
                 </div>
-                <p className="arka-number text-lg font-semibold">
+                <p className="arka-number break-words text-lg font-semibold">
                   {formatCurrency(1, money.baseCurrency)} ≈ {formatCurrency(money.rate, money.currency)}
                 </p>
                 <p className="text-xs text-muted-foreground">
                   {t("lastUpdated", { ago: money.ratesUpdatedAt ? ratesAgo : t("never") })}
                 </p>
               </div>
-              <Button size="sm" variant="outline" onClick={refreshRates} disabled={loading.rates}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={refreshRates}
+                disabled={loading.rates}
+                className="shrink-0 self-start"
+              >
                 {loading.rates ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                 <span className="ml-1">{tCommon("refresh")}</span>
               </Button>
@@ -312,6 +346,7 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
+      {confirmDialog}
       <Card className="border-destructive/30">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base text-destructive">
@@ -320,7 +355,15 @@ export default function SettingsPage() {
           </CardTitle>
           <CardDescription>{t("dangerZoneDesc")}</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            onClick={handleResetAchievements}
+            className="border-destructive/40 text-destructive hover:bg-destructive/10"
+          >
+            <Trash2 className="h-4 w-4" />
+            <span className="ml-1">{t("resetAchievements")}</span>
+          </Button>
           <Button
             variant="outline"
             onClick={clearLocalData}

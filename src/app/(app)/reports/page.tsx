@@ -18,15 +18,39 @@ import { useMoney } from "@/hooks/useMoney";
 import { useLabels } from "@/hooks/useLabels";
 import { monthlyExpenses, monthlyIncome, savingsRate } from "@/utils/finance";
 import { toCSV, downloadCSV } from "@/utils/export";
+import { AccountFilter } from "@/components/dashboard/account-filter";
+import { DEFAULT_BUCKET_ID, filterByAccount } from "@/utils/accounts";
 
 export default function ReportsPage() {
-  const incomes = useFinanceStore((s) => s.incomes);
-  const expenses = useFinanceStore((s) => s.expenses);
+  const incomesAll = useFinanceStore((s) => s.incomes);
+  const expensesAll = useFinanceStore((s) => s.expenses);
+  const accounts = useFinanceStore((s) => s.accounts);
+  const activeAccountId = useFinanceStore((s) => s.activeAccountId);
   const money = useMoney();
   const labels = useLabels();
   const t = useTranslations("reports");
+  const tAccounts = useTranslations("accounts");
   const tNav = useTranslations("nav");
   const now = React.useMemo(() => new Date(), []);
+
+  // Apply the active account filter ONCE at the top — every KPI, chart, table
+  // and export below reads from these narrowed arrays. No duplicated logic and
+  // every derivation lives inside useMemo.
+  const incomes = React.useMemo(
+    () => filterByAccount(incomesAll, activeAccountId),
+    [incomesAll, activeAccountId]
+  );
+  const expenses = React.useMemo(
+    () => filterByAccount(expensesAll, activeAccountId),
+    [expensesAll, activeAccountId]
+  );
+
+  // Pretty label for the export filename and the contextual hint.
+  const accountLabel = React.useMemo(() => {
+    if (!activeAccountId) return null;
+    if (activeAccountId === DEFAULT_BUCKET_ID) return tAccounts("filterUnassigned");
+    return accounts.find((a) => a.id === activeAccountId)?.name ?? null;
+  }, [activeAccountId, accounts, tAccounts]);
 
   const last6 = React.useMemo(
     () =>
@@ -52,6 +76,18 @@ export default function ReportsPage() {
   const totalSavings = last6.reduce((a, b) => a + b.savings, 0);
   const hasData = incomes.length > 0 || expenses.length > 0;
   const fileDate = now.toISOString().slice(0, 10);
+  // ASCII-safe slug appended to export filenames so the user can tell exports
+  // for the same period but different accounts apart.
+  const accountSlug = React.useMemo(() => {
+    if (!accountLabel) return "";
+    const slug = accountLabel
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    return slug ? `-${slug}` : "";
+  }, [accountLabel]);
 
   function exportExpenses() {
     const csv = toCSV(
@@ -65,7 +101,7 @@ export default function ReportsPage() {
         description: e.description ?? "",
       }))
     );
-    downloadCSV(`arka-expenses-${money.currency}-${fileDate}.csv`, csv);
+    downloadCSV(`arka-expenses-${money.currency}${accountSlug}-${fileDate}.csv`, csv);
     toast.success(t("toasts.expensesCsv"));
   }
 
@@ -80,7 +116,7 @@ export default function ReportsPage() {
         description: i.description ?? "",
       }))
     );
-    downloadCSV(`arka-income-${money.currency}-${fileDate}.csv`, csv);
+    downloadCSV(`arka-income-${money.currency}${accountSlug}-${fileDate}.csv`, csv);
     toast.success(t("toasts.incomeCsv"));
   }
 
@@ -95,7 +131,7 @@ export default function ReportsPage() {
         currency: money.currency,
       }))
     );
-    downloadCSV(`arka-summary-${money.currency}-${fileDate}.csv`, csv);
+    downloadCSV(`arka-summary-${money.currency}${accountSlug}-${fileDate}.csv`, csv);
     toast.success(t("toasts.summaryCsv"));
   }
 
@@ -105,7 +141,8 @@ export default function ReportsPage() {
         title={t("title")}
         description={t("description")}
         action={
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <AccountFilter />
             <Button size="sm" variant="outline" onClick={exportSummary} disabled={!hasData}>
               <Download className="h-4 w-4" />
               <span className="ml-1">{t("summary")}</span>
@@ -122,11 +159,17 @@ export default function ReportsPage() {
         }
       />
 
+      {accountLabel && hasData && (
+        <p className="text-xs text-muted-foreground">
+          {t("filteredBy", { name: accountLabel })}
+        </p>
+      )}
+
       {!hasData ? (
         <EmptyState
           icon={<FileBarChart2 className="h-5 w-5" />}
-          title={t("emptyTitle")}
-          description={t("emptyDesc")}
+          title={accountLabel ? t("emptyAccountTitle", { name: accountLabel }) : t("emptyTitle")}
+          description={accountLabel ? t("emptyAccountDesc") : t("emptyDesc")}
         />
       ) : (
         <>

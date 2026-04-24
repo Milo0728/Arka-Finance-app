@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Repeat } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +30,13 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useMoney } from "@/hooks/useMoney";
 import { useLabels } from "@/hooks/useLabels";
 import { EXPENSE_CATEGORY_VALUES } from "@/lib/categories";
+import { isFeatureEnabled } from "@/lib/feature-flags";
+import { QuickParseInput } from "@/components/dashboard/quick-parse-input";
 import type { Expense, ExpenseCategory, ExpenseType } from "@/types";
+
+const NO_ACCOUNT_VALUE = "__none__";
+const NO_SUB_VALUE = "__none__";
+const CREATE_SUB_VALUE = "__create__";
 
 type Values = {
   amount: number;
@@ -38,6 +44,11 @@ type Values = {
   type: ExpenseType;
   date: string;
   description?: string;
+  accountId?: string;
+  /** Existing subscription id, the create sentinel, or NO_SUB_VALUE. */
+  subscriptionPick?: string;
+  /** Used only when `subscriptionPick === CREATE_SUB_VALUE`. */
+  newSubscriptionName?: string;
 };
 
 interface Props {
@@ -49,7 +60,11 @@ interface Props {
 export function ExpenseForm({ open, onOpenChange, editing }: Props) {
   const addExpense = useFinanceStore((s) => s.addExpense);
   const updateExpense = useFinanceStore((s) => s.updateExpense);
+  const addSubscription = useFinanceStore((s) => s.addSubscription);
+  const subscriptions = useFinanceStore((s) => s.subscriptions);
   const profile = useFinanceStore((s) => s.profile);
+  const accounts = useFinanceStore((s) => s.accounts);
+  const activeAccountId = useFinanceStore((s) => s.activeAccountId);
   const user = useAuthStore((s) => s.user);
   const userId = user?.uid ?? profile?.id ?? "demo-user";
   const money = useMoney();
@@ -57,6 +72,12 @@ export function ExpenseForm({ open, onOpenChange, editing }: Props) {
   const t = useTranslations("expenses");
   const tForm = useTranslations("expenses.form");
   const tCommon = useTranslations("common");
+  const tAccounts = useTranslations("accounts");
+  const tSubs = useTranslations("subscriptions");
+  // Show the picker whenever there's at least one account to pick — otherwise
+  // the user has no way to tie an entry to their real account and everything
+  // silently lands in "General". The previous ≥2 rule caused exactly that bug.
+  const showAccountSelector = isFeatureEnabled("multiAccount") && accounts.length >= 1;
 
   const schema = React.useMemo(
     () =>
@@ -75,10 +96,14 @@ export function ExpenseForm({ open, onOpenChange, editing }: Props) {
           "savings",
           "debt",
           "other",
+          "transfer",
         ]),
         type: z.enum(["fixed", "variable"]),
         date: z.string().min(1),
         description: z.string().optional(),
+        accountId: z.string().optional(),
+        subscriptionPick: z.string().optional(),
+        newSubscriptionName: z.string().optional(),
       }),
     [tForm]
   );
@@ -91,8 +116,19 @@ export function ExpenseForm({ open, onOpenChange, editing }: Props) {
       type: (editing?.type as ExpenseType) ?? "variable",
       date: editing?.date ?? new Date().toISOString().slice(0, 10),
       description: editing?.description ?? "",
+      // Default cascade: the entry's own account (when editing) →
+      // the globally active account → the first real account the user owns.
+      // Only falls back to undefined ("General") when the user has no
+      // accounts at all. Prevents the previous silent-to-General bug.
+      accountId:
+        editing?.accountId ??
+        activeAccountId ??
+        (accounts[0]?.id) ??
+        undefined,
+      subscriptionPick: editing?.subscriptionId ?? NO_SUB_VALUE,
+      newSubscriptionName: "",
     }),
-    [editing, moneyRate]
+    [editing, moneyRate, activeAccountId]
   );
 
   const {
@@ -100,6 +136,7 @@ export function ExpenseForm({ open, onOpenChange, editing }: Props) {
     handleSubmit,
     reset,
     setValue,
+    watch,
     getValues,
     formState: { errors, isSubmitting },
   } = useForm<Values>({ resolver: zodResolver(schema), defaultValues: defaults });
@@ -108,8 +145,54 @@ export function ExpenseForm({ open, onOpenChange, editing }: Props) {
     reset(defaults);
   }, [defaults, reset]);
 
+  const watchedCategory = watch("category");
+  const watchedSub = watch("subscriptionPick");
+  const showSubscriptionField = watchedCategory === "subscriptions";
+  const showNewSubInput = showSubscriptionField && watchedSub === CREATE_SUB_VALUE;
+
   async function onSubmit(values: Values) {
-    const payload = { ...values, amount: money.toUSD(values.amount) };
+    // Strip out the synthetic "no account" sentinel so we never persist it to Firestore.
+    const accountId =
+      values.accountId && values.accountId !== NO_ACCOUNT_VALUE ? values.accountId : undefined;
+
+    // Resolve subscription link. We only persist a `subscriptionId` when the
+    // expense really is in the subscriptions category — otherwise users who
+    // change category late would carry a stale link.
+    let subscriptionId: string | undefined;
+    if (values.category === "subscriptions") {
+      if (values.subscriptionPick === CREATE_SUB_VALUE) {
+        const name = (values.newSubscriptionName ?? "").trim();
+        if (!name) {
+          toast.error(tSubs("link.needName"));
+          return;
+        }
+        // Create the subscription first so the id we link is real, not a temp.
+        const created = await addSubscription({
+          userId,
+          name,
+          // Use the expense amount in USD as a starting point for the
+          // declared monthly amount — the user can refine it later.
+          amount: money.toUSD(values.amount),
+          billingCycle: "monthly",
+          category: "subscriptions",
+        });
+        subscriptionId = created.id;
+        toast.success(tSubs("link.createdToast", { name }));
+      } else if (values.subscriptionPick && values.subscriptionPick !== NO_SUB_VALUE) {
+        subscriptionId = values.subscriptionPick;
+      }
+    }
+
+    const payload = {
+      ...values,
+      amount: money.toUSD(values.amount),
+      accountId,
+      subscriptionId,
+    };
+    // Strip transient form-only fields before persisting.
+    delete (payload as Record<string, unknown>).subscriptionPick;
+    delete (payload as Record<string, unknown>).newSubscriptionName;
+
     if (editing) {
       await updateExpense(editing.id, payload);
       toast.success(t("toasts.updated"));
@@ -128,6 +211,16 @@ export function ExpenseForm({ open, onOpenChange, editing }: Props) {
           <DialogDescription>{t("formDesc")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {!editing && (
+            <QuickParseInput
+              onApply={(result) => {
+                if (result.amount !== null) setValue("amount", result.amount);
+                if (result.description) setValue("description", result.description);
+                if (result.category) setValue("category", result.category);
+              }}
+              resolveLabel={(r) => (r.category ? labels.expenseCategory(r.category) ?? r.category : null)}
+            />
+          )}
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label>
@@ -155,7 +248,7 @@ export function ExpenseForm({ open, onOpenChange, editing }: Props) {
             <div className="space-y-2">
               <Label>{tForm("category")}</Label>
               <Select
-                defaultValue={getValues("category")}
+                value={watchedCategory}
                 onValueChange={(v) => setValue("category", v as ExpenseCategory)}
               >
                 <SelectTrigger>
@@ -186,6 +279,73 @@ export function ExpenseForm({ open, onOpenChange, editing }: Props) {
               </Select>
             </div>
           </div>
+
+          {/* Subscription link — appears only when the user picks the
+              "subscriptions" category. Lets the expense be tied to an
+              existing subscription or spawn a new one inline. */}
+          {showSubscriptionField && (
+            <div className="space-y-2 rounded-lg border border-primary/20 bg-primary/5 p-3">
+              <Label className="flex items-center gap-1.5 text-xs">
+                <Repeat className="h-3 w-3 text-primary" />
+                {tSubs("link.label")}
+              </Label>
+              <Select
+                value={watchedSub ?? NO_SUB_VALUE}
+                onValueChange={(v) => setValue("subscriptionPick", v)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={NO_SUB_VALUE}>{tSubs("link.none")}</SelectItem>
+                  {subscriptions.map((s) => (
+                    <SelectItem key={s.id} value={s.id}>
+                      {s.name}
+                    </SelectItem>
+                  ))}
+                  <SelectItem value={CREATE_SUB_VALUE}>{tSubs("link.createNew")}</SelectItem>
+                </SelectContent>
+              </Select>
+              {showNewSubInput && (
+                <div className="space-y-1">
+                  <Input
+                    placeholder={tSubs("link.namePlaceholder")}
+                    {...register("newSubscriptionName")}
+                  />
+                  <p className="text-[11px] text-muted-foreground">{tSubs("link.createHint")}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {showAccountSelector && (
+            <div className="space-y-2">
+              <Label>{tAccounts("form.accountLabel")}</Label>
+              <Select
+                // Controlled value — `watch()` keeps the Select in sync with
+                // form state, so when accounts load asynchronously or the
+                // defaults re-compute, the dropdown reflects the change.
+                value={watch("accountId") ?? NO_ACCOUNT_VALUE}
+                onValueChange={(v) =>
+                  setValue("accountId", v === NO_ACCOUNT_VALUE ? undefined : v, {
+                    shouldDirty: true,
+                  })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={NO_ACCOUNT_VALUE}>{tAccounts("form.noAccount")}</SelectItem>
+                  {accounts.map((a) => (
+                    <SelectItem key={a.id} value={a.id}>
+                      {a.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="space-y-2">
             <Label>{tForm("descriptionLabel")}</Label>
             <Input placeholder={tForm("descriptionPlaceholder")} {...register("description")} />

@@ -4,6 +4,7 @@ import {
   addDoc,
   collection,
   deleteDoc,
+  deleteField,
   doc,
   getDoc,
   getDocs,
@@ -18,6 +19,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "@/lib/firebase";
 import type {
+  Account,
   Budget,
   Expense,
   Goal,
@@ -39,6 +41,7 @@ const COLLECTIONS = {
   budgets: "budgets",
   goals: "goals",
   subscriptions: "subscriptions",
+  accounts: "accounts",
 } as const;
 
 async function listForUser<T>(collectionName: string, userId: string, extra: QueryConstraint[] = []): Promise<T[]> {
@@ -53,12 +56,28 @@ async function createForUser<T extends { userId: string }>(
   data: Omit<T, "id">
 ): Promise<T> {
   const ref = collection(db(), collectionName);
-  const created = await addDoc(ref, { ...data, createdAt: serverTimestamp() });
+  // Strip undefined values — addDoc with ignoreUndefinedProperties=false (our
+  // default) would otherwise throw. We drop them on create rather than storing
+  // deleteField() sentinels, which only make sense on update.
+  const clean: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(data as Record<string, unknown>)) {
+    if (value !== undefined) clean[key] = value;
+  }
+  clean.createdAt = serverTimestamp();
+  const created = await addDoc(ref, clean as DocumentData);
   return { ...data, id: created.id } as unknown as T;
 }
 
 async function updateDocument<T>(collectionName: string, id: string, data: Partial<T>) {
-  await updateDoc(doc(db(), collectionName, id), data as DocumentData);
+  // Firestore's updateDoc rejects raw `undefined` values — but callers use
+  // `undefined` naturally to mean "clear this field" (e.g. unlinking an
+  // account or subscription). Translate undefineds into deleteField() so the
+  // write succeeds AND the field actually goes away on the backend.
+  const clean: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(data as Record<string, unknown>)) {
+    clean[key] = value === undefined ? deleteField() : value;
+  }
+  await updateDoc(doc(db(), collectionName, id), clean as DocumentData);
 }
 
 async function removeDocument(collectionName: string, id: string) {
@@ -116,4 +135,12 @@ export const subscriptionService = {
   update: (id: string, data: Partial<Subscription>) =>
     updateDocument<Subscription>(COLLECTIONS.subscriptions, id, data),
   remove: (id: string) => removeDocument(COLLECTIONS.subscriptions, id),
+};
+
+// Accounts
+export const accountService = {
+  list: (userId: string) => listForUser<Account>(COLLECTIONS.accounts, userId),
+  create: (data: Omit<Account, "id">) => createForUser<Account>(COLLECTIONS.accounts, data),
+  update: (id: string, data: Partial<Account>) => updateDocument<Account>(COLLECTIONS.accounts, id, data),
+  remove: (id: string) => removeDocument(COLLECTIONS.accounts, id),
 };

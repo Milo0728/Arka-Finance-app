@@ -10,6 +10,8 @@ export const CURRENCIES: { code: Currency; label: string; symbol: string }[] = [
   { code: "BRL", label: "Brazilian Real", symbol: "R$" },
   { code: "CLP", label: "Chilean Peso", symbol: "CLP$" },
   { code: "PEN", label: "Peruvian Sol", symbol: "S/" },
+  { code: "HNL", label: "Honduran Lempira", symbol: "L" },
+  { code: "GTQ", label: "Guatemalan Quetzal", symbol: "Q" },
 ];
 
 export function formatCurrency(value: number, currency: Currency = "USD", locale = "en-US") {

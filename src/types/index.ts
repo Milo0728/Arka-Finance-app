@@ -1,4 +1,15 @@
-export type Currency = "USD" | "EUR" | "GBP" | "MXN" | "ARS" | "COP" | "BRL" | "CLP" | "PEN";
+export type Currency =
+  | "USD"
+  | "EUR"
+  | "GBP"
+  | "MXN"
+  | "ARS"
+  | "COP"
+  | "BRL"
+  | "CLP"
+  | "PEN"
+  | "HNL"
+  | "GTQ";
 
 export type ExpenseType = "fixed" | "variable";
 
@@ -41,6 +52,8 @@ export interface Income {
   frequency?: IncomeFrequency;
   description?: string;
   createdAt?: ISODate;
+  /** Optional — undefined means it belongs to the user's default account. */
+  accountId?: string;
 }
 
 export interface Expense {
@@ -52,7 +65,37 @@ export interface Expense {
   date: ISODate;
   description?: string;
   createdAt?: ISODate;
+  /** Optional — undefined means it belongs to the user's default account. */
+  accountId?: string;
+  /**
+   * Optional link to the Subscription this expense pays for. When set, the
+   * subscription's "paid from" / "last paid" / "monthly average" stats are
+   * derived from every expense pointing to it. Existing expenses without this
+   * field are treated as "not linked" and continue to work unchanged.
+   */
+  subscriptionId?: string;
 }
+
+export type AccountType = "bank" | "cash" | "wallet";
+
+export interface Account {
+  id: string;
+  userId: string;
+  name: string;
+  type: AccountType;
+  /** Display currency for this account (storage is still USD-anchored). */
+  currency: Currency;
+  /** Initial balance in USD — added to derived flows for the account-level total. */
+  initialBalance: number;
+  createdAt?: ISODate;
+  /** Tailwind/CSS color string used for badges and charts. Optional. */
+  color?: string;
+  /** lucide-react icon name (e.g. "wallet", "landmark"). Optional. */
+  icon?: string;
+}
+
+/** Synthetic id used by the UI when an entry has no `accountId`. Never persisted. */
+export const DEFAULT_ACCOUNT_ID = "__default__";
 
 export interface Budget {
   id: string;
@@ -96,9 +139,17 @@ export type ExpenseCategory =
   | "shopping"
   | "savings"
   | "debt"
-  | "other";
+  | "other"
+  | "transfer";
 
-export type IncomeCategory = "salary" | "freelance" | "investment" | "business" | "gift" | "other";
+export type IncomeCategory =
+  | "salary"
+  | "freelance"
+  | "investment"
+  | "business"
+  | "gift"
+  | "other"
+  | "transfer";
 
 export interface FinancialInsight {
   id: string;

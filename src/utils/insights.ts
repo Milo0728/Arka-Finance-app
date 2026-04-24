@@ -1,4 +1,5 @@
 import type { Budget, Expense, FinancialInsight, Goal, Income, Subscription } from "@/types";
+import { subMonths } from "date-fns";
 import {
   babylonSavingsTarget,
   budgetUsage,
@@ -9,6 +10,22 @@ import {
   totalMonthlySubscriptions,
 } from "./finance";
 import { formatPercent } from "@/lib/currency";
+
+/** Severity ordering — higher number means surfaced first. */
+const LEVEL_WEIGHT: Record<FinancialInsight["level"], number> = {
+  critical: 4,
+  warning: 3,
+  info: 2,
+  positive: 1,
+};
+
+/**
+ * Stable severity-first sort. Used by both the dashboard widget and the full
+ * insights page so the principal alert stays consistent across the UI.
+ */
+export function prioritizeInsights(insights: FinancialInsight[]): FinancialInsight[] {
+  return [...insights].sort((a, b) => LEVEL_WEIGHT[b.level] - LEVEL_WEIGHT[a.level]);
+}
 
 export interface GenerateInsightsArgs {
   incomes: Income[];
@@ -133,5 +150,49 @@ export function generateInsights(args: GenerateInsightsArgs): FinancialInsight[]
     }
   }
 
-  return insights;
+  // ── Month-over-month comparison ────────────────────────────────────────────
+  // Only emit when both months have at least one expense — otherwise the delta
+  // is noise (going from 0 to anything is mathematically infinite).
+  const now = new Date();
+  const prevRef = subMonths(now, 1);
+  const prevExpense = monthlyExpenses(expenses, prevRef);
+  if (expense > 0 && prevExpense > 0) {
+    const delta = ((expense - prevExpense) / prevExpense) * 100;
+    if (delta >= 25) {
+      insights.push({
+        id: "trend-spend-up",
+        level: delta >= 50 ? "warning" : "info",
+        titleKey: "trendSpendUpTitle",
+        descriptionKey: "trendSpendUpDesc",
+        descriptionValues: { delta: formatPercent(delta, 0) },
+        value: format(expense - prevExpense),
+      });
+    } else if (delta <= -15) {
+      insights.push({
+        id: "trend-spend-down",
+        level: "positive",
+        titleKey: "trendSpendDownTitle",
+        descriptionKey: "trendSpendDownDesc",
+        descriptionValues: { delta: formatPercent(Math.abs(delta), 0) },
+        value: format(prevExpense - expense),
+      });
+    }
+  }
+
+  // ── Predictive runway warning ──────────────────────────────────────────────
+  // If current spend pace exceeds income, project the gap and flag it before the
+  // month closes. Cheap and deterministic — no ML model needed.
+  if (income > 0 && expense > income) {
+    const overshoot = expense - income;
+    insights.push({
+      id: "predict-overshoot",
+      level: "critical",
+      titleKey: "predictOvershootTitle",
+      descriptionKey: "predictOvershootDesc",
+      descriptionValues: { amount: format(overshoot) },
+      value: format(overshoot),
+    });
+  }
+
+  return prioritizeInsights(insights);
 }

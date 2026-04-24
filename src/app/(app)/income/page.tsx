@@ -12,22 +12,40 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { KPICard } from "@/components/dashboard/kpi-card";
 import { IncomeForm } from "@/features/income/income-form";
+import { AccountFilter } from "@/components/dashboard/account-filter";
 import { useTranslations } from "next-intl";
 import { useFinanceStore } from "@/store/useFinanceStore";
 import { useMoney } from "@/hooks/useMoney";
 import { useLabels } from "@/hooks/useLabels";
 import { lifetimeIncome, monthlyIncome as getMonthlyIncome } from "@/utils/finance";
+import { DEFAULT_BUCKET_ID, filterByAccount } from "@/utils/accounts";
 import type { Income } from "@/types";
 
 export default function IncomePage() {
-  const incomes = useFinanceStore((s) => s.incomes);
+  const incomesAll = useFinanceStore((s) => s.incomes);
+  const accounts = useFinanceStore((s) => s.accounts);
+  const activeAccountId = useFinanceStore((s) => s.activeAccountId);
   const removeIncome = useFinanceStore((s) => s.removeIncome);
   const money = useMoney();
   const labels = useLabels();
   const t = useTranslations("income");
   const tCommon = useTranslations("common");
+  const tAccounts = useTranslations("accounts");
+
+  // Name of the active account — used by the contextual empty state so the
+  // message reads "No income for Itaú" instead of the generic one.
+  const accountLabel = React.useMemo(() => {
+    if (!activeAccountId) return null;
+    if (activeAccountId === DEFAULT_BUCKET_ID) return tAccounts("filterUnassigned");
+    return accounts.find((a) => a.id === activeAccountId)?.name ?? null;
+  }, [activeAccountId, accounts, tAccounts]);
   const [open, setOpen] = React.useState(false);
   const [editing, setEditing] = React.useState<Income | null>(null);
+
+  const incomes = React.useMemo(
+    () => filterByAccount(incomesAll, activeAccountId),
+    [incomesAll, activeAccountId]
+  );
 
   const total = lifetimeIncome(incomes);
   const thisMonth = getMonthlyIncome(incomes);
@@ -59,10 +77,13 @@ export default function IncomePage() {
         title={t("title")}
         description={t("description")}
         action={
-          <Button onClick={openNew} size="sm" data-tutorial="add-button">
-            <Plus className="h-4 w-4" />
-            <span className="ml-1">{t("logIncome")}</span>
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <AccountFilter />
+            <Button onClick={openNew} size="sm" data-tutorial="add-button">
+              <Plus className="h-4 w-4" />
+              <span className="ml-1">{t("logIncome")}</span>
+            </Button>
+          </div>
         }
       />
 
@@ -80,8 +101,17 @@ export default function IncomePage() {
       {incomes.length === 0 ? (
         <EmptyState
           icon={<TrendingUp className="h-5 w-5" />}
-          title={t("emptyTitle")}
-          description={t("emptyDesc")}
+          // Distinguish "nothing yet" from "nothing for THIS account". The
+          // second case needs a different action hint since creating a new
+          // income will (by default) still land outside the filtered account.
+          title={
+            accountLabel && incomesAll.length > 0
+              ? t("emptyAccountTitle", { name: accountLabel })
+              : t("emptyTitle")
+          }
+          description={
+            accountLabel && incomesAll.length > 0 ? t("emptyAccountDesc") : t("emptyDesc")
+          }
           action={
             <Button onClick={openNew} size="sm">
               <Plus className="h-4 w-4" />
@@ -120,7 +150,9 @@ export default function IncomePage() {
                       <TableCell>
                         <Badge variant="secondary">{labels.incomeCategory(i.category) ?? i.category}</Badge>
                       </TableCell>
-                      <TableCell className="text-sm">{i.description ?? "—"}</TableCell>
+                      <TableCell className="max-w-[220px] truncate text-sm" title={i.description ?? undefined}>
+                        {i.description ?? "—"}
+                      </TableCell>
                       <TableCell className="arka-number text-right font-medium text-success">
                         +{money.format(i.amount)}
                       </TableCell>
