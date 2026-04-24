@@ -11,6 +11,10 @@ import { BabylonWidget } from "@/components/dashboard/babylon-widget";
 import { CashflowChart, CategoryPieChart, SavingsTrendChart } from "@/components/dashboard/lazy-charts";
 import { HealthScore } from "@/components/dashboard/health-score";
 import { InsightsList } from "@/components/dashboard/insights-list";
+import { AchievementsPanel } from "@/components/dashboard/achievements";
+import { NotificationsBanner } from "@/components/dashboard/notifications-banner";
+import { AccountFilter } from "@/components/dashboard/account-filter";
+import { filterByAccount } from "@/utils/accounts";
 import { useFinanceStore } from "@/store/useFinanceStore";
 import { useMoney } from "@/hooks/useMoney";
 import { useLabels } from "@/hooks/useLabels";
@@ -27,12 +31,24 @@ import { generateInsights } from "@/utils/insights";
 import { subMonths } from "date-fns";
 
 export default function DashboardPage() {
-  const incomes = useFinanceStore((s) => s.incomes);
-  const expenses = useFinanceStore((s) => s.expenses);
+  const incomesAll = useFinanceStore((s) => s.incomes);
+  const expensesAll = useFinanceStore((s) => s.expenses);
+  const activeAccountId = useFinanceStore((s) => s.activeAccountId);
   const budgets = useFinanceStore((s) => s.budgets);
   const goals = useFinanceStore((s) => s.goals);
   const subscriptions = useFinanceStore((s) => s.subscriptions);
   const profile = useFinanceStore((s) => s.profile);
+
+  // Apply the global account filter once — every chart and KPI downstream
+  // reads from these narrowed arrays, so the dashboard is internally consistent.
+  const incomes = React.useMemo(
+    () => filterByAccount(incomesAll, activeAccountId),
+    [incomesAll, activeAccountId]
+  );
+  const expenses = React.useMemo(
+    () => filterByAccount(expensesAll, activeAccountId),
+    [expensesAll, activeAccountId]
+  );
   const money = useMoney();
   const locale = useLocale();
   const labels = useLabels();
@@ -87,7 +103,7 @@ export default function DashboardPage() {
         subscriptions,
         format: moneyFormat,
         categoryLabel,
-      }).slice(0, 5),
+      }).slice(0, 3),
     [incomes, expenses, budgets, goals, subscriptions, moneyFormat, categoryLabel]
   );
   const thisMonthExpenses = React.useMemo(() => filterByMonth(expenses, now), [expenses, now]);
@@ -105,7 +121,8 @@ export default function DashboardPage() {
             })}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <AccountFilter />
           <Button asChild variant="outline" size="sm">
             <Link href="/reports">{tCommon("export")}</Link>
           </Button>
@@ -158,12 +175,12 @@ export default function DashboardPage() {
 
       <div className="grid gap-4 xl:grid-cols-[1.6fr_1fr]" data-tutorial="charts">
         <Card>
-          <CardHeader className="flex flex-row items-start justify-between pb-2">
-            <div>
+          <CardHeader className="flex flex-col gap-2 pb-2 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
               <CardTitle className="text-base">{t("cashflow")}</CardTitle>
               <CardDescription>{t("cashflowSub")}</CardDescription>
             </div>
-            <div className="flex items-center gap-3 text-xs">
+            <div className="flex flex-wrap items-center gap-3 text-xs">
               <LegendDot color="#22c55e" label={t("legendIncome")} />
               <LegendDot color="#ef4444" label={t("legendExpense")} />
             </div>
@@ -198,13 +215,17 @@ export default function DashboardPage() {
         </Card>
 
         <div data-tutorial="score" className="xl:col-span-1">
-          <HealthScore score={score} hasData={hasData} />
+          <HealthScore score={score} hasData={hasData} scopedToAccount={!!activeAccountId} />
         </div>
       </div>
+
+      <NotificationsBanner insights={insights} />
 
       <div data-tutorial="insights">
         <InsightsList insights={insights} title={t("arkaInsights")} />
       </div>
+
+      <AchievementsPanel />
     </div>
   );
 }

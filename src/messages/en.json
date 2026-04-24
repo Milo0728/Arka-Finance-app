@@ -13,6 +13,7 @@
     "insights": "Insights",
     "reports": "Reports",
     "settings": "Settings",
+    "accounts": "Accounts",
     "workspace": "Workspace",
     "babylonRuleActive": "ACTIVE",
     "babylonRuleTitle": "Babylon rule",
@@ -71,7 +72,8 @@
       "shopping": "Shopping",
       "savings": "Savings",
       "debt": "Debt",
-      "other": "Other"
+      "other": "Other",
+      "transfer": "Transfer between accounts"
     },
     "income": {
       "salary": "Salary",
@@ -79,7 +81,8 @@
       "investment": "Investment",
       "business": "Business",
       "gift": "Gift",
-      "other": "Other"
+      "other": "Other",
+      "transfer": "Transfer between accounts"
     }
   },
   "billing": {
@@ -166,6 +169,8 @@
     "averageMonth": "Avg / month",
     "emptyTitle": "No income logged yet",
     "emptyDesc": "Add your first paycheck, gig payment or dividend to start tracking.",
+    "emptyAccountTitle": "No income for {name}",
+    "emptyAccountDesc": "Try selecting another account or log an income into this one.",
     "formNewTitle": "Log new income",
     "formEditTitle": "Edit income",
     "formDesc": "Money flowing in — whether salary, side hustle or dividends.",
@@ -200,9 +205,12 @@
     "title": "Expenses",
     "description": "Track every outflow — and spot where your money leaks.",
     "logExpense": "Log expense",
+    "importCsv": "Import file",
     "topCategory": "Top category",
     "noMatchTitle": "No expenses match",
     "noMatchDesc": "Clear your filters or log a new expense.",
+    "emptyAccountTitle": "No expenses for {name}",
+    "emptyAccountDesc": "Switch to another account or log an expense into this one.",
     "byCategory": "By category",
     "formNewTitle": "Log new expense",
     "formEditTitle": "Edit expense",
@@ -257,6 +265,8 @@
     "usedSlow": "{pct}% used — slow down",
     "usedTrack": "{pct}% used — on track",
     "of": "of {limit}",
+    "scopeNote": "Showing consumption from {name}. Budget limits stay global — they aren't per-account.",
+    "consumedFrom": "Consumed from {name}: {used} / {limit} (global limit)",
     "over": "Over",
     "warning": "Warning",
     "toasts": {
@@ -325,7 +335,47 @@
       "service": "Service",
       "billing": "Billing",
       "amount": "Amount",
-      "monthlyEquivalent": "≈ Monthly"
+      "monthlyEquivalent": "≈ Monthly",
+      "monthlyAverage": "Avg / month",
+      "monthly": "Monthly",
+      "estimatedHint": "Estimated from {count} linked payments.",
+      "detectedHint": "Detected cadence from your payments differs from the declared cycle.",
+      "frequency": {
+        "monthly": "Monthly",
+        "weekly": "Weekly",
+        "irregular": "Variable"
+      },
+      "lastPaid": "Last paid",
+      "paidFrom": "Paid from",
+      "notLinked": "Not associated",
+      "unassignedAccount": "General",
+      "unknownAccount": "Unknown account",
+      "multipleAccounts": "Multiple accounts"
+    },
+    "link": {
+      "label": "Linked subscription",
+      "none": "Don't link",
+      "createNew": "+ Create new",
+      "namePlaceholder": "e.g. Netflix",
+      "createHint": "We'll create a monthly subscription with this amount. You can refine it later.",
+      "needName": "Give the new subscription a name",
+      "createdToast": "Created subscription \"{name}\"",
+      "detectedToast": "Linked to \"{name}\"",
+      "detectedBadge": "{name} detected",
+      "suggest": "Did you mean \"{name}\"?",
+      "useThis": "Use this",
+      "willCreate": "We'll create \"{name}\" as a new subscription.",
+      "notFoundPrompt": "No subscription matches \"{name}\".",
+      "createBtn": "Create \"{name}\"",
+      "linkExisting": "Link existing expenses",
+      "linkTitle": "Link expenses to {name}",
+      "linkDescription": "Pick the expenses that belong to this subscription. Changes save immediately.",
+      "linkEmpty": "No expenses to choose from yet.",
+      "linkApply": "Link {count}",
+      "linkApplied": "Linked {count} expenses to {name}",
+      "linkHint": "Based on your latest payments",
+      "multipleAccountsHint": "Paid from multiple accounts — no clear winner.",
+      "noDataAction": "Link subscription"
     },
     "toasts": {
       "added": "Subscription added",
@@ -346,9 +396,16 @@
     "title": "Financial insights",
     "description": "Patterns, nudges and signals Arka surfaces from your activity.",
     "all": "All insights",
+    "allForAccount": "All insights · {name}",
     "topCategoriesTitle": "Top spending categories",
+    "topCategoriesTitleForAccount": "Top spending categories · {name}",
     "topCategoriesDesc": "Where the most money flowed over time.",
     "nothingYet": "Nothing to show yet.",
+    "scopeAll": "Analysing all accounts",
+    "scopeAllHint": "Insights and score reflect your full picture.",
+    "scopeAccount": "Analysing: {name}",
+    "scopeAccountHint": "Income and expenses are narrowed to this account. Budgets, goals and subscriptions stay global.",
+    "scoreForAccount": "How this account's habits compound.",
     "curatedDesc": "Curated automatically from your activity.",
     "defaultTitle": "Insights",
     "empty": {
@@ -369,8 +426,15 @@
       "budgetWarnTitle": "Approaching {category} limit",
       "budgetWarnDesc": "You've used {pct} of your {category} budget.",
       "goalDoneTitle": "Goal achieved: {title}",
-      "goalDoneDesc": "Consider setting a new target to keep momentum."
-    }
+      "goalDoneDesc": "Consider setting a new target to keep momentum.",
+      "trendSpendUpTitle": "Spending is climbing",
+      "trendSpendUpDesc": "You're spending {delta} more than the previous month.",
+      "trendSpendDownTitle": "Spending is cooling off",
+      "trendSpendDownDesc": "You spent {delta} less than the previous month — keep it going.",
+      "predictOvershootTitle": "On track to overspend",
+      "predictOvershootDesc": "At this pace you'll exceed your monthly income by {amount}."
+    },
+    "primaryLabel": "Primary insight"
   },
   "reports": {
     "title": "Reports",
@@ -394,6 +458,9 @@
     "below10": "Below 10%",
     "emptyTitle": "No financial activity yet.",
     "emptyDesc": "Start by adding your first income or expense.",
+    "emptyAccountTitle": "No activity for {name}",
+    "emptyAccountDesc": "Try selecting a different account or add a transaction to this one.",
+    "filteredBy": "Showing data for {name}.",
     "toasts": {
       "expensesCsv": "Expenses exported as CSV",
       "incomeCsv": "Income exported as CSV",
@@ -424,14 +491,19 @@
     "languageDesc": "Choose the language used across the interface.",
     "dangerZone": "Danger zone",
     "dangerZoneDesc": "Locally stored data can be cleared at any time.",
-    "clearLocal": "Clear local data",
+    "clearLocal": "Reset all data",
+    "resetAchievements": "Reset achievements",
+    "confirmResetAchievementsTitle": "Reset achievements?",
+    "confirmResetAchievements": "All unlocked badges and visit streaks will be cleared. Your financial data stays intact.",
     "tip": "Tip: when you type a new transaction it's converted into {base} at the current rate and stored that way — so switching display currency later stays consistent.",
-    "confirmClear": "Clear all locally stored demo data? This will not delete Firestore data.",
+    "confirmClearTitle": "Reset all data?",
+    "confirmClear": "This clears incomes, expenses, budgets, goals, subscriptions, accounts AND achievements. Your profile and preferences stay.",
     "toasts": {
       "signInRequired": "Sign in to save profile details.",
       "saved": "Preferences saved",
       "cleared": "Local data cleared",
-      "fxRefreshed": "FX rates refreshed"
+      "fxRefreshed": "FX rates refreshed",
+      "achievementsReset": "Achievements reset"
     }
   },
   "cookies": {
@@ -499,6 +571,8 @@
   "quickAdd": {
     "title": "Quick add",
     "description": "Log money in or out in a few seconds.",
+    "modeToAdvanced": "Advanced ↗",
+    "modeToSimple": "← Simpler",
     "expenseTab": "Expense",
     "incomeTab": "Income",
     "amount": "Amount",
@@ -511,9 +585,240 @@
     "saveExpense": "Save expense",
     "saveIncome": "Save income",
     "positive": "Must be a positive number",
+    "parser": {
+      "label": "Quick parse",
+      "placeholder": "e.g. 25 lunch, 120 fuel",
+      "placeholderIncome": "e.g. 1200 freelance project",
+      "batchPlaceholder": "e.g. 20 uber, 50 lunch\nor one per line",
+      "batchPlaceholderIncome": "e.g. 1200 freelance, 80 dividends",
+      "batchHint": "Separate multiple entries with commas or new lines. Press Cmd/Ctrl+Enter to parse.",
+      "apply": "Parse",
+      "matched": "Matched: {category}",
+      "noMatch": "No category match — pick one manually.",
+      "noAmount": "Couldn't find an amount in any entry."
+    },
+    "preview": {
+      "title": "Preview ({count})",
+      "noDescription": "(no description)",
+      "remove": "Remove from batch",
+      "hintExpense": "Date, type and account from the form below apply to every row.",
+      "hintIncome": "Date and account from the form below apply to every row.",
+      "saveBatch": "Save {count} transactions"
+    },
     "toasts": {
       "expenseAdded": "Expense added",
-      "incomeAdded": "Income added"
+      "incomeAdded": "Income added",
+      "batchAdded": "Added {count} transactions"
+    }
+  },
+  "accounts": {
+    "title": "Accounts",
+    "description": "Track every place your money lives — bank, cash, wallets.",
+    "newAccount": "New account",
+    "consolidated": "Consolidated balance",
+    "emptyTitle": "No accounts yet",
+    "emptyDesc": "Create your first account to start tracking balances per source.",
+    "defaultBucket": "General",
+    "defaultBadge": "System",
+    "defaultDesc": "Entries you haven't assigned to a specific account yet. Cannot be edited or removed.",
+    "confirmRemoveTitle": "Remove account \"{name}\"?",
+    "activatedToast": "Now using {name}",
+    "filterAllAccounts": "All accounts",
+    "filterUnassigned": "No account (General)",
+    "clearFilter": "Clear account filter",
+    "inflow": "Inflow",
+    "outflow": "Outflow",
+    "notAvailable": "Multi-account support is coming soon.",
+    "confirmRemove": "Remove account \"{name}\"? Existing transactions stay but become unassigned.",
+    "formNewTitle": "New account",
+    "formEditTitle": "Edit account",
+    "formDesc": "Give the account a name, type and an opening balance.",
+    "types": {
+      "bank": "Bank",
+      "cash": "Cash",
+      "wallet": "Wallet"
+    },
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Main checking, Cash wallet…",
+      "type": "Type",
+      "typeBank": "Bank",
+      "typeCash": "Cash",
+      "typeWallet": "Wallet",
+      "currency": "Currency",
+      "initialBalance": "Initial balance",
+      "addButton": "Create account",
+      "nameRequired": "Give the account a name",
+      "nonNegative": "Cannot be negative",
+      "storedIn": "Stored in {base} at ~{rate} {currency}/{base}.",
+      "accountLabel": "Account",
+      "noAccount": "No account (default)"
+    },
+    "toasts": {
+      "created": "Account created",
+      "updated": "Account updated",
+      "removed": "Account removed"
+    }
+  },
+  "achievements": {
+    "title": "Achievements",
+    "subtitle": "{unlocked} of {total} unlocked.",
+    "earned": "Unlocked",
+    "encouragement": "Small habits compound — every entry counts.",
+    "items": {
+      "first-expense": {
+        "title": "First expense logged",
+        "desc": "Awareness is the first law of wealth."
+      },
+      "first-income": {
+        "title": "First income recorded",
+        "desc": "You know what's coming in."
+      },
+      "first-budget": {
+        "title": "Budget set",
+        "desc": "Boundaries make spending intentional."
+      },
+      "first-goal": {
+        "title": "Goal created",
+        "desc": "A wish becomes a plan."
+      },
+      "babylon-saver": {
+        "title": "Babylon saver",
+        "desc": "You hit at least 10% savings this month."
+      },
+      "streak-7": {
+        "title": "Seven-day streak",
+        "desc": "A full week of staying on top of your money."
+      }
+    }
+  },
+  "notifications": {
+    "title": "Heads up",
+    "dismiss": "Dismiss"
+  },
+  "changelog": {
+    "description": "A quick tour of what's new in this release.",
+    "confirm": "Got it",
+    "fallbackTitle": "What's new",
+    "fallbackBody": "No release notes available for this version."
+  },
+  "accountComparison": {
+    "title": "Compare accounts",
+    "description": "Where your money flows best — account by account.",
+    "generalHint": "Unassigned entries",
+    "tabs": {
+      "summary": "Summary",
+      "table": "Table",
+      "categories": "Categories",
+      "trend": "Trend",
+      "insights": "Insights"
+    },
+    "metrics": {
+      "balance": "Balance",
+      "income": "Income",
+      "expenses": "Expenses",
+      "savings": "Savings"
+    },
+    "badges": {
+      "topIncome": "Top income",
+      "topExpense": "Top spend",
+      "topSavings": "Best saver"
+    },
+    "table": {
+      "account": "Account",
+      "income": "Income",
+      "expenses": "Expenses",
+      "balance": "Balance",
+      "savings": "Savings"
+    },
+    "categories": {
+      "empty": "No category data yet."
+    },
+    "trend": {
+      "metricLabel": {
+        "income": "Monthly income per account",
+        "expense": "Monthly spending per account",
+        "balance": "Monthly balance per account"
+      }
+    },
+    "insights": {
+      "empty": "No significant differences between accounts yet.",
+      "savingsGap": "{top} has a better savings rate ({topRate}) than {bottom} ({bottomRate}).",
+      "spendOvershoot": "You spent {pct} more in {high} than in {low}.",
+      "categoryDominance": "{category} is {multiplier}x higher in {high} than in {low}."
+    }
+  },
+  "import": {
+    "title": "Import transactions",
+    "description": "Upload a CSV or Excel file — preview every row before adding it.",
+    "tabs": {
+      "expense": "Expenses",
+      "income": "Income"
+    },
+    "supportsFiles": "Supported: .csv, .xlsx and .xls files.",
+    "acceptHint": "CSV or Excel · up to a few thousand rows",
+    "rowCount": "{count, plural, one {# row} other {# rows}}",
+    "changeFile": "Change file",
+    "startOver": "Start over",
+    "requireDateAmount": "Pick which column holds the date and which holds the amount to enable the import.",
+    "dupRole": "Used by another column",
+    "truncatedRich": "Showing the first {shown} of {total} rows. The full file will be imported.",
+    "roles": {
+      "ignore": "Ignore",
+      "date": "Date",
+      "amount": "Amount",
+      "description": "Description",
+      "category": "Category",
+      "type": "Type"
+    },
+    "expected": "Expected format (the type column is optional):",
+    "downloadSample": "Sample CSV",
+    "hintDate": "• date — ISO format YYYY-MM-DD",
+    "hintAmount": "• amount — positive number, in your display currency",
+    "hintCategory": "• category — food, transport, housing, utilities, entertainment, subscriptions, health, education, shopping, savings, debt, other",
+    "hintType": "• type — fixed or variable (defaults to variable)",
+    "pickFile": "Choose CSV",
+    "validCount": "{count} valid",
+    "invalidCount": "{count} skipped",
+    "ok": "Ready",
+    "truncated": "Showing the first 100 rows — the full file will be imported.",
+    "cancel": "Cancel",
+    "confirm": "Import {count} expenses",
+    "col": {
+      "date": "Date",
+      "amount": "Amount",
+      "category": "Category",
+      "description": "Description",
+      "status": "Status"
+    },
+    "rowReasons": {
+      "missingDate": "Missing date",
+      "invalidAmount": "Invalid amount"
+    },
+    "formatFlex": "Headers can also be in Spanish or French (fecha, monto, descripción…). Arka detects them automatically.",
+    "mappingIntro": "We couldn't auto-detect every required column. Please match each field to a column from your file.",
+    "mappingHint": "Only date and amount are required. Description, category and type use defaults when skipped.",
+    "mappingPick": "— Pick a column —",
+    "mappingSkip": "— Skip (use default) —",
+    "autoMatched": "Auto",
+    "required": "Required",
+    "continueToPreview": "Continue to preview",
+    "back": "Back",
+    "backToMapping": "Back to mapping",
+    "fields": {
+      "date": "Date",
+      "amount": "Amount",
+      "description": "Description",
+      "category": "Category",
+      "type": "Type"
+    },
+    "toasts": {
+      "empty": "The CSV file is empty.",
+      "missingHeaders": "Missing headers: {headers}",
+      "mappingRequired": "Pick columns for date and amount to continue.",
+      "nothingValid": "No valid rows to import.",
+      "imported": "Imported {count} expenses",
+      "readFailed": "Couldn't read that file. Make sure it's a valid CSV or Excel."
     }
   },
   "errors": {

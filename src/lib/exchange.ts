@@ -18,6 +18,8 @@ export const FALLBACK_RATES: Record<Currency, number> = {
   BRL: 5.1,
   CLP: 950,
   PEN: 3.7,
+  HNL: 24.7,
+  GTQ: 7.8,
 };
 
 const SUPPORTED: Currency[] = Object.keys(FALLBACK_RATES) as Currency[];

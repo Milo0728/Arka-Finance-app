@@ -18,7 +18,9 @@ import {
   Sparkles,
   FileBarChart2,
   Settings,
+  Landmark,
 } from "lucide-react";
+import { isFeatureEnabled } from "@/lib/feature-flags";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,9 +40,18 @@ import { useFinanceStore } from "@/store/useFinanceStore";
 import { logout } from "@/services/auth.service";
 import { isFirebaseConfigured } from "@/lib/firebase";
 import { Logo } from "@/components/brand/logo";
+import { ActiveAccountBadge } from "@/components/dashboard/active-account-badge";
 
-const MOBILE_LINKS = [
+type MobileLink = {
+  href: string;
+  key: "overview" | "accounts" | "income" | "expenses" | "budgets" | "goals" | "subscriptions" | "insights" | "reports" | "settings";
+  icon: typeof LayoutDashboard;
+  feature?: "multiAccount";
+};
+
+const MOBILE_LINKS: readonly MobileLink[] = [
   { href: "/dashboard", key: "overview", icon: LayoutDashboard },
+  { href: "/accounts", key: "accounts", icon: Landmark, feature: "multiAccount" },
   { href: "/income", key: "income", icon: TrendingUp },
   { href: "/expenses", key: "expenses", icon: Wallet },
   { href: "/budgets", key: "budgets", icon: PiggyBank },
@@ -96,6 +107,8 @@ export function DashboardHeader({ onQuickAdd }: { onQuickAdd?: () => void }) {
         <Input placeholder={tHeader("searchPlaceholder")} className="h-9 pl-9" />
       </div>
 
+      <ActiveAccountBadge />
+
       <Button size="sm" onClick={onQuickAdd} className="hidden sm:inline-flex" data-tutorial="quick-add">
         <Plus className="h-4 w-4" />
         <span className="ml-1">{tCommon("quickAdd")}</span>
@@ -135,21 +148,32 @@ export function DashboardHeader({ onQuickAdd }: { onQuickAdd?: () => void }) {
       </DropdownMenu>
 
       {mobileOpen && (
-        <div className="absolute inset-x-0 top-16 z-40 border-b bg-background p-4 shadow-lg lg:hidden">
-          <nav className="grid gap-1">
-            {MOBILE_LINKS.map(({ href, key, icon: Icon }) => (
-              <Link
-                key={href}
-                href={href}
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-muted"
-              >
-                <Icon className="h-4 w-4 text-muted-foreground" />
-                {tNav(key)}
-              </Link>
-            ))}
-          </nav>
-        </div>
+        <>
+          {/* Backdrop — tapping outside closes the drawer. Positioned below
+              the drawer but above page content so the header still shows. */}
+          <div
+            className="fixed inset-x-0 bottom-0 top-16 z-30 bg-black/40 lg:hidden"
+            onClick={() => setMobileOpen(false)}
+            aria-hidden
+          />
+          <div className="absolute inset-x-0 top-16 z-40 border-b bg-background p-4 shadow-lg lg:hidden">
+            <nav className="grid gap-1">
+              {MOBILE_LINKS.filter((item) => !item.feature || isFeatureEnabled(item.feature)).map(
+                ({ href, key, icon: Icon }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm hover:bg-muted"
+                  >
+                    <Icon className="h-4 w-4 text-muted-foreground" />
+                    {tNav(key)}
+                  </Link>
+                )
+              )}
+            </nav>
+          </div>
+        </>
       )}
     </header>
   );

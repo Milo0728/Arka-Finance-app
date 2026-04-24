@@ -138,3 +138,21 @@ body {
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
 }
+
+/* Safety net for long amounts (COP / CLP / ARS commonly produce 10+ chars).
+   Without this, numbers can push their parent wider than the viewport on
+   mobile. We still prefer `truncate` on the element itself where possible
+   — this is the fallback for all the other sites we haven't hunted down. */
+.arka-number {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Default min-width of flex children is "auto" (≈ content width) — enough
+   for a long number to push a flex container wider than the viewport. Most
+   of our flex rows genuinely want `min-w-0` on every child; we set it here
+   globally for elements that opt into `arka-number`, which is exactly the
+   population that causes overflow bugs. */
+.arka-number {
+  min-width: 0;
+}

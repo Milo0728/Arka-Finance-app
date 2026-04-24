@@ -29,7 +29,7 @@ import { useFinanceStore } from "@/store/useFinanceStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useMoney } from "@/hooks/useMoney";
 import { useLabels } from "@/hooks/useLabels";
-import { EXPENSE_CATEGORY_VALUES } from "@/lib/categories";
+import { BUDGETABLE_EXPENSE_CATEGORIES } from "@/lib/categories";
 import type { Budget, BudgetPeriod, ExpenseCategory } from "@/types";
 
 type Values = {
@@ -132,7 +132,7 @@ export function BudgetForm({ open, onOpenChange, editing }: Props) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {EXPENSE_CATEGORY_VALUES.map((c) => (
+                {BUDGETABLE_EXPENSE_CATEGORIES.map((c) => (
                   <SelectItem key={c} value={c}>
                     {labels.expenseCategory(c) ?? c}
                   </SelectItem>

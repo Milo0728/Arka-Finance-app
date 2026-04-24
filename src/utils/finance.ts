@@ -10,6 +10,20 @@ import type {
   IncomeFrequency,
   Subscription,
 } from "@/types";
+import { isTransferCategory } from "@/lib/categories";
+
+/**
+ * Strip out internal account-to-account transfers before computing aggregates.
+ * Transfers aren't net inflow/outflow — they just change which bucket the money
+ * lives in. Counting them in monthly totals would double-count the same dollar
+ * and wreck savings rate, spending ratio and health score.
+ */
+function excludeTransfersExpense<T extends Expense>(items: T[]): T[] {
+  return items.filter((e) => !isTransferCategory(e.category));
+}
+function excludeTransfersIncome<T extends Income>(items: T[]): T[] {
+  return items.filter((i) => !isTransferCategory(i.category));
+}
 
 /**
  * Converts a per-cycle amount into its equivalent monthly amount.
@@ -54,11 +68,11 @@ export function monthlyIncomeContribution(income: Income, reference = new Date()
 }
 
 export function monthlyIncome(incomes: Income[], reference = new Date()) {
-  return sum(incomes, (i) => monthlyIncomeContribution(i, reference));
+  return sum(excludeTransfersIncome(incomes), (i) => monthlyIncomeContribution(i, reference));
 }
 
 export function monthlyExpenses(expenses: Expense[], reference = new Date()) {
-  return sum(filterByMonth(expenses, reference), (e) => e.amount);
+  return sum(filterByMonth(excludeTransfersExpense(expenses), reference), (e) => e.amount);
 }
 
 export function monthlyBalance(incomes: Income[], expenses: Expense[], reference = new Date()) {
@@ -71,7 +85,7 @@ export function monthlyBalance(incomes: Income[], expenses: Expense[], reference
  * their monthly equivalent across every elapsed month.
  */
 export function lifetimeIncome(incomes: Income[], asOf = new Date()): number {
-  return sum(incomes, (i) => lifetimeContribution(i, asOf));
+  return sum(excludeTransfersIncome(incomes), (i) => lifetimeContribution(i, asOf));
 }
 
 function lifetimeContribution(income: Income, asOf: Date): number {
@@ -84,7 +98,7 @@ function lifetimeContribution(income: Income, asOf: Date): number {
 }
 
 export function totalBalance(incomes: Income[], expenses: Expense[]) {
-  return lifetimeIncome(incomes) - sum(expenses, (e) => e.amount);
+  return lifetimeIncome(incomes) - sum(excludeTransfersExpense(expenses), (e) => e.amount);
 }
 
 export function savingsRate(income: number, expenses: number): number {
@@ -101,7 +115,8 @@ export function babylonSavingsTarget(income: number, rate = 0.1): number {
 
 export function expensesByCategory(expenses: Expense[]): Record<ExpenseCategory, number> {
   const map = {} as Record<ExpenseCategory, number>;
-  for (const e of expenses) {
+  // Transfers are skipped so they never show up in "top categories" / pie charts.
+  for (const e of excludeTransfersExpense(expenses)) {
     map[e.category] = (map[e.category] ?? 0) + e.amount;
   }
   return map;

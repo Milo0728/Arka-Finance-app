@@ -13,6 +13,7 @@
     "insights": "Analyses",
     "reports": "Rapports",
     "settings": "Paramètres",
+    "accounts": "Comptes",
     "workspace": "Espace",
     "babylonRuleActive": "ACTIVE",
     "babylonRuleTitle": "Règle de Babylone",
@@ -71,7 +72,8 @@
       "shopping": "Achats",
       "savings": "Épargne",
       "debt": "Dettes",
-      "other": "Autres"
+      "other": "Autres",
+      "transfer": "Transfert entre comptes"
     },
     "income": {
       "salary": "Salaire",
@@ -79,7 +81,8 @@
       "investment": "Investissement",
       "business": "Entreprise",
       "gift": "Cadeau",
-      "other": "Autres"
+      "other": "Autres",
+      "transfer": "Transfert entre comptes"
     }
   },
   "billing": {
@@ -166,6 +169,8 @@
     "averageMonth": "Moy. / mois",
     "emptyTitle": "Aucun revenu enregistré",
     "emptyDesc": "Ajoutez votre premier salaire, mission ou dividende pour commencer.",
+    "emptyAccountTitle": "Aucun revenu pour {name}",
+    "emptyAccountDesc": "Sélectionnez un autre compte ou ajoutez un revenu à celui-ci.",
     "formNewTitle": "Nouveau revenu",
     "formEditTitle": "Modifier le revenu",
     "formDesc": "Argent entrant — salaire, freelance ou dividendes.",
@@ -200,9 +205,12 @@
     "title": "Dépenses",
     "description": "Suivez chaque sortie — et repérez les fuites.",
     "logExpense": "Ajouter une dépense",
+    "importCsv": "Importer un fichier",
     "topCategory": "Catégorie principale",
     "noMatchTitle": "Aucune dépense ne correspond",
     "noMatchDesc": "Retirez les filtres ou ajoutez une nouvelle dépense.",
+    "emptyAccountTitle": "Aucune dépense pour {name}",
+    "emptyAccountDesc": "Changez de compte ou ajoutez une dépense à celui-ci.",
     "byCategory": "Par catégorie",
     "formNewTitle": "Nouvelle dépense",
     "formEditTitle": "Modifier la dépense",
@@ -257,6 +265,8 @@
     "usedSlow": "{pct}% utilisé — ralentissez",
     "usedTrack": "{pct}% utilisé — sur la voie",
     "of": "de {limit}",
+    "scopeNote": "Affichage de la consommation depuis {name}. Les limites de budget restent globales — elles ne sont pas par compte.",
+    "consumedFrom": "Consommé depuis {name} : {used} / {limit} (limite globale)",
     "over": "Dépassé",
     "warning": "Attention",
     "toasts": {
@@ -325,7 +335,47 @@
       "service": "Service",
       "billing": "Facturation",
       "amount": "Montant",
-      "monthlyEquivalent": "≈ Mensuel"
+      "monthlyEquivalent": "≈ Mensuel",
+      "monthlyAverage": "Moy. / mois",
+      "monthly": "Mois",
+      "estimatedHint": "Estimé à partir de {count} paiements liés.",
+      "detectedHint": "La cadence détectée dans vos paiements diffère du cycle déclaré.",
+      "frequency": {
+        "monthly": "Mensuel",
+        "weekly": "Hebdomadaire",
+        "irregular": "Variable"
+      },
+      "lastPaid": "Dernier paiement",
+      "paidFrom": "Payé depuis",
+      "notLinked": "Non associé",
+      "unassignedAccount": "Général",
+      "unknownAccount": "Compte inconnu",
+      "multipleAccounts": "Plusieurs comptes"
+    },
+    "link": {
+      "label": "Abonnement associé",
+      "none": "Ne pas associer",
+      "createNew": "+ Créer nouveau",
+      "namePlaceholder": "ex. Netflix",
+      "createHint": "Nous créerons un abonnement mensuel avec ce montant. Vous pourrez l'ajuster ensuite.",
+      "needName": "Donnez un nom au nouvel abonnement",
+      "createdToast": "Abonnement \"{name}\" créé",
+      "detectedToast": "Associé à \"{name}\"",
+      "detectedBadge": "{name} détecté",
+      "suggest": "Voulez-vous dire \"{name}\" ?",
+      "useThis": "Utiliser",
+      "willCreate": "Nous créerons \"{name}\" comme nouvel abonnement.",
+      "notFoundPrompt": "Aucun abonnement ne correspond à \"{name}\".",
+      "createBtn": "Créer \"{name}\"",
+      "linkExisting": "Associer des dépenses existantes",
+      "linkTitle": "Associer des dépenses à {name}",
+      "linkDescription": "Choisissez les dépenses appartenant à cet abonnement. Les modifications s'appliquent à la confirmation.",
+      "linkEmpty": "Aucune dépense à sélectionner pour l'instant.",
+      "linkApply": "Associer {count}",
+      "linkApplied": "{count} dépenses associées à {name}",
+      "linkHint": "Basé sur vos derniers paiements",
+      "multipleAccountsHint": "Payé depuis plusieurs comptes — aucun ne prédomine clairement.",
+      "noDataAction": "Associer l'abonnement"
     },
     "toasts": {
       "added": "Abonnement ajouté",
@@ -346,9 +396,16 @@
     "title": "Analyses financières",
     "description": "Motifs, alertes et signaux que Arka extrait de votre activité.",
     "all": "Toutes les analyses",
+    "allForAccount": "Toutes les analyses · {name}",
     "topCategoriesTitle": "Catégories les plus dépensées",
+    "topCategoriesTitleForAccount": "Catégories les plus dépensées · {name}",
     "topCategoriesDesc": "Où l'argent a le plus circulé.",
     "nothingYet": "Rien à afficher pour le moment.",
+    "scopeAll": "Analyse de tous les comptes",
+    "scopeAllHint": "Les analyses et le score reflètent votre vue globale.",
+    "scopeAccount": "Analyse : {name}",
+    "scopeAccountHint": "Revenus et dépenses filtrés sur ce compte. Budgets, objectifs et abonnements restent globaux.",
+    "scoreForAccount": "Comment les habitudes de ce compte s'accumulent.",
     "curatedDesc": "Généré automatiquement à partir de votre activité.",
     "defaultTitle": "Analyses",
     "empty": {
@@ -369,8 +426,15 @@
       "budgetWarnTitle": "Vous approchez la limite de {category}",
       "budgetWarnDesc": "Vous avez utilisé {pct} de votre budget {category}.",
       "goalDoneTitle": "Objectif atteint : {title}",
-      "goalDoneDesc": "Fixez un nouvel objectif pour garder l'élan."
-    }
+      "goalDoneDesc": "Fixez un nouvel objectif pour garder l'élan.",
+      "trendSpendUpTitle": "Vos dépenses augmentent",
+      "trendSpendUpDesc": "Vous dépensez {delta} de plus que le mois dernier.",
+      "trendSpendDownTitle": "Vos dépenses ralentissent",
+      "trendSpendDownDesc": "Vous avez dépensé {delta} de moins que le mois dernier — continuez.",
+      "predictOvershootTitle": "Risque de dépassement",
+      "predictOvershootDesc": "À ce rythme, vous dépasserez vos revenus mensuels de {amount}."
+    },
+    "primaryLabel": "Insight principal"
   },
   "reports": {
     "title": "Rapports",
@@ -394,6 +458,9 @@
     "below10": "Sous les 10%",
     "emptyTitle": "Aucune activité financière pour l'instant.",
     "emptyDesc": "Commencez par ajouter votre premier revenu ou dépense.",
+    "emptyAccountTitle": "Aucune activité pour {name}",
+    "emptyAccountDesc": "Sélectionnez un autre compte ou ajoutez une transaction à celui-ci.",
+    "filteredBy": "Affichage des données pour {name}.",
     "toasts": {
       "expensesCsv": "Dépenses exportées en CSV",
       "incomeCsv": "Revenus exportés en CSV",
@@ -424,14 +491,19 @@
     "languageDesc": "Choisissez la langue de l'interface.",
     "dangerZone": "Zone sensible",
     "dangerZoneDesc": "Vous pouvez effacer les données locales à tout moment.",
-    "clearLocal": "Effacer les données",
+    "clearLocal": "Réinitialiser toutes les données",
+    "resetAchievements": "Réinitialiser les succès",
+    "confirmResetAchievementsTitle": "Réinitialiser les succès ?",
+    "confirmResetAchievements": "Les badges débloqués et les séries de visites seront effacés. Vos données financières restent intactes.",
     "tip": "Astuce : une nouvelle transaction est convertie en {base} au taux actuel et stockée ainsi — le changement de monnaie d'affichage reste cohérent.",
-    "confirmClear": "Effacer toutes les données locales ? Les données Firestore ne seront pas supprimées.",
+    "confirmClearTitle": "Réinitialiser toutes les données ?",
+    "confirmClear": "Les revenus, dépenses, budgets, objectifs, abonnements, comptes ET succès seront effacés. Votre profil et vos préférences sont conservés.",
     "toasts": {
       "signInRequired": "Connectez-vous pour enregistrer votre profil.",
       "saved": "Préférences enregistrées",
       "cleared": "Données locales effacées",
-      "fxRefreshed": "Taux de change actualisés"
+      "fxRefreshed": "Taux de change actualisés",
+      "achievementsReset": "Succès réinitialisés"
     }
   },
   "cookies": {
@@ -499,6 +571,8 @@
   "quickAdd": {
     "title": "Ajout rapide",
     "description": "Enregistrez l'argent entrant ou sortant en quelques secondes.",
+    "modeToAdvanced": "Avancé ↗",
+    "modeToSimple": "← Plus simple",
     "expenseTab": "Dépense",
     "incomeTab": "Revenu",
     "amount": "Montant",
@@ -511,9 +585,240 @@
     "saveExpense": "Enregistrer la dépense",
     "saveIncome": "Enregistrer le revenu",
     "positive": "Doit être un nombre positif",
+    "parser": {
+      "label": "Analyse rapide",
+      "placeholder": "ex. 25 déjeuner, 120 essence",
+      "placeholderIncome": "ex. 1200 projet freelance",
+      "batchPlaceholder": "ex. 20 uber, 50 déjeuner\nou un par ligne",
+      "batchPlaceholderIncome": "ex. 1200 freelance, 80 dividendes",
+      "batchHint": "Séparez les entrées par des virgules ou des sauts de ligne. Cmd/Ctrl+Entrée pour analyser.",
+      "apply": "Analyser",
+      "matched": "Détecté : {category}",
+      "noMatch": "Aucune correspondance — choisissez une catégorie.",
+      "noAmount": "Aucun montant détecté."
+    },
+    "preview": {
+      "title": "Aperçu ({count})",
+      "noDescription": "(sans description)",
+      "remove": "Retirer du lot",
+      "hintExpense": "La date, le type et le compte du formulaire s'appliquent à chaque ligne.",
+      "hintIncome": "La date et le compte du formulaire s'appliquent à chaque ligne.",
+      "saveBatch": "Enregistrer {count} transactions"
+    },
     "toasts": {
       "expenseAdded": "Dépense ajoutée",
-      "incomeAdded": "Revenu ajouté"
+      "incomeAdded": "Revenu ajouté",
+      "batchAdded": "{count} transactions ajoutées"
+    }
+  },
+  "accounts": {
+    "title": "Comptes",
+    "description": "Suivez chaque endroit où vit votre argent — banque, espèces, portefeuilles.",
+    "newAccount": "Nouveau compte",
+    "consolidated": "Solde consolidé",
+    "emptyTitle": "Aucun compte",
+    "emptyDesc": "Créez votre premier compte pour suivre les soldes par source.",
+    "defaultBucket": "Général",
+    "defaultBadge": "Système",
+    "defaultDesc": "Mouvements sans compte assigné. Impossible à éditer ou supprimer.",
+    "confirmRemoveTitle": "Supprimer le compte \"{name}\" ?",
+    "activatedToast": "Vous utilisez maintenant {name}",
+    "filterAllAccounts": "Tous les comptes",
+    "filterUnassigned": "Sans compte (Général)",
+    "clearFilter": "Effacer le filtre de compte",
+    "inflow": "Entrées",
+    "outflow": "Sorties",
+    "notAvailable": "Le multi-compte arrive bientôt.",
+    "confirmRemove": "Supprimer le compte \"{name}\" ? Les transactions restent mais deviennent non assignées.",
+    "formNewTitle": "Nouveau compte",
+    "formEditTitle": "Modifier le compte",
+    "formDesc": "Donnez un nom, un type et un solde initial.",
+    "types": {
+      "bank": "Banque",
+      "cash": "Espèces",
+      "wallet": "Portefeuille"
+    },
+    "form": {
+      "name": "Nom",
+      "namePlaceholder": "Compte courant, Espèces…",
+      "type": "Type",
+      "typeBank": "Banque",
+      "typeCash": "Espèces",
+      "typeWallet": "Portefeuille",
+      "currency": "Devise",
+      "initialBalance": "Solde initial",
+      "addButton": "Créer le compte",
+      "nameRequired": "Donnez un nom au compte",
+      "nonNegative": "Ne peut pas être négatif",
+      "storedIn": "Stocké en {base} à ~{rate} {currency}/{base}.",
+      "accountLabel": "Compte",
+      "noAccount": "Sans compte (par défaut)"
+    },
+    "toasts": {
+      "created": "Compte créé",
+      "updated": "Compte mis à jour",
+      "removed": "Compte supprimé"
+    }
+  },
+  "achievements": {
+    "title": "Réalisations",
+    "subtitle": "{unlocked} sur {total} débloquées.",
+    "earned": "Débloqué",
+    "encouragement": "Les petites habitudes s'accumulent — chaque entrée compte.",
+    "items": {
+      "first-expense": {
+        "title": "Première dépense enregistrée",
+        "desc": "La conscience est la première loi de la richesse."
+      },
+      "first-income": {
+        "title": "Premier revenu enregistré",
+        "desc": "Vous savez ce qui rentre."
+      },
+      "first-budget": {
+        "title": "Budget défini",
+        "desc": "Les limites rendent les dépenses intentionnelles."
+      },
+      "first-goal": {
+        "title": "Objectif créé",
+        "desc": "Un souhait devient un plan."
+      },
+      "babylon-saver": {
+        "title": "Épargnant babylonien",
+        "desc": "Vous avez atteint au moins 10% d'épargne ce mois-ci."
+      },
+      "streak-7": {
+        "title": "Série de 7 jours",
+        "desc": "Une semaine complète à suivre vos finances."
+      }
+    }
+  },
+  "notifications": {
+    "title": "À noter",
+    "dismiss": "Fermer"
+  },
+  "changelog": {
+    "description": "Un aperçu rapide des nouveautés de cette version.",
+    "confirm": "Compris",
+    "fallbackTitle": "Nouveautés",
+    "fallbackBody": "Aucune note de version disponible pour cette release."
+  },
+  "accountComparison": {
+    "title": "Comparer les comptes",
+    "description": "Où votre argent circule le mieux — compte par compte.",
+    "generalHint": "Mouvements non assignés",
+    "tabs": {
+      "summary": "Résumé",
+      "table": "Tableau",
+      "categories": "Catégories",
+      "trend": "Tendance",
+      "insights": "Analyses"
+    },
+    "metrics": {
+      "balance": "Solde",
+      "income": "Revenus",
+      "expenses": "Dépenses",
+      "savings": "Épargne"
+    },
+    "badges": {
+      "topIncome": "Revenu max",
+      "topExpense": "Dépense max",
+      "topSavings": "Meilleure épargne"
+    },
+    "table": {
+      "account": "Compte",
+      "income": "Revenus",
+      "expenses": "Dépenses",
+      "balance": "Solde",
+      "savings": "Épargne"
+    },
+    "categories": {
+      "empty": "Pas encore de données par catégorie."
+    },
+    "trend": {
+      "metricLabel": {
+        "income": "Revenus mensuels par compte",
+        "expense": "Dépenses mensuelles par compte",
+        "balance": "Solde mensuel par compte"
+      }
+    },
+    "insights": {
+      "empty": "Aucune différence significative entre les comptes pour l'instant.",
+      "savingsGap": "{top} a un meilleur taux d'épargne ({topRate}) que {bottom} ({bottomRate}).",
+      "spendOvershoot": "Vous avez dépensé {pct} de plus sur {high} que sur {low}.",
+      "categoryDominance": "{category} est {multiplier}x plus élevé sur {high} que sur {low}."
+    }
+  },
+  "import": {
+    "title": "Importer des transactions",
+    "description": "Téléversez un CSV ou Excel — chaque ligne est prévisualisée avant l'ajout.",
+    "tabs": {
+      "expense": "Dépenses",
+      "income": "Revenus"
+    },
+    "supportsFiles": "Formats supportés : .csv, .xlsx et .xls.",
+    "acceptHint": "CSV ou Excel · jusqu'à quelques milliers de lignes",
+    "rowCount": "{count, plural, one {# ligne} other {# lignes}}",
+    "changeFile": "Changer de fichier",
+    "startOver": "Recommencer",
+    "requireDateAmount": "Indiquez quelle colonne contient la date et laquelle contient le montant pour activer l'import.",
+    "dupRole": "Déjà utilisée par une autre colonne",
+    "truncatedRich": "Affichage des {shown} premières lignes sur {total}. Le fichier complet sera importé.",
+    "roles": {
+      "ignore": "Ignorer",
+      "date": "Date",
+      "amount": "Montant",
+      "description": "Description",
+      "category": "Catégorie",
+      "type": "Type"
+    },
+    "expected": "Format attendu (la colonne type est optionnelle) :",
+    "downloadSample": "CSV d'exemple",
+    "hintDate": "• date — format ISO AAAA-MM-JJ",
+    "hintAmount": "• amount — nombre positif, dans votre devise d'affichage",
+    "hintCategory": "• category — food, transport, housing, utilities, entertainment, subscriptions, health, education, shopping, savings, debt, other",
+    "hintType": "• type — fixed ou variable (variable par défaut)",
+    "pickFile": "Choisir CSV",
+    "validCount": "{count} valides",
+    "invalidCount": "{count} ignorés",
+    "ok": "Prêt",
+    "truncated": "Affichage des 100 premières lignes — le fichier complet sera importé.",
+    "cancel": "Annuler",
+    "confirm": "Importer {count} dépenses",
+    "col": {
+      "date": "Date",
+      "amount": "Montant",
+      "category": "Catégorie",
+      "description": "Description",
+      "status": "Statut"
+    },
+    "rowReasons": {
+      "missingDate": "Date manquante",
+      "invalidAmount": "Montant invalide"
+    },
+    "formatFlex": "Les en-têtes peuvent aussi être en anglais ou espagnol (date, monto…). Arka les détecte automatiquement.",
+    "mappingIntro": "Impossible de détecter toutes les colonnes. Associez chaque champ à une colonne de votre fichier.",
+    "mappingHint": "Seules la date et le montant sont obligatoires. Description, catégorie et type utilisent des valeurs par défaut si omises.",
+    "mappingPick": "— Choisir une colonne —",
+    "mappingSkip": "— Ignorer (valeur par défaut) —",
+    "autoMatched": "Auto",
+    "required": "Obligatoire",
+    "continueToPreview": "Continuer vers l'aperçu",
+    "back": "Retour",
+    "backToMapping": "Retour au mappage",
+    "fields": {
+      "date": "Date",
+      "amount": "Montant",
+      "description": "Description",
+      "category": "Catégorie",
+      "type": "Type"
+    },
+    "toasts": {
+      "empty": "Le fichier CSV est vide.",
+      "missingHeaders": "En-têtes manquants : {headers}",
+      "mappingRequired": "Sélectionnez les colonnes date et montant pour continuer.",
+      "nothingValid": "Aucune ligne valide à importer.",
+      "imported": "{count} dépenses importées",
+      "readFailed": "Impossible de lire ce fichier. Assurez-vous qu'il s'agit d'un CSV ou Excel valide."
     }
   },
   "errors": {

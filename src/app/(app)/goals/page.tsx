@@ -76,15 +76,15 @@ export default function GoalsPage() {
             const deadlineFmt = format(parseISO(g.deadline), "MMM d, yyyy");
             return (
               <Card key={g.id} className="group overflow-hidden">
-                <CardHeader className="flex flex-row items-start justify-between pb-3">
-                  <div>
-                    <CardTitle className="text-base">{g.title}</CardTitle>
+                <CardHeader className="flex flex-row items-start justify-between gap-2 pb-3">
+                  <div className="min-w-0 flex-1">
+                    <CardTitle className="truncate text-base">{g.title}</CardTitle>
                     <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-                      <CalendarClock className="h-3.5 w-3.5" />
-                      <span>{t("by", { date: deadlineFmt })}</span>
+                      <CalendarClock className="h-3.5 w-3.5 shrink-0" />
+                      <span className="truncate">{t("by", { date: deadlineFmt })}</span>
                     </div>
                   </div>
-                  <div className="flex gap-1 opacity-0 transition group-hover:opacity-100">
+                  <div className="flex shrink-0 gap-1 opacity-100 transition sm:opacity-0 sm:group-hover:opacity-100">
                     <Button size="icon" variant="ghost" onClick={() => openEdit(g)} aria-label={tCommon("edit")}>
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -101,11 +101,17 @@ export default function GoalsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <div className="flex items-baseline justify-between">
-                      <span className="arka-number text-2xl font-semibold">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
+                      <span
+                        className="arka-number truncate text-xl font-semibold sm:text-2xl"
+                        title={money.format(g.currentAmount)}
+                      >
                         {money.format(g.currentAmount)}
                       </span>
-                      <span className="text-sm text-muted-foreground">
+                      <span
+                        className="truncate text-sm text-muted-foreground"
+                        title={t("of", { target: money.format(g.targetAmount) })}
+                      >
                         {t("of", { target: money.format(g.targetAmount) })}
                       </span>
                     </div>
@@ -123,13 +129,18 @@ export default function GoalsPage() {
                       <Badge variant="success">{t("achieved")}</Badge>
                     ) : (
                       <div className="space-y-1">
-                        <div className="flex justify-between text-muted-foreground">
-                          <span>{t("monthsRemaining")}</span>
-                          <span className="arka-number font-medium text-foreground">{monthsLeft}</span>
+                        <div className="flex items-baseline justify-between gap-2 text-muted-foreground">
+                          <span className="shrink-0">{t("monthsRemaining")}</span>
+                          <span className="arka-number truncate text-right font-medium text-foreground">
+                            {monthsLeft}
+                          </span>
                         </div>
-                        <div className="flex justify-between text-muted-foreground">
-                          <span>{t("saveMonthly")}</span>
-                          <span className="arka-number font-medium text-foreground">
+                        <div className="flex items-baseline justify-between gap-2 text-muted-foreground">
+                          <span className="shrink-0">{t("saveMonthly")}</span>
+                          <span
+                            className="arka-number truncate text-right font-medium text-foreground"
+                            title={money.format(perMonth)}
+                          >
                             {money.format(perMonth)}
                           </span>
                         </div>

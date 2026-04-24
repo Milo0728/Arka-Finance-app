@@ -1,0 +1,11 @@
+date,amount,description,category
+2026-04-01,15000,Almuerzo,food
+2026-04-02,8000,Bus transporte,transport
+2026-04-03,120000,Arriendo,housing
+2026-04-04,25000,Supermercado,shopping
+2026-04-05,18000,Gasolina,transport
+2026-04-06,12000,Netflix,subscriptions
+2026-04-07,50000,Cena restaurante,food
+2026-04-08,20000,Cine,entertainment
+2026-04-09,30000,Consulta médica,health
+2026-04-10,10000,Curso online,education

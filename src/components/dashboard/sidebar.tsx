@@ -14,13 +14,26 @@ import {
   Sparkles,
   FileBarChart2,
   Settings,
+  Landmark,
 } from "lucide-react";
+import { isFeatureEnabled } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/brand/logo";
 import { Badge } from "@/components/ui/badge";
+import { APP_VERSION } from "@/lib/version";
+import { useChangelogStore } from "@/store/useChangelogStore";
 
-const ITEMS = [
+type NavItem = {
+  href: string;
+  key: "overview" | "accounts" | "income" | "expenses" | "budgets" | "goals" | "subscriptions" | "insights" | "reports";
+  icon: typeof LayoutDashboard;
+  /** Optional feature flag — when set, the item only renders if the flag is on. */
+  feature?: "multiAccount";
+};
+
+const ITEMS: readonly NavItem[] = [
   { href: "/dashboard", key: "overview", icon: LayoutDashboard },
+  { href: "/accounts", key: "accounts", icon: Landmark, feature: "multiAccount" },
   { href: "/income", key: "income", icon: TrendingUp },
   { href: "/expenses", key: "expenses", icon: Wallet },
   { href: "/budgets", key: "budgets", icon: PiggyBank },
@@ -34,24 +47,30 @@ export const Sidebar = React.memo(function Sidebar() {
   const pathname = usePathname();
   const t = useTranslations("nav");
   const tCommon = useTranslations("common");
+  const openChangelog = useChangelogStore((s) => s.open);
 
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r bg-card/40 lg:flex">
       <div className="flex h-16 items-center gap-2 border-b px-6">
         <Logo />
-        <Badge
-          variant="outline"
-          className="border-primary/40 bg-primary/10 text-[10px] font-semibold uppercase tracking-wider text-primary"
+        {/* Beta badge doubles as the "what's new" entry point — clicking it
+            always opens the changelog modal, regardless of whether the user
+            already dismissed the auto-popup. */}
+        <button
+          type="button"
+          onClick={openChangelog}
+          className="inline-flex items-center rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary transition-colors hover:bg-primary/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          aria-label={tCommon("beta") + " " + APP_VERSION}
         >
-          {tCommon("beta")}
-        </Badge>
+          {tCommon("beta")} {APP_VERSION}
+        </button>
       </div>
 
       <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">
         <p className="px-3 pb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
           {t("workspace")}
         </p>
-        {ITEMS.map(({ href, key, icon: Icon }) => {
+        {ITEMS.filter((item) => !item.feature || isFeatureEnabled(item.feature)).map(({ href, key, icon: Icon }) => {
           const active = pathname === href || (href !== "/dashboard" && pathname?.startsWith(href));
           return (
             <Link

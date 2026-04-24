@@ -45,5 +45,10 @@ service cloud.firestore {
       allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
       allow create: if belongsToUser();
     }
+
+    match /accounts/{docId} {
+      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if belongsToUser();
+    }
   }
 }
