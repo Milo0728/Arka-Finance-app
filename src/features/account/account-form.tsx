@@ -29,6 +29,7 @@ import { useFinanceStore } from "@/store/useFinanceStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useMoney } from "@/hooks/useMoney";
 import { CURRENCIES } from "@/lib/currency";
+import { FALLBACK_RATES } from "@/lib/exchange";
 import type { Account, AccountType, Currency } from "@/types";
 
 type Values = {
@@ -53,9 +54,24 @@ export function AccountForm({ open, onOpenChange, editing }: Props) {
   const user = useAuthStore((s) => s.user);
   const userId = user?.uid ?? profile?.id ?? "demo-user";
   const money = useMoney();
+  const rates = useFinanceStore((s) => s.rates);
   const t = useTranslations("accounts");
   const tForm = useTranslations("accounts.form");
   const tCommon = useTranslations("common");
+
+  // Per-account FX: the *initial balance* is entered in the account's own
+  // currency (not the user's global display currency), so we convert with the
+  // rate for that currency. Falls back to the static table if a live rate is
+  // missing, and to 1 (USD) as last resort to never throw on submit.
+  const rateFor = React.useCallback(
+    (code: Currency) => {
+      const live = rates[code];
+      if (typeof live === "number" && live > 0) return live;
+      const fb = FALLBACK_RATES[code];
+      return fb && fb > 0 ? fb : 1;
+    },
+    [rates]
+  );
 
   const schema = React.useMemo(
     () =>
@@ -69,19 +85,21 @@ export function AccountForm({ open, onOpenChange, editing }: Props) {
     [tForm]
   );
 
-  const moneyRate = money.rate;
-  const defaults = React.useMemo<Values>(
-    () => ({
+  const defaults = React.useMemo<Values>(() => {
+    const accountCurrency: Currency = editing?.currency ?? money.currency;
+    const accountRate = rateFor(accountCurrency);
+    return {
       name: editing?.name ?? "",
       type: editing?.type ?? "bank",
-      currency: editing?.currency ?? money.currency,
+      currency: accountCurrency,
+      // When editing: stored amount is USD; show it converted to the
+      // account's own currency. When creating: blank field.
       initialBalance: editing
-        ? Number((editing.initialBalance * moneyRate).toFixed(2))
+        ? Number((editing.initialBalance * accountRate).toFixed(2))
         : 0,
       color: editing?.color ?? "",
-    }),
-    [editing, moneyRate, money.currency]
-  );
+    };
+  }, [editing, money.currency, rateFor]);
 
   const {
     register,
@@ -89,6 +107,7 @@ export function AccountForm({ open, onOpenChange, editing }: Props) {
     reset,
     setValue,
     getValues,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<Values>({ resolver: zodResolver(schema), defaultValues: defaults });
 
@@ -96,10 +115,18 @@ export function AccountForm({ open, onOpenChange, editing }: Props) {
     reset(defaults);
   }, [defaults, reset]);
 
+  // The currency the user just picked in the form drives the input label and
+  // the USD conversion on submit — not the global display currency.
+  const watchedCurrency = watch("currency") ?? money.currency;
+
   async function onSubmit(values: Values) {
+    const accountRate = rateFor(values.currency);
     const payload = {
       ...values,
-      initialBalance: money.toUSD(values.initialBalance),
+      // Convert from the account's currency to USD for storage.
+      // Was previously using money.toUSD (global display rate) which silently
+      // mis-stored the balance whenever the account currency != display.
+      initialBalance: values.initialBalance / accountRate,
     };
     if (editing) {
       await updateAccount(editing.id, payload);
@@ -165,7 +192,7 @@ export function AccountForm({ open, onOpenChange, editing }: Props) {
           </div>
           <div className="space-y-2">
             <Label>
-              {tForm("initialBalance")} ({money.currency})
+              {tForm("initialBalance")} ({watchedCurrency})
             </Label>
             <Input
               type="number"
@@ -176,12 +203,12 @@ export function AccountForm({ open, onOpenChange, editing }: Props) {
             {errors.initialBalance && (
               <p className="text-xs text-destructive">{errors.initialBalance.message}</p>
             )}
-            {money.currency !== money.baseCurrency && (
+            {watchedCurrency !== money.baseCurrency && (
               <p className="text-[11px] text-muted-foreground">
                 {tForm("storedIn", {
                   base: money.baseCurrency,
-                  rate: money.rate.toFixed(4),
-                  currency: money.currency,
+                  rate: rateFor(watchedCurrency).toFixed(4),
+                  currency: watchedCurrency,
                 })}
               </p>
             )}

@@ -1,11 +1,6 @@
 "use client";
 
 import { getApp, getApps, initializeApp, type FirebaseApp, type FirebaseOptions } from "firebase/app";
-import {
-  initializeAppCheck,
-  ReCaptchaV3Provider,
-  type AppCheck,
-} from "firebase/app-check";
 import { getAuth, GoogleAuthProvider, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
 
@@ -19,46 +14,16 @@ const firebaseConfig: FirebaseOptions = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_V3_SITE_KEY;
-const APPCHECK_DEBUG_TOKEN = process.env.NEXT_PUBLIC_APPCHECK_DEBUG_TOKEN;
-
 export const isFirebaseConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId);
 
 let _app: FirebaseApp | null = null;
 let _auth: Auth | null = null;
 let _db: Firestore | null = null;
-let _appCheck: AppCheck | null = null;
-
-function ensureAppCheck(app: FirebaseApp) {
-  if (_appCheck || typeof window === "undefined" || !RECAPTCHA_SITE_KEY) return;
-
-  // Debug token lets you hit App Check-protected services from dev without solving reCAPTCHA.
-  // In Firebase console → App Check → Apps → Manage debug tokens, paste the value printed
-  // in the browser console the first time this runs (or set the token explicitly here).
-  if (process.env.NODE_ENV !== "production" && APPCHECK_DEBUG_TOKEN) {
-    (self as unknown as { FIREBASE_APPCHECK_DEBUG_TOKEN: string | boolean }).FIREBASE_APPCHECK_DEBUG_TOKEN =
-      APPCHECK_DEBUG_TOKEN === "true" ? true : APPCHECK_DEBUG_TOKEN;
-  }
-
-  try {
-    _appCheck = initializeAppCheck(app, {
-      provider: new ReCaptchaV3Provider(RECAPTCHA_SITE_KEY),
-      isTokenAutoRefreshEnabled: true,
-    });
-  } catch (err) {
-    // App Check can throw if initialised twice (e.g. React StrictMode); swallow silently.
-    if (process.env.NODE_ENV !== "production") {
-      // eslint-disable-next-line no-console
-      console.warn("[Arka] App Check init skipped:", err);
-    }
-  }
-}
 
 export function firebaseApp(): FirebaseApp | null {
   if (!isFirebaseConfigured) return null;
   if (_app) return _app;
   _app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-  ensureAppCheck(_app);
   return _app;
 }
 
