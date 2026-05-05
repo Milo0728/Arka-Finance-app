@@ -13,3 +13,9 @@ coverage
 .vercel
 dist
 build
+
+# Test artefacts
+playwright-report
+test-results
+.playwright-cache
+coverage

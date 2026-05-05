@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+# Cancel in-flight runs on the same ref when a new commit lands — no point
+# keeping the previous run busy if it's already stale.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  static:
+    name: lint + types + unit + build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npm run type-check
+
+      - name: Unit tests
+        run: npm run test:run
+
+      - name: Build
+        # Demo mode build — empty Firebase env keeps `isFirebaseConfigured`
+        # false and avoids requiring secrets in the CI environment.
+        env:
+          NEXT_PUBLIC_FIREBASE_API_KEY: ""
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ""
+          NEXT_PUBLIC_DEFAULT_CURRENCY: USD
+        run: npm run build
+
+      - name: Upload Next.js build output
+        # Saves CI minutes on the e2e job by skipping the rebuild.
+        uses: actions/upload-artifact@v4
+        with:
+          name: next-build
+          path: |
+            .next
+            !.next/cache
+          retention-days: 1
+          if-no-files-found: error
+
+  e2e:
+    name: playwright (chromium)
+    needs: static
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Restore Next.js build
+        uses: actions/download-artifact@v4
+        with:
+          name: next-build
+          path: .next
+
+      - name: Resolve Playwright version
+        # Cache key includes the installed Playwright version so a bump
+        # invalidates the browser cache cleanly.
+        id: playwright-version
+        run: |
+          version=$(node -p "require('./package-lock.json').packages['node_modules/@playwright/test'].version")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright browser (chromium)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright system deps (cache hit path)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Run Playwright tests
+        env:
+          CI: "true"
+          NEXT_PUBLIC_FIREBASE_API_KEY: ""
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ""
+          NEXT_PUBLIC_DEFAULT_CURRENCY: USD
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: ${{ failure() || cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7

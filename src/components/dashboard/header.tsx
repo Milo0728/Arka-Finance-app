@@ -67,7 +67,8 @@ export function DashboardHeader({ onQuickAdd }: { onQuickAdd?: () => void }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const user = useAuthStore((s) => s.user);
   const profile = useFinanceStore((s) => s.profile);
-  const reset = useFinanceStore((s) => s.reset);
+  const unsubscribeAll = useFinanceStore((s) => s.unsubscribeAll);
+  const resetFinance = useFinanceStore((s) => s.reset);
   const tNav = useTranslations("nav");
   const tHeader = useTranslations("header");
   const tCommon = useTranslations("common");
@@ -77,14 +78,28 @@ export function DashboardHeader({ onQuickAdd }: { onQuickAdd?: () => void }) {
   const initial = displayName.split(" ").map((s) => s[0]).join("").slice(0, 2).toUpperCase();
 
   async function handleLogout() {
+    // In Firebase mode, signOut() triggers the auth listener which runs the
+    // strict transition (unsubscribeAll → reset). We still call them here as
+    // a safety net in case signOut throws AFTER firing onAuthStateChanged
+    // partially, or AFTER unrelated state has been mutated.
+    let signOutError: unknown = null;
     try {
       if (isFirebaseConfigured) await logout();
-      reset();
-      toast.success(tCommon("signOut"));
-      router.push("/");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : tHeader("signOutFailed"));
+      signOutError = err;
     }
+    // Strict order, even on the safety-net path:
+    //   1. detach listeners
+    //   2. wipe store + localStorage
+    // No bootstrap step on logout.
+    unsubscribeAll();
+    resetFinance();
+    if (signOutError) {
+      toast.error(signOutError instanceof Error ? signOutError.message : tHeader("signOutFailed"));
+    } else {
+      toast.success(tCommon("signOut"));
+    }
+    router.push("/");
   }
 
   return (

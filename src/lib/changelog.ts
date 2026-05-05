@@ -23,6 +23,26 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: Record<string, ChangelogEntry> = {
+  "1.0.2": {
+    title: "Novedades en Arka Finance",
+    sections: [
+      {
+        title: "⚡ Más rápido al usarlo",
+        items: [
+          "Crear, editar o borrar movimientos ahora se ve en pantalla al instante, sin esperar a que el servidor confirme.",
+          "Si la conexión falla, Arka revierte el cambio sola y te avisa con un mensaje claro — nunca te queda un dato a medias.",
+          "Sincronización en tiempo real más estable: si tienes la app abierta en otra pestaña o dispositivo, los cambios viajan al toque.",
+        ],
+      },
+      {
+        title: "🛡️ Más confiable",
+        items: [
+          "Mejor manejo de errores al guardar: un solo aviso por error, sin notificaciones repetidas.",
+          "Cambios que fallan dejan tu información exactamente como estaba antes — cero riesgo de datos corruptos.",
+        ],
+      },
+    ],
+  },
   "1.0.1": {
     title: "Novedades en Arka Finance",
     sections: [

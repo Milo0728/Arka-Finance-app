@@ -56,14 +56,20 @@ export function toUSD(amount: number, from: Currency, rates: Record<Currency, nu
 }
 
 /**
- * Pull live USD-anchored rates from exchangerate.host. Falls back to FALLBACK_RATES
- * on any network or parsing error so the app keeps working offline.
+ * Pull live USD-anchored rates from Frankfurter (https://frankfurter.dev) — a
+ * free, key-less, ECB-backed API. We migrated off exchangerate.host because
+ * Apilayer turned it into a key-required service in 2024 and every call from
+ * the browser silently failed back to the static table without telling the user.
+ *
+ * Frankfurter doesn't quote LATAM currencies (ARS/COP/CLP/PEN/HNL/GTQ), so we
+ * merge whatever it returns over the static fallback. Result is "live" only
+ * when at least one fresh rate came back.
  */
 export async function fetchRates(): Promise<ExchangeRatesResult> {
   const symbols = SUPPORTED.filter((c) => c !== "USD").join(",");
   try {
     const res = await fetch(
-      `https://api.exchangerate.host/latest?base=USD&symbols=${symbols}`,
+      `https://api.frankfurter.dev/v1/latest?base=USD&symbols=${symbols}`,
       { cache: "no-store" }
     );
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -71,12 +77,23 @@ export async function fetchRates(): Promise<ExchangeRatesResult> {
     if (!json.rates) throw new Error("No rates in response");
 
     const rates = { ...FALLBACK_RATES };
+    let liveCount = 0;
     for (const code of SUPPORTED) {
       if (code === "USD") continue;
       const live = json.rates[code];
-      if (typeof live === "number" && live > 0) rates[code] = live;
+      if (typeof live === "number" && live > 0) {
+        rates[code] = live;
+        liveCount++;
+      }
     }
-    return { rates, fetchedAt: new Date().toISOString(), source: "live" };
+    return {
+      rates,
+      fetchedAt: new Date().toISOString(),
+      // Only flag as "live" if the API actually returned at least one quote.
+      // Avoids the previous behaviour where a 200-OK with empty rates would
+      // pretend everything was live while silently serving the static table.
+      source: liveCount > 0 ? "live" : "fallback",
+    };
   } catch {
     return {
       rates: { ...FALLBACK_RATES },
