@@ -13,9 +13,12 @@ import { expect, test, type Page } from "@playwright/test";
  * suppressed via cookies + localStorage so they never overlay interactions.
  */
 
+import pkg from "../../package.json";
+
 const STORE_KEY = "arka-finance-store";
-// Must match `APP_VERSION` in src/lib/version.ts. Bump if that file changes.
-const APP_VERSION = "1.0.1";
+// Sourced from package.json — the same way the runtime resolves APP_VERSION.
+// Single source of truth; no manual bump required when shipping a release.
+const APP_VERSION = pkg.version;
 // Must match `TUTORIAL_VERSION` in src/store/useTutorialStore.ts.
 const TUTORIAL_VERSION = "2";
 
